@@ -1,8 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
+// import counterReducer from '../features/counter/counterSlice';
+import chatroomReducer from '../features/chatroom/chatRoomSlice';
 
-export default configureStore({
+const store = configureStore({
   reducer: {
-    counter: counterReducer,
+    chatroom: chatroomReducer,
   },
 });
+
+
+export type Dispatch = typeof store.dispatch;
+
+export default store;

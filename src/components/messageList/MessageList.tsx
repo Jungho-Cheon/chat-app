@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { nanoid } from '@reduxjs/toolkit';
+import { useDispatch, useSelector } from 'react-redux';
 
+// components
 import MessageCard from './MessageCard';
 
 // types
-import { UserData } from './messageCardTypes';
+import { ChatRoom } from './messageCardTypes';
 
 // styled-components
 import {
@@ -21,24 +23,36 @@ import {
   MessageCardsContainer,
 } from '../../styles/messageList-styles';
 
-// test data
-import { testData } from '../../tests/data/userdata';
+import {
+  fetchChatRoom,
+  selectChatRooms,
+} from '../../features/chatroom/chatRoomSlice';
 
 const MessageList = (): JSX.Element => {
+  const dispatch = useDispatch();
+  const chatRooms = useSelector(selectChatRooms);
+  // const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
   const [searchUsername, setSearchUserName] = useState<string>('');
   const searchHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchUserName(e.target.value.trim());
   };
+
+  useEffect(() => {
+    dispatch(fetchChatRoom());
+  }, []);
+
   const filterMessageCards = (): JSX.Element[] => {
+    if (chatRooms === undefined) return [];
     if (searchUsername !== '') {
-      return testData
+      return chatRooms
         .filter(
-          (data: UserData) =>
+          (data: ChatRoom) =>
             !data.username.toLowerCase().indexOf(searchUsername.toLowerCase())
         )
         .map(
-          (data: UserData): JSX.Element => (
+          (data: ChatRoom): JSX.Element => (
             <MessageCard
+              id={nanoid()}
               username={data.username}
               profileImage={data.profileImage}
               previewMessage={data.previewMessage}
@@ -49,9 +63,10 @@ const MessageList = (): JSX.Element => {
           )
         );
     }
-    return testData.map(
-      (data: UserData): JSX.Element => (
+    return chatRooms.map(
+      (data: ChatRoom): JSX.Element => (
         <MessageCard
+          id={nanoid()}
           username={data.username}
           profileImage={data.profileImage}
           previewMessage={data.previewMessage}

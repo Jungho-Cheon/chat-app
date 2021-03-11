@@ -1,4 +1,5 @@
-export interface UserData {
+export interface ChatRoom {
+  id: string;
   username: string;
   profileImage: string;
   previewMessage?: string;

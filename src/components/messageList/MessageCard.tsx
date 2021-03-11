@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { UserData } from './messageCardTypes';
+import { ChatRoom } from './messageCardTypes';
 
 // styled component
 import {
@@ -15,13 +15,13 @@ import {
 } from '../../styles/messageCard-styles';
 import UserAvatar from '../avatar/UserAvatar';
 
-const MessageCard: React.FunctionComponent<UserData> = ({
+const MessageCard: React.FunctionComponent<ChatRoom> = ({
   username,
   profileImage,
   previewMessage,
   timeago,
   unreadCount,
-}: UserData): JSX.Element => {
+}: ChatRoom): JSX.Element => {
   return (
     <MessageCardContainer unread={!!unreadCount}>
       <MessageCardAvatar>
