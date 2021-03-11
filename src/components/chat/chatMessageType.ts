@@ -4,9 +4,13 @@ export enum MESSAGE_TYPE {
   Url = 'URL',
 }
 
-export interface ChatMessageProps {
-  isMine: boolean;
+interface ChatMessage {
+  id: string;
   type: MESSAGE_TYPE;
   message: string;
+}
+export interface ChatMessageProps {
+  isMine: boolean;
+  messages: ChatMessage[];
   avatarImage: string;
 }

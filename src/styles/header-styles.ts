@@ -33,6 +33,9 @@ export const NewMessageButton = styled.button`
   &:hover {
     background-color: ${props => props.theme.orangeHovered};
   }
+  &:active {
+    background-color: ${props => props.theme.purple};
+  }
 `;
 export const NotificationButton = styled.div`
   position: relative;
@@ -42,7 +45,10 @@ export const NotificationButton = styled.div`
   cursor: pointer;
   transition: 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
   &:hover {
-    color: #aaa;
+    color: ${props => props.theme.secondaryText};
+  }
+  &:active {
+    color: ${props => props.theme.orangeHovered};
   }
 `;
 export const AlertPoint = styled.div`

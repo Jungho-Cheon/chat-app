@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
+import EmojiPicker, { IEmojiData } from 'emoji-picker-react';
 
 // components
 import Header from '../Header';
@@ -22,10 +23,39 @@ import {
   ChatDivider,
   ChatInput,
   EmojiButton,
+  EmojiPickerWrapper,
   ChatSendButton,
 } from '../../styles/chatMain-styles';
 
 const ChatMain = (): JSX.Element => {
+  const [text, setText] = useState<string>('');
+  const [isEmojiOpened, setIsEmojiOpened] = useState<boolean>(false);
+  const textInput = useRef<HTMLInputElement>(null);
+  
+  const emojiClick = (
+    event: React.MouseEvent<Element, MouseEvent>,
+    emojiObject: IEmojiData
+  ): void => {
+    event.preventDefault();
+    setText(text => text + emojiObject.emoji);
+  };
+  const textChange: React.ChangeEventHandler<HTMLInputElement> = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setText(event.target.value);
+  };
+  const handleEnterKeyPress = (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (event.key === 'Enter') {
+      // message 처리
+      sendMessage();
+    }
+  };
+  const sendMessage = () => {
+    console.log(text);
+    if (textInput.current !== null) textInput.current.value = '';
+  };
   return (
     <ChatMainContainer>
       {/* Header */}
@@ -85,18 +115,31 @@ const ChatMain = (): JSX.Element => {
         </ChatHeader>
 
         {/* Chat Pane */}
-        <ChatArea></ChatArea>
+        <ChatArea />
 
         <ChatDivider />
         <ChatInputContainer>
           <UploadFileButton>
             <i className="fas fa-paperclip"></i>
           </UploadFileButton>
-          <ChatInput placeholder="Write your message" />
-          <EmojiButton>
+          <ChatInput
+            placeholder="Write your message"
+            ref={textInput}
+            type="text"
+            value={text}
+            onChange={textChange}
+            onKeyPress={handleEnterKeyPress}
+          />
+          <EmojiButton onClick={() => setIsEmojiOpened(!isEmojiOpened)}>
             <i className="far fa-smile"></i>
           </EmojiButton>
-          <ChatSendButton>
+          {isEmojiOpened && (
+            <EmojiPickerWrapper>
+              <EmojiPicker onEmojiClick={emojiClick} />
+            </EmojiPickerWrapper>
+          )}
+
+          <ChatSendButton onClick={sendMessage}>
             <i className="fas fa-paper-plane"></i>
           </ChatSendButton>
         </ChatInputContainer>

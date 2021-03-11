@@ -17,10 +17,11 @@ export const ChatMessageFlexDirection = styled.div<FlexDirection>`
   display: flex;
   justify-content: ${props => (props.isMine ? `flex-end` : `flex-start`)};
 `;
-export const ChatMessageContainer = styled.div<MessageType>`
+export const MessageContainer = styled.div``;
+export const ChatMessageContainer = styled.div<FlexDirection>`
   display: flex;
   flex-direction: ${props => (props.isMine ? `row` : `row-reverse`)};
-  align-items: flex-end;
+  align-items: flex-start;
 `;
 export const Message = styled.div<MessageType>`
   background-color: ${props => (props.isMine ? props.theme.purple : `white`)};
@@ -30,27 +31,30 @@ export const Message = styled.div<MessageType>`
     props.type === MESSAGE_TYPE.File && `rgb(232,232,242)`};
   color: ${props => props.type === MESSAGE_TYPE.File && props.theme.purple};
   padding: 10px 20px;
-  margin: 0 20px;
+  margin: 0 20px 10px 0;
   border-radius: 20px;
-  ${props =>
-    props.type === MESSAGE_TYPE.Text &&
-    (props.isMine
-      ? `border-bottom-right-radius: 0;`
-      : `border-bottom-left-radius: 0;`)}
-
-  ${props =>
-    props.type === MESSAGE_TYPE.File &&
-    `cursor: pointer; &:hover{p::after{contenr: ''; width:100%; height:1px; background-color:${props.theme.purple}}}`}
-
-  &:hover {
-    span {
-      text-decoration: underline;
-    }
-  }
-
-  font-weight: 600;
+  max-width: 370px;
+  font-weight: 400;
+  line-height: 1.2;
   i {
     padding-right: 10px;
   }
+  ${props =>
+    props.type === MESSAGE_TYPE.Text &&
+    (props.isMine
+      ? `border-top-right-radius: 0;`
+      : `border-top-left-radius: 0;`)}
+
+  ${props =>
+    props.type === MESSAGE_TYPE.File &&
+    `
+    font-weight: 600;
+    &:hover {
+    span {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+  `}
 `;
 export const UserAvatar = styled.div``;

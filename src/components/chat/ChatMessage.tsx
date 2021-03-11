@@ -10,22 +10,28 @@ import { ChatMessageProps, MESSAGE_TYPE } from './chatMessageType';
 import {
   ChatMessageFlexDirection,
   ChatMessageContainer,
+  MessageContainer,
   Message,
 } from '../../styles/chatMessage-styles';
 
 const ChatMessage = ({
   isMine,
-  type,
-  message,
+  messages,
   avatarImage,
 }: ChatMessageProps): JSX.Element => {
   return (
     <ChatMessageFlexDirection isMine={isMine}>
-      <ChatMessageContainer type={type} isMine={isMine}>
-        <Message type={type} isMine={isMine}>
-          {type === MESSAGE_TYPE.File && <i className="fas fa-paperclip"></i>}
-          <span>{message}</span>
-        </Message>
+      <ChatMessageContainer isMine={isMine}>
+        <MessageContainer>
+          {messages.map(message => (
+            <Message type={message.type} isMine={isMine} key={message.id}>
+              {message.type === MESSAGE_TYPE.File && (
+                <i className="fas fa-paperclip"></i>
+              )}
+              <span>{message.message}</span>
+            </Message>
+          ))}
+        </MessageContainer>
 
         <UserAvatar avatarUrl={avatarImage} width="40px" />
       </ChatMessageContainer>

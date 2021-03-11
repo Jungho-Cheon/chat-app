@@ -187,6 +187,13 @@ export const EmojiButton = styled.div`
     color: ${props => props.theme.orangeHovered};
   }
 `;
+
+export const EmojiPickerWrapper = styled.div`
+  position: absolute;
+  right: 20px;
+  bottom: 90px;
+`;
+
 export const ChatSendButton = styled.div`
   width: 50px;
   height: 50px;
