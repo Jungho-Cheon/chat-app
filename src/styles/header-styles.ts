@@ -4,8 +4,8 @@ export const HeaderContainer = styled.div`
   position: relative;
   display: flex;
   justify-content: flex-end;
-  align-items: center;
-  height: 60px;
+  align-items: flex-start;
+  height: 40px;
   margin: 20px;
 `;
 export const UserMenu = styled.div`
@@ -31,7 +31,7 @@ export const NewMessageButton = styled.button`
   }
 
   &:hover {
-    background-color: rgba(244, 118, 85, 0.7);
+    background-color: ${props => props.theme.orangeHovered};
   }
 `;
 export const NotificationButton = styled.div`
@@ -55,59 +55,6 @@ export const AlertPoint = styled.div`
   right: 0;
 `;
 
-export const UserInfoDropdownContents = styled.div`
-  display: none;
-  position: absolute;
-  ul {
-    position: relative;
-    background-color: #fff;
-    min-width: 160px;
-    box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.1);
-    z-index: 1;
-    border-radius: 0.3rem;
-    padding: 10px 0;
-    &:after,
-    &:before {
-      bottom: 100%;
-      left: 10px;
-      border: solid transparent;
-      content: '  ';
-      height: 0;
-      width: 0;
-      position: absolute;
-      pointer-events: none;
-    }
-
-    &:after {
-      border-color: rgba(255, 255, 255, 0);
-      border-bottom-color: #ffffff;
-      border-width: 5px;
-      left: 11px;
-      background-clip: padding-box;
-    }
-
-    &:before {
-      border-color: rgba(184, 184, 184, 0);
-      border-bottom-color: white;
-      border-width: 6px;
-      background-clip: padding-box;
-    }
-  }
-  div {
-    height: 20px;
-    width: 100%;
-    position: relative;
-    background: rgba(0, 0, 0, 0);
-  }
-  li {
-    padding: 8px 12px;
-    &:hover {
-      color: rgba(244, 118, 85, 0.7);
-      cursor: pointer;
-    }
-  }
-`;
-
 export const UserInfoContainer = styled.div`
   position: relative;
   display: flex;
@@ -117,13 +64,6 @@ export const UserInfoContainer = styled.div`
   &:hover {
     color: #aaa;
   }
-`;
-
-export const UserAvatar = styled.img`
-  width: 35px;
-  height: 35px;
-  object-fit: cover;
-  border-radius: 50%;
 `;
 
 export const UserInfo = styled.div`
@@ -137,16 +77,5 @@ export const UserInfo = styled.div`
   }
   i {
     color: ${props => props.theme.secondaryText};
-  }
-`;
-
-export const UserInfoDropdown = styled.div`
-  position: relative;
-  display: inline-block;
-  &:hover ${UserInfoDropdownContents} {
-    display: block;
-  }
-  &:hover i {
-    display: none;
   }
 `;

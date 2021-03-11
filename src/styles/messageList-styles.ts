@@ -5,13 +5,13 @@ export const MessageListContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 180px 1fr;
-  padding: 0 0 0 40px;
   max-height: 100%;
 `;
 
 export const MessageListUpperContainer = styled.div`
   margin-top: 20px;
   height: 150px;
+  padding: 0 0 0 40px;
 `;
 
 export const LogoContainer = styled.div`
@@ -84,16 +84,23 @@ export const Divider = styled.div`
 
 export const MessageCardsContainer = styled.div`
   height: calc(100vh - 210px);
-  padding-right: 20px;
+  padding: 0 20px 0 40px;
   overflow-y: auto;
   &::-webkit-scrollbar {
     width: 5px;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: ${props => props.theme.secondaryText};
+    background-color: transparent;
     border-radius: 50px;
   }
   &::-webkit-scrollbar-track {
-    background-color: white;
+    background-color: transparent;
+  }
+
+  &:hover {
+    &::-webkit-scrollbar-thumb {
+      background-color: ${props => props.theme.secondaryText};
+      border-radius: 50px;
+    }
   }
 `;

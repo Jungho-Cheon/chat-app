@@ -9,5 +9,6 @@ declare module 'styled-components' {
     secondaryText: string;
     divider: string;
     orange: string;
+    orangeHovered: string;
   }
 }

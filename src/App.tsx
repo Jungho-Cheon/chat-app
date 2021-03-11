@@ -2,9 +2,9 @@ import React from 'react';
 // import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 // components
-import Header from './components/Header';
 import Navbar from './components/Navbar';
 import MessageList from './components/MessageList';
+import ChatMain from './components/chat/ChatMain';
 
 // styled-compnents
 import { ThemeProvider } from 'styled-components';
@@ -21,7 +21,7 @@ const App = (): JSX.Element => {
         <AppContainer>
           <Navbar />
           <MessageList />
-          <Header></Header>
+          <ChatMain />
         </AppContainer>
       </ThemeProvider>
     </>

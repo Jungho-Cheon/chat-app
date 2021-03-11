@@ -7,12 +7,10 @@ import {
   NewMessageButton,
   NotificationButton,
   UserInfoContainer,
-  UserAvatar,
   UserInfo,
-  UserInfoDropdown,
   AlertPoint,
-  UserInfoDropdownContents,
 } from '../styles/header-styles';
+import UserAvatar from './avatar/UserAvatar';
 
 const Header = (): JSX.Element => {
   return (
@@ -28,23 +26,13 @@ const Header = (): JSX.Element => {
           <AlertPoint />
         </NotificationButton>
         {/* TODO: User Data에서 프로필 사진 URL가져오기 */}
-        <UserInfoDropdown>
-          <UserInfoContainer>
-            <UserAvatar src="assets/antonio.jpg" />
-            <UserInfo>
-              <p>천정호 님</p>
-              <i className="fas fa-caret-down"></i>
-            </UserInfo>
-          </UserInfoContainer>
-          <UserInfoDropdownContents>
-            <div></div>
-            <ul>
-              <li>Profile</li>
-              <li>Logout</li>
-              <li>Project Info</li>
-            </ul>
-          </UserInfoDropdownContents>
-        </UserInfoDropdown>
+
+        <UserInfoContainer>
+          <UserAvatar avatarUrl="assets/antonio.jpg" width="40px" />
+          <UserInfo>
+            <p>천정호 님</p>
+          </UserInfo>
+        </UserInfoContainer>
       </UserMenu>
     </HeaderContainer>
   );

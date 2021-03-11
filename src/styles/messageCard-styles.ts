@@ -1,29 +1,27 @@
 import styled from 'styled-components';
 
-export const MessageCardContainer = styled.div`
-  width: 100%;
-  height: 80px;
+interface messageProps {
+  unread: boolean;
+}
+
+export const MessageCardContainer = styled.div<messageProps>`
+  width: 330px;
+  height: 70px;
   background: white;
-  margin-bottom: 20px;
+  margin-bottom: 11px;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 5px;
-  border-left: 5px solid rgba(244, 118, 85, 1);
+  border-left: ${props =>
+    props.unread ? `5px solid rgba(244, 118, 85, 1)` : ``};
   cursor: pointer;
+  &:hover {
+    transform: scale(1.05);
+  }
 `;
 export const MessageCardAvatar = styled.div`
-  width: 60px;
-  height: 60px;
-  max-width: 60px;
-  min-width: 60px;
   margin: 20px;
-  img {
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
-    border-radius: 100%;
-  }
 `;
 export const MessagePreviewContainer = styled.div`
   display: flex;

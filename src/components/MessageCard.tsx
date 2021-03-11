@@ -5,14 +5,15 @@ import { UserData } from './messageCardTypes';
 // styled component
 import {
   MessageCardContainer,
-  MessageCardAvatar,
   MessagePreviewContainer,
   MessageUser,
   MessagePreview,
   MessageInfoContainer,
   TimeAgo,
   UnreadCount,
+  MessageCardAvatar,
 } from '../styles/messageCard-styles';
+import UserAvatar from './avatar/UserAvatar';
 
 const MessageCard: React.FunctionComponent<UserData> = ({
   username,
@@ -22,9 +23,9 @@ const MessageCard: React.FunctionComponent<UserData> = ({
   unreadCount,
 }: UserData): JSX.Element => {
   return (
-    <MessageCardContainer>
+    <MessageCardContainer unread={!!unreadCount}>
       <MessageCardAvatar>
-        <img src={profileImage} alt={username} />
+        <UserAvatar avatarUrl={profileImage} width="50px" />
       </MessageCardAvatar>
       <MessagePreviewContainer>
         <MessageUser> {username} </MessageUser>

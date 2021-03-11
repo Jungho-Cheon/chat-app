@@ -8,6 +8,7 @@ export const darkTheme: DefaultTheme = {
   secondaryText: `rgba(193,195,203)`,
   divider: `rgb(244, 244, 246)`,
   orange: `rgba(255,118,85)`,
+  orangeHovered: `rgba(244, 118, 85, 0.8)`,
 };
 
 export const lightTheme: DefaultTheme = {
@@ -18,4 +19,5 @@ export const lightTheme: DefaultTheme = {
   secondaryText: `rgba(146, 148,165)`,
   divider: `rgb(244, 244, 246)`,
   orange: `rgba(255,118,85)`,
+  orangeHovered: `rgba(244, 118, 85, 0.8)`,
 };
