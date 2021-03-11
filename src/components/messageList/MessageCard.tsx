@@ -12,8 +12,8 @@ import {
   TimeAgo,
   UnreadCount,
   MessageCardAvatar,
-} from '../styles/messageCard-styles';
-import UserAvatar from './avatar/UserAvatar';
+} from '../../styles/messageCard-styles';
+import UserAvatar from '../avatar/UserAvatar';
 
 const MessageCard: React.FunctionComponent<UserData> = ({
   username,

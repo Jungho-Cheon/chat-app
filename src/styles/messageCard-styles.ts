@@ -16,6 +16,7 @@ export const MessageCardContainer = styled.div<messageProps>`
   border-left: ${props =>
     props.unread ? `5px solid rgba(244, 118, 85, 1)` : ``};
   cursor: pointer;
+  transition: 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
   &:hover {
     transform: scale(1.05);
   }

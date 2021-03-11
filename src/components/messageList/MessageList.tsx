@@ -19,10 +19,10 @@ import {
   SearchInput,
   Divider,
   MessageCardsContainer,
-} from '../styles/messageList-styles';
+} from '../../styles/messageList-styles';
 
 // test data
-import { testData } from '../tests/data/userdata';
+import { testData } from '../../tests/data/userdata';
 
 const MessageList = (): JSX.Element => {
   return (

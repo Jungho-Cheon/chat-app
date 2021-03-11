@@ -3,7 +3,7 @@ import React from 'react';
 
 // components
 import Navbar from './components/Navbar';
-import MessageList from './components/MessageList';
+import MessageList from './components/messageList/MessageList';
 import ChatMain from './components/chat/ChatMain';
 
 // styled-compnents

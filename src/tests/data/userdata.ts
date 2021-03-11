@@ -1,4 +1,4 @@
-import {UserData} from "../../components/messageCardTypes"
+import {UserData} from "../../components/messageList/messageCardTypes"
 
 export const testData: UserData[] = [
   {
