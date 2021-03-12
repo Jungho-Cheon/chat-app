@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { MESSAGE_TYPE } from '../components/chat/chatMessageType';
+import { MESSAGE_TYPE } from '../features/chatData/chatDataTypes';
 
 interface FlexDirection {
   isMine: boolean;
@@ -17,7 +17,12 @@ export const ChatMessageFlexDirection = styled.div<FlexDirection>`
   display: flex;
   justify-content: ${props => (props.isMine ? `flex-end` : `flex-start`)};
 `;
-export const MessageContainer = styled.div``;
+export const MessageContainer = styled.div<FlexDirection>`
+  max-width: 370px;
+  display: flex;
+  flex-direction: column;
+  align-items: ${props => (props.isMine ? `flex-end` : `flex-start`)};
+`;
 export const ChatMessageContainer = styled.div<FlexDirection>`
   display: flex;
   flex-direction: ${props => (props.isMine ? `row` : `row-reverse`)};
@@ -26,14 +31,13 @@ export const ChatMessageContainer = styled.div<FlexDirection>`
 export const Message = styled.div<MessageType>`
   background-color: ${props => (props.isMine ? props.theme.purple : `white`)};
   color: ${props => props.isMine && `white`};
-
+  width: auto;
   background-color: ${props =>
     props.type === MESSAGE_TYPE.File && `rgb(232,232,242)`};
   color: ${props => props.type === MESSAGE_TYPE.File && props.theme.purple};
   padding: 10px 20px;
   margin: 0 20px 10px 0;
   border-radius: 20px;
-  max-width: 370px;
   font-weight: 400;
   line-height: 1.2;
   i {

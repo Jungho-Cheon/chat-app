@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootStateOrAny } from 'react-redux';
 import { ChatRoom } from '../../components/messageList/messageCardTypes';
 
+// MockUp Server
 import Server from '../../tests/server/mockUpServer';
 
 enum FETCH_CHATROOM_STATUS {
@@ -20,7 +21,7 @@ const initialState: ChatRoomState = {
   data: [] as ChatRoom[],
 };
 
-export const fetchChatRoom = createAsyncThunk<ChatRoom[]>(
+export const fetchChatRoom = createAsyncThunk(
   'chatRoom/fetchChatRoom',
   async () => {
     const response = await Server.getChatRooms();

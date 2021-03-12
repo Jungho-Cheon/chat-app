@@ -47,34 +47,18 @@ const MessageList = (): JSX.Element => {
       return chatRooms
         .filter(
           (data: ChatRoom) =>
-            !data.username.toLowerCase().indexOf(searchUsername.toLowerCase())
+            !data.chatroomName
+              .toLowerCase()
+              .indexOf(searchUsername.toLowerCase())
         )
         .map(
           (data: ChatRoom): JSX.Element => (
-            <MessageCard
-              id={nanoid()}
-              username={data.username}
-              profileImage={data.profileImage}
-              previewMessage={data.previewMessage}
-              timeago={data.timeago}
-              unreadCount={data.unreadCount}
-              key={data.username + nanoid()}
-            />
+            <MessageCard {...data} key={nanoid()} />
           )
         );
     }
     return chatRooms.map(
-      (data: ChatRoom): JSX.Element => (
-        <MessageCard
-          id={nanoid()}
-          username={data.username}
-          profileImage={data.profileImage}
-          previewMessage={data.previewMessage}
-          timeago={data.timeago}
-          unreadCount={data.unreadCount}
-          key={data.username + nanoid()}
-        />
-      )
+      (data: ChatRoom): JSX.Element => <MessageCard {...data} key={nanoid()} />
     );
   };
   return (

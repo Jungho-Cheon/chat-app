@@ -1,36 +1,45 @@
 import React, { useEffect, useRef } from 'react';
+import { nanoid } from '@reduxjs/toolkit';
 
 // components
 import ChatMessage from './ChatMessage';
-
-// test data
-import { messages } from '../../tests/data/messagedata';
-import { nanoid } from '@reduxjs/toolkit';
 
 // styled-components
 import {
   ChatPaneContainer,
   ChatPaneWrapper,
 } from '../../styles/chatArea-styles';
+import { useSelector } from 'react-redux';
+import { chatdataSelector } from '../../features/chatData/chatDataSlice';
 
 const ChatArea = (): JSX.Element => {
+  const chatData = useSelector(chatdataSelector);
   const chatPaneContainer = useRef<HTMLDivElement>(null);
-  // 아마 리덕스..?
 
   useEffect(() => {
+    // scroll to bottom
     if (chatPaneContainer.current !== null)
       chatPaneContainer.current.scrollTop =
         chatPaneContainer.current.scrollHeight;
-  }, [messages]);
+  }, [chatData]);
+
+  const createChatMessage = () => {
+    const { chatdata, participants } = chatData.data[
+      chatData.currentChatRoomId as string
+    ];
+    return chatdata.map(message => (
+      <ChatMessage
+        chatData={message}
+        participants={participants}
+        key={nanoid()}
+      />
+    ));
+  };
   return (
     <ChatPaneContainer ref={chatPaneContainer}>
-      <ChatPaneWrapper>
-        {messages.map(message => (
-          <ChatMessage {...message} key={nanoid()} />
-        ))}
-      </ChatPaneWrapper>
+      <ChatPaneWrapper>{createChatMessage()}</ChatPaneWrapper>
     </ChatPaneContainer>
   );
 };
 
-export default ChatArea;
+export default React.memo(ChatArea);

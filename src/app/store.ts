@@ -1,13 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit';
-// import counterReducer from '../features/counter/counterSlice';
+
 import chatroomReducer from '../features/chatroom/chatRoomSlice';
+import chatdataReducer from '../features/chatData/chatDataSlice';
+import loginReducer from '../features/login/loginSlice';
+import emojiReducer from '../features/emoji/emojiSlice';
 
 const store = configureStore({
   reducer: {
     chatroom: chatroomReducer,
+    chatdata: chatdataReducer,
+    login: loginReducer,
+    emoji: emojiReducer,
   },
 });
-
 
 export type Dispatch = typeof store.dispatch;
 

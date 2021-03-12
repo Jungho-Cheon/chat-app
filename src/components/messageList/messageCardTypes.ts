@@ -1,7 +1,7 @@
 export interface ChatRoom {
-  id: string;
-  username: string;
-  profileImage: string;
+  chatroomId: string;
+  chatroomName: string;
+  chatroomAvatar: string;
   previewMessage?: string;
   unreadCount?: number;
   timeago?: string;

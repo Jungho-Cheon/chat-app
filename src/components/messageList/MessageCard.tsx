@@ -2,6 +2,9 @@ import React from 'react';
 
 import { ChatRoom } from './messageCardTypes';
 
+// components
+import UserAvatar from '../avatar/UserAvatar';
+
 // styled component
 import {
   MessageCardContainer,
@@ -13,22 +16,40 @@ import {
   UnreadCount,
   MessageCardAvatar,
 } from '../../styles/messageCard-styles';
-import UserAvatar from '../avatar/UserAvatar';
+
+// redux
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  chatdataSelector,
+  fetchChatData,
+  changeChatRoom,
+} from '../../features/chatData/chatDataSlice';
 
 const MessageCard: React.FunctionComponent<ChatRoom> = ({
-  username,
-  profileImage,
+  chatroomId,
+  chatroomName,
+  chatroomAvatar,
   previewMessage,
   timeago,
   unreadCount,
 }: ChatRoom): JSX.Element => {
+  const dispatch = useDispatch();
+  const chatdata = useSelector(chatdataSelector);
+  const selectChatRoom = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!chatdata.data[chatroomId]) {
+      dispatch(fetchChatData(chatroomId));
+    } else {
+      dispatch(changeChatRoom(chatroomId));
+    }
+  };
   return (
-    <MessageCardContainer unread={!!unreadCount}>
+    <MessageCardContainer unread={!!unreadCount} onClick={selectChatRoom}>
       <MessageCardAvatar>
-        <UserAvatar avatarUrl={profileImage} width="50px" />
+        <UserAvatar avatarUrl={chatroomAvatar} width="50px" />
       </MessageCardAvatar>
       <MessagePreviewContainer>
-        <MessageUser> {username} </MessageUser>
+        <MessageUser> {chatroomName} </MessageUser>
         <MessagePreview>
           {' '}
           {previewMessage?.substring(0, 40) + '...'}

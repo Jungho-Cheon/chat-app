@@ -1,4 +1,6 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { userDataSelector } from '../features/login/loginSlice';
 
 // styled-components
 import {
@@ -13,6 +15,7 @@ import {
 import UserAvatar from './avatar/UserAvatar';
 
 const Header = (): JSX.Element => {
+  const userInfo = useSelector(userDataSelector);
   return (
     <HeaderContainer>
       <UserMenu>
@@ -28,9 +31,9 @@ const Header = (): JSX.Element => {
         {/* TODO: User Data에서 프로필 사진 URL가져오기 */}
 
         <UserInfoContainer>
-          <UserAvatar avatarUrl="assets/antonio.jpg" width="40px" />
+          <UserAvatar avatarUrl={userInfo.avatarUrl} width="40px" />
           <UserInfo>
-            <p>천정호 님</p>
+            <p>{userInfo.userName} 님</p>
           </UserInfo>
         </UserInfoContainer>
       </UserMenu>

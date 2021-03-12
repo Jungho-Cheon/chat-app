@@ -1,143 +1,212 @@
 import { nanoid } from '@reduxjs/toolkit';
 import {
-  ChatMessageProps,
+  ChatRoomData,
   MESSAGE_TYPE,
-} from '../../components/chat/chatMessageType';
+} from '../../features/chatData/chatDataTypes';
 
-export const messages: ChatMessageProps[] = [
-  {
-    avatarImage: 'assets/card-avatar-1.jpg',
-    isMine: false,
-    messages: [
+export const chatrooms: { [key: string]: ChatRoomData } = {
+  ChatRoom1: {
+    participants: {
+      'Johnson Park': {
+        avatarUrl: 'assets/card-avatar-1.jpg',
+        isOnline: false,
+      },
+    },
+    chatdata: [
       {
-        id: nanoid(),
-        type: MESSAGE_TYPE.Text,
-        message: 'hello this is test message',
+        userId: 'Johnson Park',
+        messages: [
+          {
+            message: 'hello Cheon',
+            messageId: nanoid(),
+            type: MESSAGE_TYPE.Text,
+          },
+          {
+            message: 'This is too hard.',
+            messageId: nanoid(),
+            type: MESSAGE_TYPE.Text,
+          },
+          {
+            message: 'Take this man',
+            messageId: nanoid(),
+            type: MESSAGE_TYPE.Text,
+          },
+          {
+            message: '따오기.avi',
+            messageId: nanoid(),
+            type: MESSAGE_TYPE.File,
+          },
+        ],
       },
       {
-        id: nanoid(),
-        type: MESSAGE_TYPE.Text,
-        message: `hello this is test message. 
-          hello this is test message. 
-          hello this is test message. 
-          hello this is test message. 
-          hello this is test message. 
-          hello this is test message. 
-          hello this is test message. `,
+        userId: 'TEST_USER_ID',
+        messages: [
+          {
+            message: "oh bro. what's this?",
+            messageId: nanoid(),
+            type: MESSAGE_TYPE.Text,
+          },
+          {
+            message: '이게 뭐냐고????',
+            messageId: nanoid(),
+            type: MESSAGE_TYPE.Text,
+          },
+          {
+            message: '따오기2.avi',
+            messageId: nanoid(),
+            type: MESSAGE_TYPE.File,
+          },
+        ],
       },
       {
-        id: nanoid(),
-        type: MESSAGE_TYPE.Text,
-        message: `hello this is test message. 
-        hello this is test message. 
-        hello this is test message. 
-        hello this is test message. 
-        hello this is test message. 
-        hello this is test message. 
-        hello this is test message. `,
-      },
-    ],
-  },
-  {
-    avatarImage: 'assets/antonio.jpg',
-    isMine: true,
-    messages: [
-      {
-        id: nanoid(),
-        type: MESSAGE_TYPE.Text,
-        message: `hello this is test message. 
-          hello this is test message. 
-          hello this is test message. 
-          hello this is test message. 
-          hello this is test message. 
-          hello this is test message. 
-          hello this is test message. `,
-      },
-      {
-        id: nanoid(),
-        type: MESSAGE_TYPE.Text,
-        message: `hello this is test message. 
-          hello this is test message. 
-          hello this is test message. 
-          hello this is test message. 
-          hello this is test message. 
-          hello this is test message. 
-          hello this is test message. `,
-      },
-      {
-        id: nanoid(),
-        type: MESSAGE_TYPE.Text,
-        message: `hello this is test message. 
-          hello this is test message. 
-          hello this is test message. 
-          hello this is test message. 
-          hello this is test message. 
-          hello this is test message. 
-          hello this is test message. `,
+        userId: 'Johnson Park',
+        messages: [
+          {
+            message: 'never mind~',
+            messageId: nanoid(),
+            type: MESSAGE_TYPE.Text,
+          },
+          {
+            message: 'soju soju~',
+            messageId: nanoid(),
+            type: MESSAGE_TYPE.Text,
+          },
+        ],
       },
     ],
   },
-  {
-    avatarImage: 'assets/card-avatar-1.jpg',
-    isMine: false,
-    messages: [
+  ChatRoom2: {
+    participants: {
+      'Tom Anderson': { avatarUrl: 'assets/card-avatar-2.jpg', isOnline: true },
+    },
+    chatdata: [
       {
-        id: nanoid(),
-        type: MESSAGE_TYPE.Text,
-        message: 'hello',
+        userId: 'Tom Anderson',
+        messages: [
+          {
+            message: 'hello Cheon',
+            messageId: nanoid(),
+            type: MESSAGE_TYPE.Text,
+          },
+          {
+            message: 'This is too hard.',
+            messageId: nanoid(),
+            type: MESSAGE_TYPE.Text,
+          },
+          {
+            message: 'Take this man',
+            messageId: nanoid(),
+            type: MESSAGE_TYPE.Text,
+          },
+          {
+            message: '따오기.avi',
+            messageId: nanoid(),
+            type: MESSAGE_TYPE.File,
+          },
+        ],
       },
       {
-        id: nanoid(),
-        type: MESSAGE_TYPE.Text,
-        message: 'hello',
+        userId: 'TEST_USER_ID',
+        messages: [
+          {
+            message: "oh bro. what's this?",
+            messageId: nanoid(),
+            type: MESSAGE_TYPE.Text,
+          },
+          {
+            message: '이게 뭐냐고????',
+            messageId: nanoid(),
+            type: MESSAGE_TYPE.Text,
+          },
+          {
+            message: '따오기2.avi',
+            messageId: nanoid(),
+            type: MESSAGE_TYPE.File,
+          },
+        ],
       },
       {
-        id: nanoid(),
-        type: MESSAGE_TYPE.Text,
-        message: 'hello',
+        userId: 'Tom Anderson',
+        messages: [
+          {
+            message: 'never mind~',
+            messageId: nanoid(),
+            type: MESSAGE_TYPE.Text,
+          },
+          {
+            message: 'soju soju~',
+            messageId: nanoid(),
+            type: MESSAGE_TYPE.Text,
+          },
+        ],
       },
     ],
   },
-  {
-    avatarImage: 'assets/antonio.jpg',
-    isMine: true,
-    messages: [
+  ChatRoom3: {
+    participants: {
+      Anna: { avatarUrl: 'assets/card-avatar-3.jpg', isOnline: true },
+    },
+    chatdata: [
       {
-        id: nanoid(),
-        type: MESSAGE_TYPE.Text,
-        message: 'hello',
+        userId: 'Anna',
+        messages: [
+          {
+            message: 'hello Cheon',
+            messageId: nanoid(),
+            type: MESSAGE_TYPE.Text,
+          },
+          {
+            message: 'This is too hard.',
+            messageId: nanoid(),
+            type: MESSAGE_TYPE.Text,
+          },
+          {
+            message: 'Take this man',
+            messageId: nanoid(),
+            type: MESSAGE_TYPE.Text,
+          },
+          {
+            message: '따오기.avi',
+            messageId: nanoid(),
+            type: MESSAGE_TYPE.File,
+          },
+        ],
       },
       {
-        id: nanoid(),
-        type: MESSAGE_TYPE.Text,
-        message: 'hello',
+        userId: 'TEST_USER_ID',
+        messages: [
+          {
+            message: "oh bro. what's this?",
+            messageId: nanoid(),
+            type: MESSAGE_TYPE.Text,
+          },
+          {
+            message: '이게 뭐냐고????',
+            messageId: nanoid(),
+            type: MESSAGE_TYPE.Text,
+          },
+          {
+            message: '따오기2.avi',
+            messageId: nanoid(),
+            type: MESSAGE_TYPE.File,
+          },
+        ],
       },
       {
-        id: nanoid(),
-        type: MESSAGE_TYPE.Text,
-        message: 'hello',
+        userId: 'Anna',
+        messages: [
+          {
+            message: 'never mind~',
+            messageId: nanoid(),
+            type: MESSAGE_TYPE.Text,
+          },
+          {
+            message: 'soju soju~',
+            messageId: nanoid(),
+            type: MESSAGE_TYPE.Text,
+          },
+        ],
       },
     ],
   },
-  {
-    avatarImage: 'assets/card-avatar-1.jpg',
-    isMine: false,
-    messages: [
-      {
-        id: nanoid(),
-        type: MESSAGE_TYPE.Text,
-        message: 'hello',
-      },
-      {
-        id: nanoid(),
-        type: MESSAGE_TYPE.File,
-        message: 'file1.txt',
-      },
-      {
-        id: nanoid(),
-        type: MESSAGE_TYPE.File,
-        message: 'file2.txt',
-      },
-    ],
-  },
-];
+};
