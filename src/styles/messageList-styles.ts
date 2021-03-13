@@ -56,7 +56,7 @@ export const SearchContainer = styled.div`
     top: 10px;
     left: 10px;
     translate: transform(-50%, -50%);
-    color: ${props => props.theme.purple};
+    color: ${props => props.theme.primaryText};
   }
 `;
 export const SearchInput = styled.input`
@@ -67,6 +67,8 @@ export const SearchInput = styled.input`
   font-size: 1.1rem;
   padding: 1px 0 0 30px;
   border-radius: 10px;
+  background-color: ${props => props.theme.background};
+  color: ${props => props.theme.primaryText};
   transition: 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
   &:focus {
     border: 4px solid ${props => props.theme.purple};
@@ -76,7 +78,7 @@ export const SearchInput = styled.input`
 `;
 
 export const Divider = styled.div`
-  width: 100%;
+  width: calc(100% - 25px);
   height: 1px;
   margin: 20px 0;
   background-color: ${props => props.theme.divider};

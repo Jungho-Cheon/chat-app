@@ -32,6 +32,7 @@ export const ChatTextInput = styled.input`
   border-radius: 10px;
   transition: 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
   background-color: transparent;
+  color: ${props => props.theme.primaryText};
 `;
 
 export const EmojiButton = styled.div`
@@ -45,9 +46,21 @@ export const EmojiButton = styled.div`
 `;
 
 export const EmojiPickerWrapper = styled.div`
-  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  position: fixed;
   right: 20px;
   bottom: 90px;
+  z-index: 1;
+  aside {
+    position: absolute;
+    bottom: 100px;
+    right: 20px;
+    z-index: 2;
+  }
 `;
 
 export const ChatSendButton = styled.div`

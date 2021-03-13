@@ -85,7 +85,7 @@ const ChatInput = (): JSX.Element => {
         <i className="far fa-smile"></i>
       </EmojiButton>
       {isEmojiOpened && (
-        <EmojiPickerWrapper>
+        <EmojiPickerWrapper onClick={() => dispatch(toggleEmojiContainer())}>
           <EmojiPicker onEmojiClick={emojiClick} />
         </EmojiPickerWrapper>
       )}

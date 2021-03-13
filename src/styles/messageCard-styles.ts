@@ -7,7 +7,7 @@ interface messageProps {
 export const MessageCardContainer = styled.div<messageProps>`
   width: 330px;
   height: 70px;
-  background: white;
+  background: ${props => props.theme.background};
   margin-bottom: 11px;
   display: flex;
   justify-content: center;

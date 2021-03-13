@@ -44,11 +44,12 @@ export const NotificationButton = styled.div`
   height: 1.1rem;
   cursor: pointer;
   transition: 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+  color: ${props => props.theme.primaryText};
   &:hover {
-    color: ${props => props.theme.secondaryText};
+    color: ${props => props.theme.orangeHovered};
   }
   &:active {
-    color: ${props => props.theme.orangeHovered};
+    color: ${props => props.theme.purple};
   }
 `;
 export const AlertPoint = styled.div`
@@ -64,7 +65,7 @@ export const AlertPoint = styled.div`
 export const UserInfoContainer = styled.div`
   position: relative;
   display: flex;
-  width: 150px;
+  width: 200px;
   cursor: pointer;
   transition: 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
   &:hover {
@@ -76,12 +77,11 @@ export const UserInfo = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 170px;
+  flex-grow: 1;
   p {
     font-size: 0.8rem;
-    color: ${props => props.theme.secondaryText};
+    color: ${props => props.theme.primaryText};
     padding: 0 15px;
-  }
-  i {
-    color: ${props => props.theme.secondaryText};
   }
 `;

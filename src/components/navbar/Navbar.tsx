@@ -1,19 +1,23 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { clearChatRoom } from '../../features/chatData/chatDataSlice';
 
 // styled-components
-import {
-  NavbarContainer,
-  NavbarIcon,
-} from '../styles/navbar-styles';
+import { NavbarContainer, NavbarIcon, ThemeToggleSwitchContainer } from '../../styles/navbar-styles';
+
+// component
+import ThemeToggleSwitch from './ThemeToggleSwitch';
 
 const Navbar = (): JSX.Element => {
+  const dispatch = useDispatch();
   return (
     <NavbarContainer>
       <NavbarIcon>
         <i className="fas fa-stream"></i>
       </NavbarIcon>
 
-      <NavbarIcon>
+      {/* Home */}
+      <NavbarIcon onClick={() => dispatch(clearChatRoom())}>
         <i className="fas fa-home"></i>
       </NavbarIcon>
       <NavbarIcon>
@@ -28,6 +32,9 @@ const Navbar = (): JSX.Element => {
       <NavbarIcon>
         <i className="fas fa-cog"></i>
       </NavbarIcon>
+      <ThemeToggleSwitchContainer>
+        <ThemeToggleSwitch />
+      </ThemeToggleSwitchContainer>
     </NavbarContainer>
   );
 };

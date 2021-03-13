@@ -29,14 +29,15 @@ export const ChatMessageContainer = styled.div<FlexDirection>`
   align-items: flex-start;
 `;
 export const Message = styled.div<MessageType>`
-  background-color: ${props => (props.isMine ? props.theme.purple : `white`)};
-  color: ${props => props.isMine && `white`};
+  background-color: ${props =>
+    props.isMine ? props.theme.purple : props.theme.background};
+  color: ${props => (props.isMine ? `white` : props.theme.primaryText)};
   width: auto;
   background-color: ${props =>
     props.type === MESSAGE_TYPE.File && `rgb(232,232,242)`};
   color: ${props => props.type === MESSAGE_TYPE.File && props.theme.purple};
   padding: 10px 20px;
-  margin: 0 20px 10px 0;
+  margin: 10px 20px 0px;
   border-radius: 20px;
   font-weight: 400;
   line-height: 1.2;
@@ -61,4 +62,3 @@ export const Message = styled.div<MessageType>`
   }
   `}
 `;
-export const UserAvatar = styled.div``;

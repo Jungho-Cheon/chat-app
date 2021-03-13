@@ -51,10 +51,15 @@ export const chatDataSlice = createSlice({
   name: 'chatdata',
   initialState,
   reducers: {
-    changeChatRoom(state, action:PayloadAction<string>) {
+    // 채팅방 변경
+    changeChatRoom(state, action: PayloadAction<string>) {
       state.currentChatRoomId = action.payload;
       return state;
+    }, // 현재 채팅방 초기화
+    clearChatRoom(state) {
+      state.currentChatRoomId = false;
     },
+    // 현재 채팅방으로 메세지 전송
     addMessage(state, action: PayloadAction<sendMessageProps>) {
       const { chatroomId, userId, message } = action.payload;
       const charRoom = state.data[chatroomId];
@@ -92,9 +97,11 @@ export const chatDataSlice = createSlice({
 export const chatdataSelector = (state: RootStateOrAny): ChatDataState =>
   state.chatdata;
 
-
-
 // action
-export const { addMessage, changeChatRoom } = chatDataSlice.actions;
+export const {
+  addMessage,
+  changeChatRoom,
+  clearChatRoom,
+} = chatDataSlice.actions;
 
 export default chatDataSlice.reducer;

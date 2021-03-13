@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 // import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 // components
-import Navbar from './components/Navbar';
+import Navbar from './components/navbar/Navbar';
 import MessageList from './components/messageList/MessageList';
 import ChatMain from './components/chat/ChatMain';
 
@@ -13,14 +13,11 @@ import { GlobalStyle } from './styles/global-style';
 import { AppContainer } from './styles/app-styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginRequest } from './features/login/loginSlice';
-import {
-  isEmojiOpenedSelector,
-  toggleEmojiContainer,
-} from './features/emoji/emojiSlice';
+import { getCurrentTheme } from './features/theme/themeSlice';
 
 const App = (): JSX.Element => {
   const dispatch = useDispatch();
-  const isEmojiOpened = useSelector(isEmojiOpenedSelector);
+  const currentTheme = useSelector(getCurrentTheme);
   useEffect(() => {
     // TODO: 로그인 구현
     dispatch(loginRequest({ userId: null, password: null }));
@@ -28,11 +25,9 @@ const App = (): JSX.Element => {
   return (
     <>
       {/* TODO: Add Theme Change Button */}
-      <ThemeProvider theme={darkTheme}>
+      <ThemeProvider theme={currentTheme ? darkTheme : lightTheme}>
         <GlobalStyle />
-        <AppContainer
-          onClick={() => isEmojiOpened && dispatch(toggleEmojiContainer())}
-        >
+        <AppContainer>
           <Navbar />
           <MessageList />
           <ChatMain />

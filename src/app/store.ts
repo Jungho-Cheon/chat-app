@@ -4,6 +4,7 @@ import chatroomReducer from '../features/chatroom/chatRoomSlice';
 import chatdataReducer from '../features/chatData/chatDataSlice';
 import loginReducer from '../features/login/loginSlice';
 import emojiReducer from '../features/emoji/emojiSlice';
+import themeReducer from '../features/theme/themeSlice';
 
 const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ const store = configureStore({
     chatdata: chatdataReducer,
     login: loginReducer,
     emoji: emojiReducer,
+    theme: themeReducer,
   },
 });
 

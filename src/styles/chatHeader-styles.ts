@@ -16,25 +16,22 @@ export const PartnerInfo = styled.div`
   height: 100%;
 `;
 
-export const PartnerStatusContainer = styled.div`
+export const PartnerStatusContainer = styled.div<isOnlineProp>`
   margin: auto 20px;
+  color: ${props => props.theme.secondaryText};
   h2 {
     font-size: 1.6rem;
     font-weight: 600;
     margin-bottom: 8px;
-  }
-  p {
-    color: ${props => props.theme.secondaryText};
+    color: ${props => props.isOnline && props.theme.primaryText};
   }
 `;
 
 export const PartnerStatus = styled.div<isOnlineProp>`
   display: flex;
-  ${props =>
-    props.isOnline &&
-    `p {
-    color: black;
-  }`}
+  p {
+    color: ${props => props.isOnline && props.theme.primaryText};
+  }
 `;
 
 export const StatusIndicator = styled.div<isOnlineProp>`
@@ -67,7 +64,7 @@ export const DropdownContents = styled.div`
   left: -220px;
   ul {
     position: relative;
-    background-color: #fff;
+    background-color: ${props => props.theme.background};
     min-width: 160px;
     box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.1);
     z-index: 1;

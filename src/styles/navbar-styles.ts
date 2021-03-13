@@ -28,3 +28,8 @@ export const NavbarIcon = styled.div`
     background-color: rgba(255, 255, 255, 0.1);
   }
 `;
+
+export const ThemeToggleSwitchContainer = styled.div`
+  position: absolute;
+  bottom: 20px;
+`;
