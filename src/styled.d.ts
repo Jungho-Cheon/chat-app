@@ -5,6 +5,8 @@ declare module 'styled-components' {
     mainBackground: string;
     background: string;
     purple: string;
+    secondaryPurple: string;
+    deepPurple: string;
     title: string;
     primaryText: string;
     secondaryText: string;

@@ -1,4 +1,4 @@
-import { ChatRoom } from '../../components/messageList/messageCardTypes';
+import { ChatRoom } from '../../components/chatPage/messageList/messageCardTypes';
 import { testData } from '../data/userdata';
 import { chatrooms } from '../data/messagedata';
 import { ChatRoomData } from '../../features/chatData/chatDataTypes';

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootStateOrAny } from 'react-redux';
-import { ChatRoom } from '../../components/messageList/messageCardTypes';
+import { ChatRoom } from '../../components/chatPage/messageList/messageCardTypes';
 
 // MockUp Server
 import Server from '../../tests/server/mockUpServer';
