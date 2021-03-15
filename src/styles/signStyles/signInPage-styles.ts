@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const SignInContainer = styled.div`
-  height: 100%;
+  height: 100vh;
   display: grid;
   grid-template-columns: 400px 1fr;
 `;
@@ -12,12 +12,23 @@ export const SidebarContainer = styled.div`
   height: 100%;
   object-fit: contain;
   background-color: ${props => props.theme.purple};
+  .sidebar__home {
+    padding: 80px 40px 20px;
+    a {
+      color: ${props => props.theme.mainBackground};
+      font-size: 2.6rem;
+      font-weight: 400;
+      cursor: pointer;
+      text-decoration: none;
+      font-family: 'Pangolin', cursive;
+    }
+  }
   .sidebar__title {
-    padding: 80px 40px 0;
+    padding: 0px 40px 40px;
     h1 {
       color: ${props => props.theme.deepPurple};
-      font-size: 2.3rem;
-      font-weight: 900;
+      font-size: 1.6rem;
+      font-weight: 700;
     }
   }
 `;
@@ -43,7 +54,7 @@ export const SignInFormContainer = styled.div`
   flex-grow: 1;
   h1 {
     font-size: 1.5rem;
-    font-weight: 900;
+    font-weight: 700;
     margin-bottom: 20px;
   }
   .signin__form {
@@ -53,7 +64,7 @@ export const SignInFormContainer = styled.div`
     background-color: ${props => props.theme.mainBackground};
     width: 500px;
     label {
-      font-weight: 600;
+      font-weight: 700;
     }
     input {
       height: 35px;

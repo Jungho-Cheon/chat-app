@@ -31,6 +31,9 @@ const SignUpPage = (): JSX.Element => {
     <SignInContainer>
       <SidebarSection>
         <SidebarContainer>
+          <div className="sidebar__home">
+            <Link to="/">TALKI</Link>
+          </div>
           <div className="sidebar__title">
             <h1>
               Simply sign up and start chatting with your friends around you.
@@ -38,7 +41,7 @@ const SignUpPage = (): JSX.Element => {
           </div>
           <Lottie
             options={defaultOptions}
-            height="75%"
+            height="74.5%"
             isClickToPauseDisabled={true}
           />
         </SidebarContainer>
@@ -70,12 +73,12 @@ const SignUpPage = (): JSX.Element => {
             </DividerContainer>
             <label htmlFor="email">Email</label>
             <input type="text" id="email"></input>
-            <label htmlFor="name">name</label>
+            <label htmlFor="name">Nickname</label>
             <input type="text" id="email"></input>
             <label htmlFor="password">Password</label>
-            <input type="password"></input>
+            <input type="password" placeholder="6+ charaters"></input>
             <button type="button" id="submit">
-              Sign In
+              Sign Up
             </button>
           </div>
         </SignInFormContainer>

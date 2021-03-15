@@ -1,18 +1,27 @@
 import styled from 'styled-components';
 
 export const HeaderContainer = styled.div`
-  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 60px;
   background-color: ${props => props.theme.background};
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  height: 60px;
-  padding: 0 120px;
+  justify-content: center;
+  z-index: 9999;
 `;
 export const HeaderLogoContainer = styled.div`
   display: flex;
   align-items: center;
-  padding: 0 20px;
+  margin-right: 220px;
+  h1 {
+    font-weight: 900;
+    font-size: 2rem;
+    color: ${props => props.theme.purple};
+    font-family: 'Pangolin', cursive;
+  }
 `;
 export const HeaderLogo = styled.img`
   width: 120px;
@@ -30,7 +39,9 @@ export const HeaderNav = styled.div`
 
 export const HeaderRightContainer = styled.div`
   width: 160px;
+  min-width: 160px;
   button {
+    font-family: 'Roboto', sans-serif;
   }
   button:nth-child(1) {
     margin-right: 10px;

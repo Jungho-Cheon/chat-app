@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 // styled-components
 import {
@@ -15,8 +16,7 @@ import {
 
 // lottie
 import Lottie from 'react-lottie';
-import animationData from '../lotties/PRODUCT/Animation 03/drawkit-grape-animation-3-LOOP.json';
-import { Link } from 'react-router-dom';
+import animationData from '../lotties/PRODUCT/Animation 07/drawkit-grape-animation-7-LOOP.json';
 
 const SignInPage = (): JSX.Element => {
   const defaultOptions = {
@@ -31,14 +31,18 @@ const SignInPage = (): JSX.Element => {
     <SignInContainer>
       <SidebarSection>
         <SidebarContainer>
+          <div className="sidebar__home">
+            <Link to="/">TALKI</Link>
+          </div>
           <div className="sidebar__title">
             <h1>
-              Simply sign up and start chatting with your friends around you.
+              Start a variety of conversations through chat apps, from simple
+              tasks to meetings for collaboration.
             </h1>
           </div>
           <Lottie
             options={defaultOptions}
-            height="70%"
+            height="60%"
             isClickToPauseDisabled={true}
           />
         </SidebarContainer>

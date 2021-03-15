@@ -6,16 +6,17 @@ export const HomeMainContainer = styled.div`
   align-items: center;
   position: relative;
   width: 100%;
-  height: 100%;
-  padding: 0 80px;
-  background-color: ${props => props.theme.background};
+  padding: 60px 80px 0;
+  background-color: ${props => props.theme.mainBackground};
+  
 `;
 export const HomeDescriptions = styled.div`
   display: flex;
   flex-direction: column;
   width: 50%;
   z-index: 10;
-  padding: 40px 0;
+  padding: 10px 0;
+
   h1 {
     font-size: 2.2rem;
     font-weight: 300;
@@ -25,16 +26,13 @@ export const HomeDescriptions = styled.div`
     font-weight: 600;
   }
   p {
-    padding: 20px 0;
-    font-weight: 300;
+    padding: 20px 0 0;
+    font-weight: 100;
     line-height: 1.2;
   }
-  button {
-    width: 150px;
-    height: 50px;
-    font-size: 1.4rem;
-    border-radius: 25px;
-    cursor: pointer;
+  p#japanese {
+    font-weight: 100;
+    font-family: 'Noto Sans JP', sans-serif;
   }
   a {
     align-self: center;
@@ -43,9 +41,8 @@ export const HomeDescriptions = styled.div`
 `;
 export const HomeMainImageContainer = styled.div`
   position: relative;
-  padding-top: 40px;
   width: 50%;
-  height: 50%;
+  height: 520px;
 `;
 export const HomeMainImage = styled.img`
   margin-top: 20px;

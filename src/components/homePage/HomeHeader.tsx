@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import {
   HeaderContainer,
   HeaderLogoContainer,
-  HeaderLogo,
   HeaderNav,
   HeaderRightContainer,
   SignInButton,
@@ -14,7 +13,7 @@ const Header = (): JSX.Element => {
   return (
     <HeaderContainer>
       <HeaderLogoContainer>
-        <HeaderLogo src="assets/logo.svg"></HeaderLogo>
+        <h1>TALKI</h1>
         <HeaderNav>
           <Link to="/about">about</Link>
           <Link to="/contact">contact</Link>
