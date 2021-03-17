@@ -24,7 +24,7 @@ import {
 
 import {
   fetchChatroomInfo,
-  selectChatRooms,
+  getAllChatrooms,
 } from '../../../features/chatroom/chatroomSlice';
 import { getUserData } from '../../../features/auth/authSlice';
 import ChatroomType from '../../../features/chatroom/chatroomTypes';
@@ -32,25 +32,26 @@ import ChatroomType from '../../../features/chatroom/chatroomTypes';
 const MessageList = (): JSX.Element => {
   const dispatch = useDispatch();
   const userData = useSelector(getUserData);
-  const { chatroomIds } = useSelector(getUserData);
-  const chatrooms = useSelector(selectChatRooms);
+  const chatroomData = useSelector(getAllChatrooms);
   const [searchUsername, setSearchUserName] = useState<string>('');
   const searchHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchUserName(e.target.value.trim());
   };
 
-  const dispatchAllChatRooms = () => {
-    const chatroomSet = new Set(chatroomIds);
+  const dispatchAllChatrooms = () => {
+    const chatroomSet = new Set(userData.chatroomIds);
     chatroomSet.forEach((chatroomId: string) => {
       dispatch(fetchChatroomInfo(chatroomId));
     });
   };
 
   useEffect(() => {
-    dispatchAllChatRooms();
+    dispatchAllChatrooms();
   }, []);
 
+  console.log('rerender MessageList');
   const filterMessageCards = (): JSX.Element[] => {
+    const chatrooms = Array.from(Object.values(chatroomData));
     if (chatrooms.length > 0) {
       console.log(chatrooms);
       if (searchUsername !== '') {

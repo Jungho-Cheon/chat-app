@@ -27,7 +27,7 @@ const ChatArea = (): JSX.Element => {
   }, [currentChatroom]);
 
   const createChatMessage = () => {
-    const { chatMessages, chatroomId, participants } = currentChatroom;
+    const { chatMessages, participants } = currentChatroom;
     return chatMessages.map(chatMessage => (
       <ChatMessage
         chatMessage={chatMessage}

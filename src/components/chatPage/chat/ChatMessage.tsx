@@ -11,7 +11,7 @@ import {
   Message,
 } from '../../../styles/chatStyles/chatMessage-styles';
 import { useSelector } from 'react-redux';
-import { getUserData, UserData } from '../../../features/auth/authSlice';
+import { getUserData } from '../../../features/auth/authSlice';
 
 import {
   ChatData,
@@ -39,14 +39,22 @@ const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
       <ChatMessageContainer isMine={isMine}>
         <MessageContainer isMine={isMine}>
           {messages.map(message => (
-            <Message
-              type={message.type}
-              isMine={isMine}
-              key={message.messageId}
-            >
-              {message.type === 'FILE' && <i className="fas fa-paperclip"></i>}
-              <span>{message.message}</span>
-            </Message>
+            <div className="message__wrapper" key={message.messageId}>
+              {isMine && !message.isComplete && (
+                <i className="fas fa-spinner complete"></i>
+              )}
+              <Message
+                type={message.messageType}
+                isMine={isMine}
+                isCompleted={!isMine || message.isComplete || false}
+              >
+                {message.messageType === 'FILE' && (
+                  <i className="fas fa-paperclip"></i>
+                )}
+
+                <span>{message.message}</span>
+              </Message>
+            </div>
           ))}
         </MessageContainer>
         <UserAvatar

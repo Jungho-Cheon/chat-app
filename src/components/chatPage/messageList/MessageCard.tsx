@@ -46,10 +46,12 @@ const MessageCard: React.FunctionComponent<MessageCardProps> = ({
     const otherUser = participants.filter(user => user.email !== email)[0];
     setChatroomAvatar(otherUser.avatarUrl);
     setChatroomName(otherUser.nickname);
-    const lastMessages = chatMessages[chatMessages.length - 1].messages;
-    const lastMessage = lastMessages[lastMessages.length - 1].message;
-    setPreviewMessage(lastMessage);
-  }, []);
+    if (chatMessages.length > 0) {
+      const lastMessages = chatMessages[chatMessages.length - 1].messages;
+      const lastMessage = lastMessages[lastMessages.length - 1].message;
+      setPreviewMessage(lastMessage);
+    }
+  }, [chatMessages]);
 
   return (
     <MessageCardContainer unread={false} onClick={selectChatRoom}>
@@ -60,7 +62,8 @@ const MessageCard: React.FunctionComponent<MessageCardProps> = ({
         <MessageUser> {chatroomName} </MessageUser>
         <MessagePreview>
           {' '}
-          {previewMessage?.substring(0, 40) + '...'}
+          {previewMessage?.substring(0, 40)}
+          {previewMessage.length >= 40 && '...'}
         </MessagePreview>
       </MessagePreviewContainer>
       <MessageInfoContainer>

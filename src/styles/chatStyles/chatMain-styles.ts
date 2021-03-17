@@ -4,8 +4,9 @@ export const ChatMainContainer = styled.div`
   position: relative;
 `;
 export const ChatSection = styled.main`
-  height: 100%;
+  height: 100vh;
   width: 100%;
+  overflow-y: hidden;
 `;
 
 export const ChatArea = styled.div`

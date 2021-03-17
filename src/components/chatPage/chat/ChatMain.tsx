@@ -21,20 +21,23 @@ const ChatMain = (): JSX.Element => {
   return (
     <ChatMainContainer>
       {/* Header */}
-      <Header />
-      {currentChatroomId ? (
-        <ChatSection>
-          {/* ChatHeader */}
-          <ChatHeader />
-          {/* Chat Pane */}
-          <ChatArea />
-          <ChatDivider />
-          {/* ChatInput */}
-          <ChatInput />
-        </ChatSection>
-      ) : (
-        <PleaseSelectChat key="please" />
-      )}
+
+      <ChatSection>
+        <Header />
+        {currentChatroomId ? (
+          <>
+            {/* ChatHeader */}
+            <ChatHeader />
+            {/* Chat Pane */}
+            <ChatArea />
+            <ChatDivider />
+            {/* ChatInput */}
+            <ChatInput />
+          </>
+        ) : (
+          <PleaseSelectChat key="please" />
+        )}
+      </ChatSection>
     </ChatMainContainer>
   );
 };

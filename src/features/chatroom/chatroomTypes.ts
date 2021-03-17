@@ -5,7 +5,8 @@ export interface ChatroomRequest {
 export interface Message {
   messageId: string;
   message: string;
-  type: string;
+  messageType: string;
+  isComplete?: boolean;
 }
 
 export interface ChatData {
@@ -34,11 +35,12 @@ export enum FETCH_CHATROOM_STATUS {
 export interface ChatRoomState {
   status: FETCH_CHATROOM_STATUS;
   currentChatroomId: string;
+  socketId: string;
   data: Record<string, ChatroomType>;
 }
 
 export interface SendMessageProps {
   chatroomId: string;
   email: string;
-  message: string;
+  message: Message;
 }

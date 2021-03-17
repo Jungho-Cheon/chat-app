@@ -7,6 +7,7 @@ interface FlexDirection {
 interface MessageType {
   type: string;
   isMine: boolean;
+  isCompleted: boolean;
 }
 
 export const ChatMessageFlexDirection = styled.div<FlexDirection>`
@@ -20,6 +21,50 @@ export const MessageContainer = styled.div<FlexDirection>`
   display: flex;
   flex-direction: column;
   align-items: ${props => (props.isMine ? `flex-end` : `flex-start`)};
+  .message__wrapper {
+    display: flex;
+    flex-direction: ${props => (props.isMine ? `row` : `row-reverse`)};
+    /* justify-content: ${props => (props.isMine ? `flex-end` : ``)}; */
+    align-items: center;
+    i.complete {
+      margin-top: 10px;
+      color: ${props => props.theme.secondaryText};
+      -webkit-animation: rotating 2s cubic-bezier(0.215, 0.61, 0.355, 1)
+        infinite;
+      -moz-animation: rotating 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+      -ms-animation: rotating 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+      -o-animation: rotating 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+      animation: rotating 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+    @-webkit-keyframes rotating /* Safari and Chrome */ {
+      from {
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+      }
+      to {
+        -webkit-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+      }
+    }
+    @keyframes rotating {
+      from {
+        -ms-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+      }
+      to {
+        -ms-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+      }
+    }
+  }
 `;
 export const ChatMessageContainer = styled.div<FlexDirection>`
   display: flex;
@@ -27,6 +72,7 @@ export const ChatMessageContainer = styled.div<FlexDirection>`
   align-items: flex-start;
 `;
 export const Message = styled.div<MessageType>`
+  opacity: ${props => (props.isCompleted ? 1 : 0.5)};
   background-color: ${props =>
     props.isMine ? props.theme.purple : props.theme.background};
   color: ${props => (props.isMine ? `white` : props.theme.primaryText)};
