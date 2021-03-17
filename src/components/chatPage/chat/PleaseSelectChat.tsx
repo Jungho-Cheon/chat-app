@@ -22,7 +22,7 @@ const PleaseSelectChat = (): JSX.Element => {
   return (
     <PleaseSelectChatContainer>
       <LottieContainer>
-        <Lottie options={defaultOptions} />
+        <Lottie options={defaultOptions} isClickToPauseDisabled={true} />
       </LottieContainer>
       <h1>{`Let's Start Chat`}</h1>
     </PleaseSelectChatContainer>

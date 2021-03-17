@@ -15,9 +15,8 @@ import {
   ChatMenuIcon,
   DropdownContents,
 } from '../../../styles/chatStyles/chatHeader-styles';
-
-//selector
-import { chatdataSelector } from '../../../features/chatData/chatDataSlice';
+import { getCurrentChatroom } from '../../../features/chatroom/chatroomSlice';
+import { getUserData } from '../../../features/auth/authSlice';
 
 enum CHATROOM_TYPE {
   SINGLE,
@@ -25,33 +24,37 @@ enum CHATROOM_TYPE {
 }
 
 const ChatHeader = (): JSX.Element => {
-  const { currentChatRoomId, data } = useSelector(chatdataSelector);
+  const { chatroomId, participants } = useSelector(getCurrentChatroom);
+  const userData = useSelector(getUserData);
   let chatroomType: CHATROOM_TYPE = CHATROOM_TYPE.SINGLE;
 
   useEffect(() => {
-    if (typeof currentChatRoomId === 'string') {
-      const { participants } = data[currentChatRoomId];
-      const participantsLength = Object.keys(participants).length;
+    if (chatroomId) {
+      const participantsLength = participants.length;
       if (participantsLength > 1) chatroomType = CHATROOM_TYPE.MULTIMEMBER;
       else if (participantsLength == 1) {
         chatroomType = CHATROOM_TYPE.SINGLE;
       } else {
+        chatroomType = CHATROOM_TYPE.MULTIMEMBER;
       }
     }
-  }, [currentChatRoomId]);
+  }, [chatroomId]);
 
   const createChatHeader = (): JSX.Element => {
-    let userId = '',
-      avatarUrl = '',
-      isOnline = false;
+    let nickname = '',
+      avatarUrl = '';
+
+    // TODO: 온라인 표기
+    const isOnline = false;
     // 단일 사용자 채팅인 경우와 단체 채팅인 경우를 분기
     switch (chatroomType) {
       case CHATROOM_TYPE.SINGLE:
-        const { participants } = data[currentChatRoomId as string];
-        const userIds = Object.keys(participants);
-        userId = userIds[0];
-        avatarUrl = participants[userId].avatarUrl;
-        isOnline = participants[userId].isOnline;
+        const targetUser = participants.filter(
+          user => user.email !== userData.email
+        )[0];
+        nickname = targetUser.nickname;
+        avatarUrl = targetUser.avatarUrl;
+        // isOnline = targetUser.
         break;
     }
 
@@ -60,7 +63,7 @@ const ChatHeader = (): JSX.Element => {
         <UserAvatar avatarUrl={avatarUrl} width="100px" />
         <ChatMenu>
           <PartnerStatusContainer isOnline={isOnline}>
-            <h2>{userId}</h2>
+            <h2>{nickname}</h2>
             <PartnerStatus isOnline={isOnline}>
               <StatusIndicator isOnline={isOnline} />
               <p>{isOnline ? `Online` : `Offline`}</p>

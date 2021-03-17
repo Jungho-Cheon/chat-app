@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { clearChatRoom } from '../../../features/chatData/chatDataSlice';
+import { clearChatroom } from '../../../features/chatroom/chatroomSlice';
 
 // styled-components
 import {
@@ -21,7 +21,7 @@ const Navbar = (): JSX.Element => {
       </NavbarIcon>
 
       {/* Home */}
-      <NavbarIcon onClick={() => dispatch(clearChatRoom())}>
+      <NavbarIcon onClick={() => dispatch(clearChatroom())}>
         <i className="fas fa-home"></i>
       </NavbarIcon>
       <NavbarIcon>

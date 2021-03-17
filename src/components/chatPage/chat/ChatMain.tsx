@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { chatdataSelector } from '../../../features/chatData/chatDataSlice';
+import { getCurrentChatroomId } from '../../../features/chatroom/chatroomSlice';
 
 // components
 import Header from '../Header';
@@ -17,12 +17,12 @@ import {
 } from '../../../styles/chatStyles/chatMain-styles';
 
 const ChatMain = (): JSX.Element => {
-  const { currentChatRoomId } = useSelector(chatdataSelector);
+  const currentChatroomId = useSelector(getCurrentChatroomId);
   return (
     <ChatMainContainer>
       {/* Header */}
       <Header />
-      {typeof currentChatRoomId === 'string' ? (
+      {currentChatroomId ? (
         <ChatSection>
           {/* ChatHeader */}
           <ChatHeader />

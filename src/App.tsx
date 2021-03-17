@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 // pages
@@ -11,20 +11,13 @@ import ChatPage from './pages/ChatPage';
 import { ThemeProvider } from 'styled-components';
 import { darkTheme, lightTheme } from './styles/theme';
 import { GlobalStyle } from './styles/global-style';
-import { useDispatch, useSelector } from 'react-redux';
-import { loginRequest } from './features/login/loginSlice';
+import { useSelector } from 'react-redux';
 import { getCurrentTheme } from './features/theme/themeSlice';
 
 const App = (): JSX.Element => {
-  const dispatch = useDispatch();
   const currentTheme = useSelector(getCurrentTheme);
-  useEffect(() => {
-    // TODO: 로그인 구현
-    dispatch(loginRequest({ userId: null, password: null }));
-  }, []);
   return (
     <>
-      {/* TODO: Add Theme Change Button */}
       <ThemeProvider theme={currentTheme ? darkTheme : lightTheme}>
         <GlobalStyle />
         <Router>

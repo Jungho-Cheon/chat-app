@@ -1,6 +1,4 @@
-import React from 'react';
-
-import { ChatRoom } from './messageCardTypes';
+import React, { useEffect, useState } from 'react';
 
 // components
 import UserAvatar from '../avatar/UserAvatar';
@@ -19,32 +17,42 @@ import {
 
 // redux
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  chatdataSelector,
-  fetchChatData,
-  changeChatRoom,
-} from '../../../features/chatData/chatDataSlice';
+import { changeChatroom } from '../../../features/chatroom/chatroomSlice';
+import ChatroomType from '../../../features/chatroom/chatroomTypes';
+import { getUserData, UserData } from '../../../features/auth/authSlice';
 
-const MessageCard: React.FunctionComponent<ChatRoom> = ({
+export interface MessageCardProps extends ChatroomType {
+  email: string;
+}
+
+const MessageCard: React.FunctionComponent<MessageCardProps> = ({
+  chatMessages,
   chatroomId,
-  chatroomName,
-  chatroomAvatar,
-  previewMessage,
-  timeago,
-  unreadCount,
-}: ChatRoom): JSX.Element => {
+  participants,
+  email,
+}: MessageCardProps): JSX.Element => {
   const dispatch = useDispatch();
-  const chatdata = useSelector(chatdataSelector);
+  const [chatroomAvatar, setChatroomAvatar] = useState<string>('');
+  const [chatroomName, setChatroomName] = useState<string>('');
+  const [previewMessage, setPreviewMessage] = useState<string>('');
+
   const selectChatRoom = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (!chatdata.data[chatroomId]) {
-      dispatch(fetchChatData(chatroomId));
-    } else {
-      dispatch(changeChatRoom(chatroomId));
-    }
+    dispatch(changeChatroom(chatroomId));
   };
+
+  // const countUnreadMessages = () => {};
+  useEffect(() => {
+    const otherUser = participants.filter(user => user.email !== email)[0];
+    setChatroomAvatar(otherUser.avatarUrl);
+    setChatroomName(otherUser.nickname);
+    const lastMessages = chatMessages[chatMessages.length - 1].messages;
+    const lastMessage = lastMessages[lastMessages.length - 1].message;
+    setPreviewMessage(lastMessage);
+  }, []);
+
   return (
-    <MessageCardContainer unread={!!unreadCount} onClick={selectChatRoom}>
+    <MessageCardContainer unread={false} onClick={selectChatRoom}>
       <MessageCardAvatar>
         <UserAvatar avatarUrl={chatroomAvatar} width="50px" />
       </MessageCardAvatar>
@@ -56,12 +64,12 @@ const MessageCard: React.FunctionComponent<ChatRoom> = ({
         </MessagePreview>
       </MessagePreviewContainer>
       <MessageInfoContainer>
-        <TimeAgo>{timeago}</TimeAgo>
+        {/* <TimeAgo>{timeago}</TimeAgo>
         {unreadCount && (
           <UnreadCount>
             <p>{unreadCount.toString()}</p>
           </UnreadCount>
-        )}
+        )} */}
       </MessageInfoContainer>
     </MessageCardContainer>
   );

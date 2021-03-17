@@ -33,6 +33,11 @@ export const SidebarContainer = styled.div`
       font-weight: 700;
     }
   }
+  .sidebar__lottieContainer {
+    position: relative;
+    width: 30vw;
+    height: calc(100% - 250px);
+  }
 `;
 export const SidebarSection = styled.div``;
 export const SignInSection = styled.div`
@@ -67,6 +72,7 @@ export const SignInFormContainer = styled.div`
     width: 500px;
     label {
       font-weight: 700;
+      margin-top: 5px;
     }
     input {
       height: 35px;
@@ -74,7 +80,7 @@ export const SignInFormContainer = styled.div`
       border: none;
       outline: none;
       background-color: ${props => props.theme.divider};
-      margin: 5px 0 20px;
+      margin: 5px 0;
       padding-left: 10px;
       transition: 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
       &:hover {
@@ -94,12 +100,20 @@ export const SignInFormContainer = styled.div`
       outline: none;
       background-color: ${props => props.theme.purple};
       color: white;
+      margin-top: 10px;
       width: 50%;
       &:hover {
         background-color: ${props => props.theme.secondaryPurple};
       }
       &:active {
         background-color: ${props => props.theme.deepPurple};
+      }
+    }
+    p {
+      line-height: 1.2;
+      span {
+        font-weight: 700;
+        color: ${props => props.theme.purple};
       }
     }
   }

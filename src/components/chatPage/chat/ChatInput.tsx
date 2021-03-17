@@ -17,20 +17,16 @@ import {
 
 // redux
 import {
-  addMessage,
-  chatdataSelector,
-  sendMessage,
-} from '../../../features/chatData/chatDataSlice';
-import {
   isEmojiOpenedSelector,
   toggleEmojiContainer,
 } from '../../../features/emoji/emojiSlice';
-import { userDataSelector } from '../../../features/login/loginSlice';
+import { getUserData } from '../../../features/auth/authSlice';
+import { getCurrentChatroomId, sendMessage } from '../../../features/chatroom/chatroomSlice';
 
 const ChatInput = (): JSX.Element => {
   const dispatch = useDispatch();
-  const { userId } = useSelector(userDataSelector);
-  const { currentChatRoomId } = useSelector(chatdataSelector);
+  const { nickname, email } = useSelector(getUserData);
+  const currentChatroomId = useSelector(getCurrentChatroomId);
   const isEmojiOpened = useSelector(isEmojiOpenedSelector);
   const [text, setText] = useState<string>('');
 
@@ -57,12 +53,9 @@ const ChatInput = (): JSX.Element => {
   };
   const sendMessageHandler = () => {
     if (text.trim() !== '') {
-      if (typeof currentChatRoomId === 'string') {
+      if (typeof currentChatroomId === 'string') {
         dispatch(
-          addMessage({ chatroomId: currentChatRoomId, userId, message: text })
-        );
-        dispatch(
-          sendMessage({ chatroomId: currentChatRoomId, userId, message: text })
+          sendMessage({ chatroomId: currentChatroomId, email, message: text })
         );
       }
       setText('');

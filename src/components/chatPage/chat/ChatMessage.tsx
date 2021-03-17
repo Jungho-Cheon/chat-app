@@ -1,14 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // components
 import UserAvatar from '../avatar/UserAvatar';
-
-// types
-import {
-  ChatData,
-  MESSAGE_TYPE,
-  Participant,
-} from '../../../features/chatData/chatDataTypes';
 
 // styled-components
 import {
@@ -18,23 +11,29 @@ import {
   Message,
 } from '../../../styles/chatStyles/chatMessage-styles';
 import { useSelector } from 'react-redux';
-import { userDataSelector } from '../../../features/login/loginSlice';
+import { getUserData, UserData } from '../../../features/auth/authSlice';
+
+import {
+  ChatData,
+  Participant,
+} from '../../../features/chatroom/chatroomTypes';
 
 interface ChatMessageProps {
-  chatData: ChatData;
-  participants: Participant;
+  chatMessage: ChatData;
+  participants: Participant[];
 }
 
-const ChatMessage = ({
-  chatData,
+const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
+  chatMessage,
   participants,
 }: ChatMessageProps): JSX.Element => {
-  const { userId, messages } = chatData;
-  const LoginUserData = useSelector(userDataSelector);
-  const isMine = userId === LoginUserData.userId;
-  console.log(userId);
-  console.log('login user data', LoginUserData);
-  console.log('participants', participants);
+  const { email, messages } = chatMessage;
+  const userData = useSelector(getUserData);
+  const isMine = email === userData.email;
+  const targetUser: Participant = participants.filter(
+    user => user.email !== userData.email
+  )[0];
+
   return (
     <ChatMessageFlexDirection isMine={isMine}>
       <ChatMessageContainer isMine={isMine}>
@@ -45,17 +44,13 @@ const ChatMessage = ({
               isMine={isMine}
               key={message.messageId}
             >
-              {message.type === MESSAGE_TYPE.File && (
-                <i className="fas fa-paperclip"></i>
-              )}
+              {message.type === 'FILE' && <i className="fas fa-paperclip"></i>}
               <span>{message.message}</span>
             </Message>
           ))}
         </MessageContainer>
         <UserAvatar
-          avatarUrl={
-            isMine ? LoginUserData.avatarUrl : participants[userId]?.avatarUrl
-          }
+          avatarUrl={isMine ? userData.avatarUrl : targetUser?.avatarUrl || ''}
           width="40px"
         />
       </ChatMessageContainer>

@@ -1,13 +1,11 @@
 import styled from 'styled-components';
 
-import { MESSAGE_TYPE } from '../../features/chatData/chatDataTypes';
-
 interface FlexDirection {
   isMine: boolean;
 }
 
 interface MessageType {
-  type: MESSAGE_TYPE;
+  type: string;
   isMine: boolean;
 }
 
@@ -33,9 +31,8 @@ export const Message = styled.div<MessageType>`
     props.isMine ? props.theme.purple : props.theme.background};
   color: ${props => (props.isMine ? `white` : props.theme.primaryText)};
   width: auto;
-  background-color: ${props =>
-    props.type === MESSAGE_TYPE.File && `rgb(232,232,242)`};
-  color: ${props => props.type === MESSAGE_TYPE.File && props.theme.purple};
+  background-color: ${props => props.type === 'FILE' && `rgb(232,232,242)`};
+  color: ${props => props.type === 'FILE' && props.theme.purple};
   padding: 10px 20px;
   margin: 10px 20px 0px;
   border-radius: 20px;
@@ -45,13 +42,13 @@ export const Message = styled.div<MessageType>`
     padding-right: 10px;
   }
   ${props =>
-    props.type === MESSAGE_TYPE.Text &&
+    props.type === 'TEXT' &&
     (props.isMine
       ? `border-top-right-radius: 0;`
       : `border-top-left-radius: 0;`)}
 
   ${props =>
-    props.type === MESSAGE_TYPE.File &&
+    props.type === 'FILE' &&
     `
     font-weight: 600;
     &:hover {

@@ -6,14 +6,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import MessageCard from './MessageCard';
 
 // types
-import { ChatRoom } from './messageCardTypes';
+import { Chatroom } from './messageCardTypes';
 
 // styled-components
 import {
   MessageListContainer,
   MessageListUpperContainer,
   LogoContainer,
-  LogoImage,
   SortButton,
   SortIcon,
   SortText,
@@ -24,41 +23,64 @@ import {
 } from '../../../styles/chatStyles/messageList-styles';
 
 import {
-  fetchChatRoom,
+  fetchChatroomInfo,
   selectChatRooms,
-} from '../../../features/chatroom/chatRoomSlice';
+} from '../../../features/chatroom/chatroomSlice';
+import { getUserData } from '../../../features/auth/authSlice';
+import ChatroomType from '../../../features/chatroom/chatroomTypes';
 
 const MessageList = (): JSX.Element => {
   const dispatch = useDispatch();
-  const chatRooms = useSelector(selectChatRooms);
+  const userData = useSelector(getUserData);
+  const { chatroomIds } = useSelector(getUserData);
+  const chatrooms = useSelector(selectChatRooms);
   const [searchUsername, setSearchUserName] = useState<string>('');
   const searchHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchUserName(e.target.value.trim());
   };
 
+  const dispatchAllChatRooms = () => {
+    const chatroomSet = new Set(chatroomIds);
+    chatroomSet.forEach((chatroomId: string) => {
+      dispatch(fetchChatroomInfo(chatroomId));
+    });
+  };
+
   useEffect(() => {
-    dispatch(fetchChatRoom());
+    dispatchAllChatRooms();
   }, []);
 
   const filterMessageCards = (): JSX.Element[] => {
-    if (chatRooms === undefined) return [];
-    if (searchUsername !== '') {
-      return chatRooms
-        .filter(
-          (data: ChatRoom) =>
-            data.chatroomName
-              .toLowerCase()
-              .indexOf(searchUsername.toLowerCase()) !== -1
-        )
-        .map(
-          (data: ChatRoom): JSX.Element => (
-            <MessageCard {...data} key={nanoid()} />
+    if (chatrooms.length > 0) {
+      console.log(chatrooms);
+      if (searchUsername !== '') {
+        return chatrooms
+          .filter(
+            (data: ChatroomType) =>
+              data.participants
+                .filter(user => user.email !== userData.email)
+                .map(user => user.nickname)
+                .join(' ')
+                .toLowerCase()
+                .indexOf(searchUsername.toLowerCase()) !== -1
           )
-        );
+          .map(
+            (data: ChatroomType): JSX.Element => (
+              <MessageCard
+                {...data}
+                email={userData.email}
+                key={data.chatroomId}
+              />
+            )
+          );
+      }
+      return chatrooms.map(
+        (data: ChatroomType): JSX.Element => (
+          <MessageCard {...data} email={userData.email} key={data.chatroomId} />
+        )
+      );
     }
-    return chatRooms.map(
-      (data: ChatRoom): JSX.Element => <MessageCard {...data} key={nanoid()} />
-    );
+    return [];
   };
   return (
     <MessageListContainer>
@@ -66,7 +88,7 @@ const MessageList = (): JSX.Element => {
         {/* Logo */}
         <LogoContainer>
           {/* <LogoImage src="assets/logo.svg"></LogoImage> */}
-          <h1>Chatting</h1>
+          <h1>TALKI</h1>
           <SortButton>
             <SortIcon>
               <i className="fas fa-sort-amount-down-alt"></i>

@@ -65,6 +65,7 @@ export const SignInFormContainer = styled.div`
     width: 500px;
     label {
       font-weight: 700;
+      margin-top: 5px;
     }
     input {
       height: 35px;
@@ -72,7 +73,7 @@ export const SignInFormContainer = styled.div`
       border: none;
       outline: none;
       background-color: ${props => props.theme.divider};
-      margin: 5px 0 20px;
+      margin: 5px 0;
       padding-left: 10px;
       transition: 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
       &:hover {
@@ -93,6 +94,7 @@ export const SignInFormContainer = styled.div`
       background-color: ${props => props.theme.purple};
       color: white;
       width: 50%;
+      margin-top: 10px;
       &:hover {
         background-color: ${props => props.theme.secondaryPurple};
       }

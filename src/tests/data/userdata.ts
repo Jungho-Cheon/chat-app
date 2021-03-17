@@ -1,7 +1,7 @@
 import { nanoid } from '@reduxjs/toolkit';
-import { ChatRoom } from '../../components/chatPage/messageList/messageCardTypes';
+import { Chatroom } from '../../components/chatPage/messageList/messageCardTypes';
 
-export const testData: ChatRoom[] = [
+export const testData: Chatroom[] = [
   {
     chatroomId: 'ChatRoom1',
     chatroomName: 'Johnson Park',

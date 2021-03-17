@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 
 // styled-components
 import {
@@ -12,13 +12,23 @@ import {
   GoogleLoginButton,
   DividerContainer,
   FacebookLoginButton,
-} from '../styles/signStyles/signInPage-styles';
+} from '../styles/authStyles/signInPage-styles';
 
 // lottie
 import Lottie from 'react-lottie';
 import animationData from '../lotties/PRODUCT/Animation 07/drawkit-grape-animation-7-LOOP.json';
+import ValidationNotifier from '../components/authPage/ValidationNotifier';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  getSignInState,
+  SignInState,
+  signInThunk,
+} from '../features/auth/authSlice';
 
 const SignInPage = (): JSX.Element => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const currentSignInState = useSelector(getSignInState);
   const defaultOptions = {
     loop: true,
     autoplay: true,
@@ -27,8 +37,43 @@ const SignInPage = (): JSX.Element => {
       preserveAspectRatio: 'xMidYMid slice',
     },
   };
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [emailValidation, setEmailValidation] = useState<boolean>(true);
+  const [passwordValidation, setPasswordValidation] = useState<boolean>(true);
+  const emailRef = useRef(null);
+
+  const passwordRef = useRef(null);
+  const validateForm = (email: string, password: string) => {
+    const emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+    const isValidEmail = emailRegex.test(email);
+    const isValidPassword = password.trim().length >= 6;
+    setEmailValidation(isValidEmail);
+    setPasswordValidation(isValidPassword);
+    return isValidEmail && isValidPassword;
+  };
+  const requestSignIn = () => {
+    const isValid = validateForm(email, password);
+    if (isValid) {
+      dispatch(signInThunk({ email, password }));
+    }
+  };
+  const handleEnterKeyPress = (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (event.key === 'Enter') {
+      requestSignIn();
+    }
+  };
+  useEffect(() => {
+    const changePage = () => {
+      if (currentSignInState.state === SignInState.SUCCESS)
+        history.push('/chat');
+    };
+    changePage();
+  }, [currentSignInState.state]);
   return (
-    <SignInContainer>
+    <SignInContainer onKeyPress={handleEnterKeyPress}>
       <SidebarSection>
         <SidebarContainer>
           <div className="sidebar__home">
@@ -73,10 +118,41 @@ const SignInPage = (): JSX.Element => {
               </div>
             </DividerContainer>
             <label htmlFor="email">Email</label>
-            <input type="text" id="email"></input>
+            <input
+              type="text"
+              id="email"
+              ref={emailRef}
+              onChange={e => setEmail(e.target.value)}
+            ></input>
+            {currentSignInState.state === SignInState.EMAIL_INVALID ? (
+              <ValidationNotifier
+                message={currentSignInState.message}
+                isShown={true}
+              />
+            ) : (
+              <ValidationNotifier
+                message="please enter valid e-mail address."
+                isShown={!emailValidation}
+              />
+            )}
             <label htmlFor="password">Password</label>
-            <input type="password"></input>
-            <button type="button" id="submit">
+            <input
+              type="password"
+              ref={passwordRef}
+              onChange={e => setPassword(e.target.value)}
+            ></input>
+            {currentSignInState.state === SignInState.PASSWORD_INVALID ? (
+              <ValidationNotifier
+                message={currentSignInState.message}
+                isShown={true}
+              />
+            ) : (
+              <ValidationNotifier
+                message="Password must be at least 6 characters."
+                isShown={!passwordValidation}
+              />
+            )}
+            <button type="button" id="submit" onClick={requestSignIn}>
               Sign In
             </button>
           </div>

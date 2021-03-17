@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { userDataSelector } from '../../features/login/loginSlice';
+import { getUserData } from '../../features/auth/authSlice';
 
 // styled-components
 import {
@@ -15,7 +15,7 @@ import {
 import UserAvatar from './avatar/UserAvatar';
 
 const Header = (): JSX.Element => {
-  const userInfo = useSelector(userDataSelector);
+  const userInfo = useSelector(getUserData);
   return (
     <HeaderContainer>
       <UserMenu>
@@ -33,7 +33,7 @@ const Header = (): JSX.Element => {
         <UserInfoContainer>
           <UserAvatar avatarUrl={userInfo.avatarUrl} width="40px" />
           <UserInfo>
-            <p>{userInfo.userName} 님</p>
+            <p>{userInfo.nickname} 님</p>
           </UserInfo>
         </UserInfoContainer>
       </UserMenu>
