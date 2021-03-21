@@ -18,26 +18,21 @@ import {
 // redux
 import { getUserData } from '../../../features/auth/authSlice';
 import {
+  getCurrentChatroom,
   getCurrentChatroomId,
-  receiveMessage,
-  sendComplete,
   sendMessage,
 } from '../../../features/chatroom/chatroomSlice';
 import { nanoid } from '@reduxjs/toolkit';
-import {
-  CompleteMessageProps,
-  SendMessageProps,
-} from '../../../features/chatroom/chatroomTypes';
-
-import { socket } from '../../../service/socket';
+import { socket } from '../../../features/socket/socketSlice';
 
 const ChatInput = (): JSX.Element => {
   const dispatch = useDispatch();
-  const { email, chatroomIds } = useSelector(getUserData);
+  const { email, chatroomIds, friendData } = useSelector(getUserData);
+  const currentChatroom = useSelector(getCurrentChatroom);
   const currentChatroomId = useSelector(getCurrentChatroomId);
   const [isEmojiOpened, setIsEmojiOpened] = useState(false);
   const [text, setText] = useState<string>('');
-
+  const [nickname, setNickname] = useState<string>('');
   const textInput = useRef<HTMLInputElement>(null);
 
   const emojiClick = (
@@ -51,6 +46,15 @@ const ChatInput = (): JSX.Element => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setText(event.target.value);
+    if (currentChatroomId && socket.connected) {
+      socket.emit(
+        'CHAT_TYPING',
+        JSON.stringify({
+          chatroomId: currentChatroomId,
+          email,
+        })
+      );
+    }
   };
   const handleEnterKeyPress = (
     event: React.KeyboardEvent<HTMLInputElement>
@@ -89,12 +93,30 @@ const ChatInput = (): JSX.Element => {
           })
         );
       }
+      socket.emit(
+        'CHAT_TYPING',
+        JSON.stringify({
+          chatroomId: currentChatroomId,
+          email: '',
+        })
+      );
       setText('');
     }
   };
 
+  useEffect(() => {
+    if (currentChatroom.chatingUser)
+      setNickname(friendData[currentChatroom.chatingUser].nickname);
+    else setNickname('');
+  }, [currentChatroom.chatingUser]);
+
   return (
     <ChatInputContainer>
+      {currentChatroom.chatingUser && nickname && (
+        <div className="Chat__typing">
+          <p><span>{nickname}</span>님이 입력중입니다.</p>
+        </div>
+      )}
       <UploadFileButton>
         <i className="fas fa-paperclip"></i>
       </UploadFileButton>

@@ -63,6 +63,7 @@ export interface ReadCheckChatroomProps {
 export default interface ChatroomType {
   chatroomId: string;
   unreadCount: number;
+  chatingUser: string;
   participants: Participant[];
   chatMessages: ChatData[];
 }

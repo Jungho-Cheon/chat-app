@@ -2,7 +2,7 @@ import {
   SignInProps,
   SignInResponse,
   SignUpProps,
-} from '../features/auth/authSlice';
+} from '../features/auth/authTypes';
 
 const AuthClient = class {
   hostUrl: string;

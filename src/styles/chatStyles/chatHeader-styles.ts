@@ -25,6 +25,11 @@ export const PartnerStatusContainer = styled.div<isOnlineProp>`
     margin-bottom: 8px;
     color: ${props => props.isOnline && props.theme.primaryText};
   }
+  p.description {
+    font-weight: 400;
+    font-size: 0.8rem;
+    padding-top: 10px;
+  }
 `;
 
 export const PartnerStatus = styled.div<isOnlineProp>`
@@ -40,7 +45,7 @@ export const StatusIndicator = styled.div<isOnlineProp>`
   background: ${props =>
     props.isOnline ? `rgb(68, 207, 114)` : props.theme.secondaryText};
   border-radius: 50%;
-  margin: 2px 10px 0 0;
+  margin: 4px;
 `;
 
 export const ChatMenu = styled.div`

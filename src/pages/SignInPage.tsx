@@ -21,14 +21,23 @@ import ValidationNotifier from '../components/authPage/ValidationNotifier';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   getSignInState,
-  SignInState,
   signInThunk,
 } from '../features/auth/authSlice';
+
+// redux
+import { connectSocket } from '../features/socket/socketSlice';
+import { SignInState } from '../features/auth/authTypes';
 
 const SignInPage = (): JSX.Element => {
   const dispatch = useDispatch();
   const history = useHistory();
   const currentSignInState = useSelector(getSignInState);
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [emailValidation, setEmailValidation] = useState<boolean>(true);
+  const [passwordValidation, setPasswordValidation] = useState<boolean>(true);
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
   const defaultOptions = {
     loop: true,
     autoplay: true,
@@ -37,13 +46,6 @@ const SignInPage = (): JSX.Element => {
       preserveAspectRatio: 'xMidYMid slice',
     },
   };
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [emailValidation, setEmailValidation] = useState<boolean>(true);
-  const [passwordValidation, setPasswordValidation] = useState<boolean>(true);
-  const emailRef = useRef(null);
-
-  const passwordRef = useRef(null);
   const validateForm = (email: string, password: string) => {
     const emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
     const isValidEmail = emailRegex.test(email);
@@ -66,9 +68,12 @@ const SignInPage = (): JSX.Element => {
     }
   };
   useEffect(() => {
-    const changePage = () => {
-      if (currentSignInState.state === SignInState.SUCCESS)
+    const changePage = async () => {
+      if (currentSignInState.state === SignInState.SUCCESS) {
+        console.log('changePage()');
+        await connectSocket(email);
         history.push('/chat');
+      }
     };
     changePage();
   }, [currentSignInState.state]);

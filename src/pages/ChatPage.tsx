@@ -9,7 +9,6 @@ import ChatMain from '../components/chatPage/chat/ChatMain';
 import { ChatPageContainer } from '../styles/chatStyles/chatPage-styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserData } from '../features/auth/authSlice';
-import { socket } from '../service/socket';
 import {
   CheckReadMessageProps,
   CompleteMessageProps,
@@ -24,15 +23,16 @@ import {
 } from '../features/chatroom/chatroomSlice';
 import { useHistory } from 'react-router';
 
+// socket 
+import {socket} from '../features/socket/socketSlice'
+
 const ChatPage = (): JSX.Element => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { email, chatroomIds } = useSelector(getUserData);
+
   useEffect((): (() => void) => {
     if (email) {
-      socket.on('connection', async data => {
-        dispatch(initSocketId(data));
-      });
       chatroomIds.forEach(chatroomId => {
         socket.emit(
           'JOIN_ROOM',
@@ -41,19 +41,6 @@ const ChatPage = (): JSX.Element => {
             chatroomId,
           })
         );
-      });
-      socket.on('SEND_COMPLETE', async data => {
-        const sendCompleteProps: CompleteMessageProps = JSON.parse(data);
-        dispatch(sendComplete(sendCompleteProps));
-      });
-      socket.on('RECEIVE_MESSAGE', async data => {
-        const receivedMessage: SendMessageProps = JSON.parse(data);
-        dispatch(receiveMessage({ ...receivedMessage, userEmail: email }));
-      });
-      socket.on('READ_MESSAGE', async data => {
-        const checkReadMessageProps: CheckReadMessageProps = JSON.parse(data);
-        console.log('READ_MESSAGE - ', checkReadMessageProps);
-        dispatch(checkReadMessage(checkReadMessageProps));
       });
     } else {
       history.push('/sign-in');

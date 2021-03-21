@@ -23,7 +23,7 @@ import {
   checkReadMessages,
 } from '../../../features/chatroom/chatroomSlice';
 import ChatroomType from '../../../features/chatroom/chatroomTypes';
-import { getUserData, UserData } from '../../../features/auth/authSlice';
+import { getUserData } from '../../../features/auth/authSlice';
 
 // services
 import { calcTimeAgo } from '../../../service/time';
@@ -45,19 +45,24 @@ const MessageCard: React.FunctionComponent<MessageCardProps> = ({
   const [chatroomName, setChatroomName] = useState<string>('');
   const [previewMessage, setPreviewMessage] = useState<string>('');
   const [timeAgo, setTimeAgo] = useState<string>('');
+  const { friendData } = useSelector(getUserData);
 
   const selectChatRoom = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (unreadCount > 0) dispatch(checkOutChatroom({ chatroomId, email }));
+    if (unreadCount > 0) {
+      dispatch(checkOutChatroom({ chatroomId, email }));
+      dispatch(checkReadMessages({ chatroomId, email }));
+    }
     dispatch(changeChatroom(chatroomId));
-    dispatch(checkReadMessages({ chatroomId, email }));
   };
 
   // const countUnreadMessages = () => {};
   useEffect(() => {
-    const otherUser = participants.filter(user => user.email !== email)[0];
-    setChatroomAvatar(otherUser.avatarUrl);
-    setChatroomName(otherUser.nickname);
+    const targetUserEmail = participants.filter(user => user.email !== email)[0]
+      .email;
+    const targetUserData = friendData[targetUserEmail];
+    setChatroomAvatar(targetUserData.avatarUrl);
+    setChatroomName(targetUserData.nickname);
     if (chatMessages.length > 0) {
       const lastMessages = chatMessages[chatMessages.length - 1].messages;
       const lastMessage = lastMessages[lastMessages.length - 1];

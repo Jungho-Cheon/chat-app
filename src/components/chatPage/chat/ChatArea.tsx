@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 // redux
 import { useSelector } from 'react-redux';
@@ -13,26 +13,25 @@ import {
   ChatPaneWrapper,
 } from '../../../styles/chatStyles/chatArea-styles';
 import { nanoid } from '@reduxjs/toolkit';
+import { getUserData } from '../../../features/auth/authSlice';
+import { FriendData } from '../../../features/auth/authTypes';
 
 const ChatArea = (): JSX.Element => {
   const currentChatroom = useSelector(getCurrentChatroom);
   const chatPaneContainer = useRef<HTMLDivElement>(null);
+  const userData = useSelector(getUserData);
 
   useEffect(() => {
     // scroll to bottom
     if (chatPaneContainer.current !== null)
       chatPaneContainer.current.scrollTop =
         chatPaneContainer.current.scrollHeight;
-  }, [currentChatroom]);
+  }, [currentChatroom.chatMessages]);
 
   const createChatMessage = () => {
-    const { chatMessages, participants } = currentChatroom;
+    const { chatMessages } = currentChatroom;
     return chatMessages.map(chatMessage => (
-      <ChatMessage
-        chatMessage={chatMessage}
-        participants={participants}
-        key={nanoid()}
-      />
+      <ChatMessage chatMessage={chatMessage} key={nanoid()} />
     ));
   };
   return (

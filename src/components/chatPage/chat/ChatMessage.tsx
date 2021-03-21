@@ -13,37 +13,32 @@ import {
 import { useSelector } from 'react-redux';
 import { getUserData } from '../../../features/auth/authSlice';
 
-import {
-  ChatData,
-  Participant,
-} from '../../../features/chatroom/chatroomTypes';
+import { ChatData } from '../../../features/chatroom/chatroomTypes';
 
 interface ChatMessageProps {
   chatMessage: ChatData;
-  participants: Participant[];
 }
+
+const convertTime = (time: string) => {
+  const sendTime = new Date(Date.parse(time) - 9 * 1000 * 60 * 60);
+  const prefix = sendTime.getHours() < 12 ? '오전' : '오후';
+  const hours = (sendTime.getHours() % 12).toString().padStart(2, '0');
+  const minutes = sendTime.getMinutes().toString().padStart(2, '0');
+  return prefix + ' ' + hours + ':' + minutes;
+};
 
 const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
   chatMessage,
-  participants,
 }: ChatMessageProps): JSX.Element => {
   const { email, messages } = chatMessage;
   const userData = useSelector(getUserData);
   const isMine = email === userData.email;
-  const targetUser: Participant = participants.filter(
-    user => user.email !== userData.email
-  )[0];
-  const isRead = chatMessage.messages.every(message =>
-    message.readUsers?.includes(targetUser.email)
-  );
-
-  const convertTime = (time: string) => {
-    const sendTime = new Date(Date.parse(time) - 9 * 1000 * 60 * 60);
-    const prefix = sendTime.getHours() < 12 ? '오전' : '오후';
-    const hours = (sendTime.getHours() % 12).toString().padStart(2, '0');
-    const minutes = sendTime.getMinutes().toString().padStart(2, '0');
-    return prefix + ' ' + hours + ':' + minutes;
-  };
+  const isRead =
+    isMine &&
+    chatMessage.messages.every(message => message.readUsers?.length >= 2);
+  const avatarUrl = isMine
+    ? userData.avatarUrl
+    : userData.friendData[email]?.avatarUrl;
   return (
     <ChatMessageFlexDirection isMine={isMine}>
       <ChatMessageContainer isMine={isMine}>
@@ -75,10 +70,7 @@ const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
             </div>
           )}
         </MessageContainer>
-        <UserAvatar
-          avatarUrl={isMine ? userData.avatarUrl : targetUser?.avatarUrl || ''}
-          width="40px"
-        />
+        <UserAvatar avatarUrl={avatarUrl || ''} width="40px" />
       </ChatMessageContainer>
     </ChatMessageFlexDirection>
   );

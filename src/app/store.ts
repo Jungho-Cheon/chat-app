@@ -5,13 +5,11 @@ import authReducer from '../features/auth/authSlice';
 import themeReducer from '../features/theme/themeSlice';
 
 const store = configureStore({
-  reducer: combineReducers({
-    chatroom: chatroomReducer,
+  reducer: {
     auth: authReducer,
+    chatroom: chatroomReducer,
     theme: themeReducer,
-  }),
+  },
 });
-
-export type Dispatch = typeof store.dispatch;
 
 export default store;

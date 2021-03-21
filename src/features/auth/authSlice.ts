@@ -1,6 +1,14 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootStateOrAny } from 'react-redux';
 import Client from '../../client/authClient';
+import {
+  SignInProps,
+  SignInResponse,
+  SignInState,
+  SignUpProps,
+  SignUpState,
+  UserData,
+} from './authTypes';
 
 if (!process.env.REACT_APP_SERVER_URL) {
   console.error('server url required!');
@@ -9,44 +17,6 @@ if (!process.env.REACT_APP_SERVER_URL) {
 }
 const SERVER_URL = process.env.REACT_APP_SERVER_URL || '';
 const client = new Client(SERVER_URL.toString());
-
-export interface SignUpProps {
-  email: string;
-  nickname: string;
-  password: string;
-}
-
-export interface SignInProps {
-  email: string;
-  password: string;
-}
-
-export interface UserData {
-  email: string;
-  nickname: string;
-  avatarUrl: string;
-  chatroomIds: string[];
-}
-
-export interface SignInResponse {
-  statusCode: number;
-  message: string;
-  userData: UserData;
-  accessToken: string;
-}
-
-export enum SignUpState {
-  IDLE,
-  SUCCESS,
-  FAILED,
-}
-
-export enum SignInState {
-  IDLE,
-  SUCCESS,
-  EMAIL_INVALID,
-  PASSWORD_INVALID,
-}
 
 // Async Thunks
 export const signUpThunk = createAsyncThunk(
@@ -63,12 +33,18 @@ export const signInThunk = createAsyncThunk(
   }
 );
 
-const initialState = {
+const initialState: {
+  accessToken: string;
+  userData: UserData;
+  signUpState: SignUpState;
+  signInState: { state: SignInState; message: string };
+} = {
   accessToken: '',
   userData: {
     email: '',
     nickname: '',
     avatarUrl: '',
+    friendData: {},
     chatroomIds: new Array<string>(),
   },
   signUpState: SignUpState.IDLE,
@@ -82,10 +58,25 @@ const authSlice = createSlice({
       state.signUpState = SignUpState.IDLE;
       return state;
     },
+    userOffline(state, { payload }) {
+      const email = payload;
+      const friendData = state.userData.friendData[email];
+      if (friendData) {
+        friendData.isLoggin = false;
+      }
+    },
+    userOnline(state, { payload }) {
+      const email = payload;
+      const friendData = state.userData.friendData[email];
+      if (friendData) {
+        friendData.isLoggin = true;
+      }
+    },
   },
   extraReducers: builder => {
     // 로그인 응답 처리
     builder.addCase(signInThunk.fulfilled, (state, { payload }) => {
+      console.log(payload);
       const { accessToken, message, statusCode, userData } = payload;
       if (statusCode === 200) {
         state.accessToken = accessToken;
@@ -112,7 +103,7 @@ const authSlice = createSlice({
 });
 
 // actions
-export const { clearSignUpState } = authSlice.actions;
+export const { clearSignUpState, userOffline, userOnline } = authSlice.actions;
 
 // selectors
 export const getSignUpState = (state: RootStateOrAny): SignUpState =>

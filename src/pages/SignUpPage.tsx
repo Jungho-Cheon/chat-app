@@ -22,10 +22,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   clearSignUpState,
   getSignUpState,
-  SignUpState,
   signUpThunk,
 } from '../features/auth/authSlice';
 import { SignInButton } from '../styles/homeStyles/homeHeader-styles';
+import { SignUpState } from '../features/auth/authTypes';
 
 const SignUpPage = (): JSX.Element => {
   const dispatch = useDispatch();

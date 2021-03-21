@@ -9,6 +9,24 @@ export const ChatInputContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 20px 40px;
+  div.Chat__typing {
+    position: absolute;
+    left: 50%;
+    top: -40px;
+    height: 30px;
+    padding: 8px 20px;
+    text-align: center;
+    transform: translateX(-50%);
+    border-radius: 20px;
+    background-color: ${props => props.theme.orange};
+    p {
+      color: white;
+      font-size: 0.7rem;
+      span {
+        font-weight: 700;
+      }
+    }
+  }
 `;
 
 export const UploadFileButton = styled.div`

@@ -28,6 +28,15 @@ export const ChatPaneContainer = styled.div`
       border-radius: 50px;
     }
   }
+  div.ChatPane__typing {
+    position: absolute;
+    bottom: 20px;
+    left: 100px;
+
+    p {
+      color: red;
+    }
+  }
 `;
 
 export const ChatPaneWrapper = styled.div`
