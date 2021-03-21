@@ -84,14 +84,14 @@ export const DropdownContents = styled.div`
 
     &:after {
       border-color: rgba(255, 255, 255, 0);
-      border-bottom-color: #ffffff;
+      border-bottom-color: ${props => props.theme.background};
       border-width: 5px;
       background-clip: padding-box;
     }
 
     &:before {
       border-color: rgba(184, 184, 184, 0);
-      border-bottom-color: white;
+      border-bottom-color: ${props => props.theme.background};
       border-width: 6px;
       background-clip: padding-box;
     }

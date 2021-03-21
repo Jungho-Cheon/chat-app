@@ -11,31 +11,31 @@ import {
   ChatTextInput,
   EmojiButton,
   EmojiPickerWrapper,
+  EmojiPickerContainer,
   ChatSendButton,
 } from '../../../styles/chatStyles/chatInput-styles';
 
 // redux
-import {
-  isEmojiOpenedSelector,
-  toggleEmojiContainer,
-} from '../../../features/emoji/emojiSlice';
 import { getUserData } from '../../../features/auth/authSlice';
 import {
   getCurrentChatroomId,
+  receiveMessage,
   sendComplete,
   sendMessage,
 } from '../../../features/chatroom/chatroomSlice';
 import { nanoid } from '@reduxjs/toolkit';
-import { io, Socket } from 'socket.io-client';
+import {
+  CompleteMessageProps,
+  SendMessageProps,
+} from '../../../features/chatroom/chatroomTypes';
 
-// Socket
-const SERVER_URL = process.env.REACT_APP_SERVER_URL || '';
-const socket: Socket = io(SERVER_URL);
+import { socket } from '../../../service/socket';
+
 const ChatInput = (): JSX.Element => {
   const dispatch = useDispatch();
-  const { email } = useSelector(getUserData);
+  const { email, chatroomIds } = useSelector(getUserData);
   const currentChatroomId = useSelector(getCurrentChatroomId);
-  const isEmojiOpened = useSelector(isEmojiOpenedSelector);
+  const [isEmojiOpened, setIsEmojiOpened] = useState(false);
   const [text, setText] = useState<string>('');
 
   const textInput = useRef<HTMLInputElement>(null);
@@ -70,6 +70,7 @@ const ChatInput = (): JSX.Element => {
             message: {
               message: text,
               messageId,
+              readUsers: new Array<string>(email),
               messageType: 'TEXT',
               isComplete: false,
             },
@@ -92,17 +93,6 @@ const ChatInput = (): JSX.Element => {
     }
   };
 
-  useEffect((): (() => void) => {
-    if (email) {
-      socket.connect();
-      socket.on('SEND_COMPLETE', async data => {
-        const sendCompleteProps = JSON.parse(data);
-        console.log(sendCompleteProps);
-        dispatch(sendComplete(sendCompleteProps));
-      });
-    }
-    return () => socket?.close();
-  }, []);
   return (
     <ChatInputContainer>
       <UploadFileButton>
@@ -116,14 +106,22 @@ const ChatInput = (): JSX.Element => {
         onChange={textChange}
         onKeyPress={handleEnterKeyPress}
       />
-      <EmojiButton onClick={() => dispatch(toggleEmojiContainer())}>
+      <EmojiButton onClick={() => setIsEmojiOpened(!isEmojiOpened)}>
         <i className="far fa-smile"></i>
       </EmojiButton>
-      {isEmojiOpened && (
-        <EmojiPickerWrapper onClick={() => dispatch(toggleEmojiContainer())}>
+      <EmojiPickerWrapper
+        style={{ display: isEmojiOpened ? `block` : `none` }}
+        onClick={event => {
+          event.preventDefault();
+          console.log(event.target, event.currentTarget);
+          setIsEmojiOpened(!isEmojiOpened);
+        }}
+      >
+        <EmojiPickerContainer onClick={e => e.stopPropagation()}>
           <EmojiPicker onEmojiClick={emojiClick} />
-        </EmojiPickerWrapper>
-      )}
+        </EmojiPickerContainer>
+      </EmojiPickerWrapper>
+
       <ChatSendButton onClick={sendMessageHandler}>
         <i className="fas fa-paper-plane"></i>
       </ChatSendButton>

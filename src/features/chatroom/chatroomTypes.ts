@@ -6,6 +6,8 @@ export interface Message {
   messageId: string;
   message: string;
   messageType: string;
+  readUsers: string[];
+  insertDate?: string;
   isComplete?: boolean;
 }
 
@@ -19,13 +21,6 @@ export interface Participant {
   nickname: string;
   avatarUrl: string;
 }
-
-export default interface ChatroomType {
-  chatroomId: string;
-  participants: Participant[];
-  chatMessages: ChatData[];
-}
-
 export enum FETCH_CHATROOM_STATUS {
   IDLE,
   PENDING,
@@ -41,6 +36,33 @@ export interface ChatRoomState {
 
 export interface SendMessageProps {
   chatroomId: string;
-  email: string;
+  email: string; // 보낸 사람
+  userEmail?: string; 
   message: Message;
+  insertDate?: string;
+}
+
+export interface CheckReadMessageProps {
+  chatroomId: string;
+  email: string;
+  messageId: string;
+}
+
+export interface CompleteMessageProps {
+  insertDate: string;
+  chatroomId: string;
+  messageId: string;
+}
+
+// Async Thunk Props
+export interface ReadCheckChatroomProps {
+  chatroomId: string;
+  email: string;
+}
+
+export default interface ChatroomType {
+  chatroomId: string;
+  unreadCount: number;
+  participants: Participant[];
+  chatMessages: ChatData[];
 }

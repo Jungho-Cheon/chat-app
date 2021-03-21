@@ -19,7 +19,6 @@ const ChatArea = (): JSX.Element => {
   const chatPaneContainer = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    console.log('ChatArea :', currentChatroom);
     // scroll to bottom
     if (chatPaneContainer.current !== null)
       chatPaneContainer.current.scrollTop =

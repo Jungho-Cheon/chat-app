@@ -41,7 +41,7 @@ const MessageList = (): JSX.Element => {
   const dispatchAllChatrooms = () => {
     const chatroomSet = new Set(userData.chatroomIds);
     chatroomSet.forEach((chatroomId: string) => {
-      dispatch(fetchChatroomInfo(chatroomId));
+      dispatch(fetchChatroomInfo({ chatroomId, email: userData.email }));
     });
   };
 
@@ -49,11 +49,9 @@ const MessageList = (): JSX.Element => {
     dispatchAllChatrooms();
   }, []);
 
-  console.log('rerender MessageList');
   const filterMessageCards = (): JSX.Element[] => {
     const chatrooms = Array.from(Object.values(chatroomData));
     if (chatrooms.length > 0) {
-      console.log(chatrooms);
       if (searchUsername !== '') {
         return chatrooms
           .filter(
@@ -69,6 +67,7 @@ const MessageList = (): JSX.Element => {
             (data: ChatroomType): JSX.Element => (
               <MessageCard
                 {...data}
+                unreadCount={0}
                 email={userData.email}
                 key={data.chatroomId}
               />
@@ -76,9 +75,15 @@ const MessageList = (): JSX.Element => {
           );
       }
       return chatrooms.map(
-        (data: ChatroomType): JSX.Element => (
-          <MessageCard {...data} email={userData.email} key={data.chatroomId} />
-        )
+        (data: ChatroomType): JSX.Element => {
+          return (
+            <MessageCard
+              {...data}
+              email={userData.email}
+              key={data.chatroomId}
+            />
+          );
+        }
       );
     }
     return [];
@@ -89,7 +94,7 @@ const MessageList = (): JSX.Element => {
         {/* Logo */}
         <LogoContainer>
           {/* <LogoImage src="assets/logo.svg"></LogoImage> */}
-          <h1>TALKI</h1>
+          <h1 className="logo">TALKI</h1>
           <SortButton>
             <SortIcon>
               <i className="fas fa-sort-amount-down-alt"></i>

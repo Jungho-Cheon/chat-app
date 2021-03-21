@@ -1,14 +1,13 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import chatroomReducer from '../features/chatroom/chatroomSlice';
 import authReducer from '../features/auth/authSlice';
-import emojiReducer from '../features/emoji/emojiSlice';
+
 import themeReducer from '../features/theme/themeSlice';
 
 const store = configureStore({
   reducer: combineReducers({
     chatroom: chatroomReducer,
     auth: authReducer,
-    emoji: emojiReducer,
     theme: themeReducer,
   }),
 });

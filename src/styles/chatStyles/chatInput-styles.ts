@@ -46,23 +46,20 @@ export const EmojiButton = styled.div`
 `;
 
 export const EmojiPickerWrapper = styled.div`
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: transparent;
   position: fixed;
-  right: 20px;
-  bottom: 90px;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: transparent;
   z-index: 1;
-  aside {
-    position: absolute;
-    bottom: 100px;
-    right: 20px;
-    z-index: 2;
-  }
 `;
-
+export const EmojiPickerContainer = styled.section`
+  position: absolute;
+  bottom: 100px;
+  right: 60px;
+  z-index: 2;
+`;
 export const ChatSendButton = styled.div`
   width: 50px;
   height: 50px;

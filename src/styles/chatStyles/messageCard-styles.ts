@@ -37,6 +37,8 @@ export const MessageUser = styled.div`
 export const MessagePreview = styled.div`
   font-weight: 400;
   font-size: 0.8rem;
+  word-break: break-all;
+  white-space: initial;
   color: ${props => props.theme.secondaryText};
 `;
 export const MessageInfoContainer = styled.div`
@@ -65,7 +67,4 @@ export const UnreadCount = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  p {
-    margin-top: 0.15rem;
-  }
 `;

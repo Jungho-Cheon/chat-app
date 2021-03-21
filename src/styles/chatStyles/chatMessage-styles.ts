@@ -17,7 +17,7 @@ export const ChatMessageFlexDirection = styled.div<FlexDirection>`
   justify-content: ${props => (props.isMine ? `flex-end` : `flex-start`)};
 `;
 export const MessageContainer = styled.div<FlexDirection>`
-  max-width: 370px;
+  max-width: 420px;
   display: flex;
   flex-direction: column;
   align-items: ${props => (props.isMine ? `flex-end` : `flex-start`)};
@@ -26,6 +26,13 @@ export const MessageContainer = styled.div<FlexDirection>`
     flex-direction: ${props => (props.isMine ? `row` : `row-reverse`)};
     /* justify-content: ${props => (props.isMine ? `flex-end` : ``)}; */
     align-items: center;
+    .message__time {
+      min-width: 45px;
+      color: ${props => props.theme.secondaryText};
+      font-size: 0.6rem;
+      margin-bottom: 20px;
+      align-self: flex-end;
+    }
     i.complete {
       margin-top: 10px;
       color: ${props => props.theme.secondaryText};
@@ -70,6 +77,11 @@ export const ChatMessageContainer = styled.div<FlexDirection>`
   display: flex;
   flex-direction: ${props => (props.isMine ? `row` : `row-reverse`)};
   align-items: flex-start;
+  .message__read {
+    font-size: 0.7rem;
+    color: ${props => props.theme.secondaryText};
+    padding-right: 20px;
+  }
 `;
 export const Message = styled.div<MessageType>`
   opacity: ${props => (props.isCompleted ? 1 : 0.5)};
@@ -80,10 +92,12 @@ export const Message = styled.div<MessageType>`
   background-color: ${props => props.type === 'FILE' && `rgb(232,232,242)`};
   color: ${props => props.type === 'FILE' && props.theme.purple};
   padding: 10px 20px;
-  margin: 10px 20px 0px;
+  margin: 5px 10px 10px;
   border-radius: 20px;
   font-weight: 400;
   line-height: 1.2;
+  word-break: break-all;
+  white-space: initial;
   i {
     padding-right: 10px;
   }

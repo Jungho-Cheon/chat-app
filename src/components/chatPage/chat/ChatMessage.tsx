@@ -33,7 +33,17 @@ const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
   const targetUser: Participant = participants.filter(
     user => user.email !== userData.email
   )[0];
+  const isRead = chatMessage.messages.every(message =>
+    message.readUsers?.includes(targetUser.email)
+  );
 
+  const convertTime = (time: string) => {
+    const sendTime = new Date(Date.parse(time) - 9 * 1000 * 60 * 60);
+    const prefix = sendTime.getHours() < 12 ? '오전' : '오후';
+    const hours = (sendTime.getHours() % 12).toString().padStart(2, '0');
+    const minutes = sendTime.getMinutes().toString().padStart(2, '0');
+    return prefix + ' ' + hours + ':' + minutes;
+  };
   return (
     <ChatMessageFlexDirection isMine={isMine}>
       <ChatMessageContainer isMine={isMine}>
@@ -43,6 +53,9 @@ const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
               {isMine && !message.isComplete && (
                 <i className="fas fa-spinner complete"></i>
               )}
+              <div className="message__time">
+                <p>{message.insertDate && convertTime(message.insertDate)}</p>
+              </div>
               <Message
                 type={message.messageType}
                 isMine={isMine}
@@ -56,6 +69,11 @@ const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
               </Message>
             </div>
           ))}
+          {isMine && isRead && (
+            <div className="message__read">
+              <p>읽음</p>
+            </div>
+          )}
         </MessageContainer>
         <UserAvatar
           avatarUrl={isMine ? userData.avatarUrl : targetUser?.avatarUrl || ''}

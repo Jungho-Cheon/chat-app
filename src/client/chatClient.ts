@@ -1,7 +1,10 @@
 import { Chatroom } from '../components/chatPage/messageList/messageCardTypes';
-import ChatroomType, { SendMessageProps } from '../features/chatroom/chatroomTypes';
+import ChatroomType, {
+  ReadCheckChatroomProps,
+  SendMessageProps,
+} from '../features/chatroom/chatroomTypes';
 
-import {} from '../features/chatroom/chatroomSlice'
+import {} from '../features/chatroom/chatroomSlice';
 
 const ChatClient = class {
   hostUrl: string;
@@ -41,6 +44,20 @@ const ChatClient = class {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ chatroomId }),
+    });
+    return await response.json();
+  }
+  async readCheckChatroom(
+    readCheckChatroomProps: ReadCheckChatroomProps
+  ): Promise<ChatroomType> {
+    const response = await fetch(this.hostUrl + `/chatroom/check`, {
+      method: 'post',
+      mode: 'cors',
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(readCheckChatroomProps),
     });
     return await response.json();
   }

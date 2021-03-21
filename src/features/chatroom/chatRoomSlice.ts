@@ -3,10 +3,15 @@ import { RootStateOrAny } from 'react-redux';
 import { io } from 'socket.io-client';
 
 import Client from '../../client/chatClient';
+import { socket } from '../../service/socket';
 import ChatroomType, {
+  ChatData,
   ChatRoomState,
+  CheckReadMessageProps,
+  CompleteMessageProps,
   FETCH_CHATROOM_STATUS,
   Message,
+  ReadCheckChatroomProps,
   SendMessageProps,
 } from './chatroomTypes';
 
@@ -24,18 +29,30 @@ const initialState: ChatRoomState = {
 // 채팅방 정보 초기화
 export const fetchChatroomInfo = createAsyncThunk(
   'chatroom/fetchChatRoom',
-  async (chatroomId: string): Promise<ChatroomType> => {
-    return await client.fetchChatroomInfo(chatroomId);
+  async (
+    readCheckChatroomProps: ReadCheckChatroomProps
+  ): Promise<ChatroomType> => {
+    const { chatroomId, email } = readCheckChatroomProps;
+    const response = await client.fetchChatroomInfo(chatroomId);
+    let unreadCount = 0;
+    response.chatMessages.forEach(chatMessage =>
+      chatMessage.messages.forEach(message => {
+        message.isComplete = true;
+        !message.readUsers?.includes(email) && unreadCount++;
+      })
+    );
+    response.unreadCount = unreadCount;
+    return response;
   }
 );
 
-// 메세지 전송
-// export const sendMessage = createAsyncThunk(
-//   'chatroom/sendMessage',
-//   async (sendMessageProps: SendMessageProps) => {
-//     const response = await client.sendMessage(sendMessageProps);
-//   }
-// );
+export const checkOutChatroom = createAsyncThunk(
+  'chatroom/checkOutChatroom',
+  async (readCheckChatroomProps: ReadCheckChatroomProps) => {
+    const response = await client.readCheckChatroom(readCheckChatroomProps);
+    return response;
+  }
+);
 
 export const chatroomSlice = createSlice({
   name: 'chatroom',
@@ -53,7 +70,6 @@ export const chatroomSlice = createSlice({
     sendMessage(state, action: PayloadAction<SendMessageProps>) {
       const { chatroomId, email, message } = action.payload;
       if (state.data.hasOwnProperty(chatroomId)) {
-        // const newState = {...state.data[chatroomId]}
         const chatMessages = state.data[chatroomId].chatMessages;
         if (
           chatMessages.length === 0 ||
@@ -66,25 +82,36 @@ export const chatroomSlice = createSlice({
         } else {
           chatMessages[chatMessages.length - 1].messages.push(message);
         }
-        state.data = { ...state.data };
       }
     },
-    sendComplete(
-      state,
-      action: PayloadAction<{ chatroomId: string; messageId: string }>
-    ) {
-      const { chatroomId, messageId } = action.payload;
-      console.log(chatroomId, messageId);
+    sendComplete(state, action: PayloadAction<CompleteMessageProps>) {
+      const { chatroomId, messageId, insertDate } = action.payload;
       state.data[chatroomId].chatMessages.forEach(chatMessage =>
         chatMessage.messages.forEach(message => {
-          if (message.messageId === messageId) message.isComplete = true;
+          if (message.messageId === messageId) {
+            message.isComplete = true;
+            message.insertDate = insertDate;
+          }
         })
       );
     },
     receiveMessage(state, action: PayloadAction<SendMessageProps>) {
-      const { chatroomId, email, message } = action.payload;
+      const { chatroomId, email, userEmail, message } = action.payload;
       if (state.data.hasOwnProperty(chatroomId)) {
         const chatMessages = state.data[chatroomId].chatMessages;
+        console.log(chatroomId);
+        if (state.currentChatroomId !== chatroomId) {
+          state.data[chatroomId].unreadCount++;
+        } else {
+          socket.emit(
+            'READ_MESSAGE',
+            JSON.stringify({
+              chatroomId: chatroomId,
+              email: userEmail,
+              messageId: message.messageId,
+            })
+          );
+        }
         if (
           chatMessages.length === 0 ||
           chatMessages[chatMessages.length - 1].email !== email
@@ -98,15 +125,50 @@ export const chatroomSlice = createSlice({
         }
       }
     },
+    checkReadMessage(state, action: PayloadAction<CheckReadMessageProps>) {
+      const { chatroomId, email, messageId } = action.payload;
+      state.data[chatroomId].chatMessages.forEach(chatMessage =>
+        chatMessage.messages.forEach(
+          message =>
+            message.messageId === messageId && message.readUsers.push(email)
+        )
+      );
+      console.log('checkReadMessage');
+      return state;
+    },
+    checkReadMessages(state, action: PayloadAction<ReadCheckChatroomProps>) {
+      // 채팅방 선택시 안읽은 메시지 수 초기화 및 읽음 emit
+      const { chatroomId, email } = action.payload;
+      state.data[chatroomId].unreadCount = 0;
+      const chatMessages = state.data[chatroomId].chatMessages;
+
+      const unreadMessageIds: string[] = [];
+      chatMessages.forEach(chatMessage =>
+        chatMessage.messages.forEach(message => {
+          if (!message.readUsers.includes(email)) {
+            message.readUsers.push(email);
+            unreadMessageIds.push(message.messageId);
+          }
+        })
+      );
+      socket.emit(
+        'READ_MESSAGE',
+        JSON.stringify({
+          chatroomId: chatroomId,
+          email: email,
+          messageId: unreadMessageIds,
+        })
+      );
+    },
   },
   extraReducers: builder => {
     builder.addCase(fetchChatroomInfo.fulfilled, (state, { payload }) => {
-      payload.chatMessages.forEach(chatMessage =>
-        chatMessage.messages.forEach(message => {
-          message.isComplete = true;
-        })
-      );
+      console.log(payload);
       state.data[payload.chatroomId] = payload;
+      return state;
+    });
+    builder.addCase(checkOutChatroom.fulfilled, state => {
+      return state;
     });
   },
 });
@@ -125,6 +187,7 @@ export const getCurrentChatroom = (state: RootStateOrAny): ChatroomType => {
   if (!currentChatroom)
     return {
       chatroomId: '',
+      unreadCount: 0,
       chatMessages: [],
       participants: [],
     };
@@ -138,6 +201,8 @@ export const {
   sendMessage,
   sendComplete,
   receiveMessage,
+  checkReadMessage,
+  checkReadMessages,
 } = chatroomSlice.actions;
 
 export default chatroomSlice.reducer;

@@ -19,10 +19,11 @@ export const LogoContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  h1 {
-    font-weight: 500;
+  h1.logo {
+    font-weight: 900;
     font-size: 2rem;
     color: ${props => props.theme.primaryText};
+    font-family: 'Pangolin', cursive;
   }
 `;
 
