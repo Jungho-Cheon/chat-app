@@ -9,21 +9,55 @@ export const ChatInputContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 20px 40px;
-  div.Chat__typing {
+  div.ChatInput__Typing {
     position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     left: 50%;
-    top: -40px;
+    top: -20px;
     height: 30px;
-    padding: 8px 20px;
     text-align: center;
     transform: translateX(-50%);
     border-radius: 20px;
-    background-color: ${props => props.theme.orange};
+    div.wave {
+      position: relative;
+      height: 20px;
+      margin-right: 3px;
+      div.dot {
+        display: inline-block;
+        width: 0.3rem;
+        height: 0.3rem;
+        border-radius: 50%;
+        margin-right: 3px;
+        background: ${props => props.theme.primaryText};
+        animation: wave 1.3s linear infinite;
+
+        &:nth-child(2) {
+          animation-delay: -1.1s;
+        }
+
+        &:nth-child(3) {
+          animation-delay: -0.9s;
+        }
+        @keyframes wave {
+          0%,
+          60%,
+          100% {
+            transform: initial;
+          }
+
+          30% {
+            transform: translateY(-5px);
+          }
+        }
+      }
+    }
     p {
-      color: white;
+      color: ${props => props.theme.primaryText};
       font-size: 0.7rem;
       span {
-        font-weight: 700;
+        font-weight: 400;
       }
     }
   }

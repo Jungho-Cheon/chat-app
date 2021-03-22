@@ -38,8 +38,7 @@ socket.on('connect', () => {
 });
 socket.on('CHAT_TYPING', async data => {
   const { chatroomId, email } = JSON.parse(data);
-  console.log(`CHAT_TYPING ${chatroomId} ${email}`);
-  store.dispatch(toggleChatTyping({chatroomId, email}));
+  store.dispatch(toggleChatTyping({ chatroomId, email }));
 });
 socket.on('SEND_COMPLETE', async data => {
   const sendCompleteProps: CompleteMessageProps = JSON.parse(data);
@@ -52,16 +51,14 @@ socket.on('RECEIVE_MESSAGE', async data => {
 });
 socket.on('READ_MESSAGE', async data => {
   const checkReadMessageProps: CheckReadMessageProps = JSON.parse(data);
-  console.log('READ_MESSAGE - ', checkReadMessageProps);
   store.dispatch(checkReadMessage(checkReadMessageProps));
 });
 socket.on('USER_ONLINE', async data => {
   const { email } = JSON.parse(data);
-  console.log(`USER_ONLINE ${email}`);
+
   store.dispatch(userOnline(email));
 });
 socket.on('USER_OFFLINE', async data => {
   const { email } = JSON.parse(data);
-  console.log(`USER_OFFLINE ${email}`);
   store.dispatch(userOffline(email));
 });

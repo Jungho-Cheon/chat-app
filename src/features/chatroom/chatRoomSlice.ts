@@ -11,6 +11,7 @@ import ChatroomType, {
   FETCH_CHATROOM_STATUS,
   Message,
   ReadCheckChatroomProps,
+  RequestNextMessagePageProps,
   SendMessageProps,
 } from './chatroomTypes';
 
@@ -33,6 +34,7 @@ export const fetchChatroomInfo = createAsyncThunk(
   ): Promise<ChatroomType> => {
     const { chatroomId, email } = readCheckChatroomProps;
     const response = await client.fetchChatroomInfo(chatroomId);
+    console.log(response);
     let unreadCount = 0;
     response.chatMessages.forEach(chatMessage =>
       chatMessage.messages.forEach(message => {
@@ -41,10 +43,27 @@ export const fetchChatroomInfo = createAsyncThunk(
       })
     );
     response.unreadCount = unreadCount;
+    response.currentPage = 1;
+    return response;
+  }
+);
+// 메세지 다음 페이지 요청
+export const requestNextMessagePage = createAsyncThunk(
+  'chatroom/requestNextMessagePage',
+  async (requestNextMessagePageProps: RequestNextMessagePageProps) => {
+    const response = await client.requestNextMessagePage(
+      requestNextMessagePageProps
+    );
+    response.chatMessages.forEach(chatMessage =>
+      chatMessage.messages.forEach(message => {
+        message.isComplete = true;
+      })
+    );
     return response;
   }
 );
 
+// 채팅방의 모든 메세지 읽음 처리
 export const checkOutChatroom = createAsyncThunk(
   'chatroom/checkOutChatroom',
   async (readCheckChatroomProps: ReadCheckChatroomProps) => {
@@ -104,7 +123,6 @@ export const chatroomSlice = createSlice({
       const { chatroomId, email, userEmail, message } = action.payload;
       if (state.data.hasOwnProperty(chatroomId)) {
         const chatMessages = state.data[chatroomId].chatMessages;
-        console.log(chatroomId);
         if (state.currentChatroomId !== chatroomId) {
           state.data[chatroomId].unreadCount++;
         } else {
@@ -138,7 +156,6 @@ export const chatroomSlice = createSlice({
             message.messageId === messageId && message.readUsers.push(email)
         )
       );
-      console.log('checkReadMessage');
       return state;
     },
     checkReadMessages(state, action: PayloadAction<ReadCheckChatroomProps>) {
@@ -175,6 +192,13 @@ export const chatroomSlice = createSlice({
     builder.addCase(checkOutChatroom.fulfilled, state => {
       return state;
     });
+    builder.addCase(requestNextMessagePage.fulfilled, (state, { payload }) => {
+      console.log(payload);
+      state.data[payload.chatroomId].currentPage++;
+      state.data[payload.chatroomId].chatMessages.unshift(
+        ...payload.chatMessages
+      );
+    });
   },
 });
 
@@ -193,6 +217,8 @@ export const getCurrentChatroom = (state: RootStateOrAny): ChatroomType => {
     return {
       chatroomId: '',
       unreadCount: 0,
+      currentPage: 1,
+      totalMessages: 0,
       chatingUser: '',
       chatMessages: [],
       participants: [],

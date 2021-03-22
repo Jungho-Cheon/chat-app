@@ -27,12 +27,13 @@ import { socket } from '../../../features/socket/socketSlice';
 
 const ChatInput = (): JSX.Element => {
   const dispatch = useDispatch();
-  const { email, chatroomIds, friendData } = useSelector(getUserData);
+  const { email, friendData } = useSelector(getUserData);
   const currentChatroom = useSelector(getCurrentChatroom);
   const currentChatroomId = useSelector(getCurrentChatroomId);
   const [isEmojiOpened, setIsEmojiOpened] = useState(false);
   const [text, setText] = useState<string>('');
   const [nickname, setNickname] = useState<string>('');
+  const [isTyping, setIsTyping] = useState<boolean>(false);
   const textInput = useRef<HTMLInputElement>(null);
 
   const emojiClick = (
@@ -47,13 +48,27 @@ const ChatInput = (): JSX.Element => {
   ) => {
     setText(event.target.value);
     if (currentChatroomId && socket.connected) {
-      socket.emit(
-        'CHAT_TYPING',
-        JSON.stringify({
-          chatroomId: currentChatroomId,
-          email,
-        })
-      );
+      if (!isTyping) {
+        socket.emit(
+          'CHAT_TYPING',
+          JSON.stringify({
+            chatroomId: currentChatroomId,
+            email,
+          })
+        );
+        setIsTyping(true);
+        setTimeout(() => setIsTyping(false), 3000);
+      }
+      if (event.target.value === '') {
+        setIsTyping(false);
+        socket.emit(
+          'CHAT_TYPING',
+          JSON.stringify({
+            chatroomId: currentChatroomId,
+            email: '',
+          })
+        );
+      }
     }
   };
   const handleEnterKeyPress = (
@@ -113,8 +128,16 @@ const ChatInput = (): JSX.Element => {
   return (
     <ChatInputContainer>
       {currentChatroom.chatingUser && nickname && (
-        <div className="Chat__typing">
-          <p><span>{nickname}</span>님이 입력중입니다.</p>
+        <div className="ChatInput__Typing">
+          <div className="wave">
+            <div className="dot"></div>
+            <div className="dot"></div>
+            <div className="dot"></div>
+          </div>
+
+          <p>
+            <span>{nickname}님이 입력중입니다.</span>
+          </p>
         </div>
       )}
       <UploadFileButton>

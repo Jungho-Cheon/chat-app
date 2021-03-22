@@ -60,10 +60,17 @@ export interface ReadCheckChatroomProps {
   email: string;
 }
 
+export interface RequestNextMessagePageProps {
+  chatroomId: string;
+  page: number;
+}
+
 export default interface ChatroomType {
   chatroomId: string;
   unreadCount: number;
   chatingUser: string;
+  totalMessages: number;
+  currentPage: number;
   participants: Participant[];
   chatMessages: ChatData[];
 }
