@@ -64,6 +64,12 @@ export interface RequestNextMessagePageProps {
   chatroomId: string;
   page: number;
 }
+// server response
+export interface UploadFileResponse {
+  chatroomId: string;
+  email: string;
+  fileURL: string;
+}
 
 export default interface ChatroomType {
   chatroomId: string;

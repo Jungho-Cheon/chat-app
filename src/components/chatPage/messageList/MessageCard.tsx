@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 
 // components
 import UserAvatar from '../avatar/UserAvatar';
@@ -45,6 +45,7 @@ const MessageCard: React.FunctionComponent<MessageCardProps> = ({
   const [chatroomName, setChatroomName] = useState<string>('');
   const [previewMessage, setPreviewMessage] = useState<string>('');
   const [timeAgo, setTimeAgo] = useState<string>('');
+  const [messageType, setMessageType] = useState<string>('');
   const { friendData } = useSelector(getUserData);
 
   const selectChatRoom = (e: React.MouseEvent) => {
@@ -57,7 +58,7 @@ const MessageCard: React.FunctionComponent<MessageCardProps> = ({
   };
 
   // const countUnreadMessages = () => {};
-  useEffect(() => {
+  useLayoutEffect(() => {
     const targetUserEmail = participants.filter(user => user.email !== email)[0]
       .email;
     const targetUserData = friendData[targetUserEmail];
@@ -66,11 +67,15 @@ const MessageCard: React.FunctionComponent<MessageCardProps> = ({
     if (chatMessages.length > 0) {
       const lastMessages = chatMessages[chatMessages.length - 1].messages;
       const lastMessage = lastMessages[lastMessages.length - 1];
+      setMessageType(lastMessage.messageType);
       setPreviewMessage(lastMessage.message);
       if (lastMessage.insertDate)
         setTimeAgo(calcTimeAgo(lastMessage.insertDate));
     }
   }, [chatMessages]);
+
+  const getPreviewMessage = (message: string): string =>
+    message.length > 40 ? message.substring(0, 40) + '...' : message;
 
   return (
     <MessageCardContainer unread={false} onClick={selectChatRoom}>
@@ -80,9 +85,7 @@ const MessageCard: React.FunctionComponent<MessageCardProps> = ({
       <MessagePreviewContainer>
         <MessageUser> {chatroomName} </MessageUser>
         <MessagePreview>
-          {' '}
-          {previewMessage?.substring(0, 40)}
-          {previewMessage?.length >= 40 && '...'}
+          {messageType === 'IMAGE' ? '사진' : getPreviewMessage(previewMessage)}
         </MessagePreview>
       </MessagePreviewContainer>
       <MessageInfoContainer>

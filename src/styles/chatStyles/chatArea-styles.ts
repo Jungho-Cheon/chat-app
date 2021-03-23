@@ -41,17 +41,49 @@ export const ChatPaneContainer = styled.div`
 
 export const ChatPaneWrapper = styled.div`
   height: 100%;
+  * {
+    pointer-events: none;
+  }
 `;
-
+export const ChatMessageContainer = styled.div`
+  position: relative;
+  .message__dateDivider {
+    width: 100%;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: -20px;
+    .message__dateDivider__line {
+      z-index: 0;
+      position: absolute;
+      padding: 0 60px;
+      width: 20%;
+      height: 1px;
+      background-color: ${props => props.theme.divider};
+    }
+    .message__dateDivider__date {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 80px;
+      height: 30px;
+      z-index: 1;
+      font-size: 0.8rem;
+      color: ${props => props.theme.secondaryText};
+      background-color: ${props => props.theme.mainBackground};
+    }
+  }
+`;
 export const ChatPaneNewMessageContainer = styled.div`
   position: absolute;
   bottom: 118px;
   left: 50%;
+  transform: translateX(-50%);
   height: 33px;
   width: 200px;
   text-align: center;
   border-radius: 20px;
-  transform: translateX(-50%);
   background-color: ${props => props.theme.orange};
   color: white;
   font-size: 0.7rem;
@@ -74,5 +106,23 @@ export const ChatPaneNewMessageContainer = styled.div`
   }
   &:active {
     background-color: ${props => props.theme.purple};
+  }
+`;
+
+export const ChatPaneAddFileModelContainer = styled.section`
+  position: absolute;
+  z-index: 200;
+  bottom: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  img.ChatPane__AddFile {
+    z-index: 200;
+    width: 100px;
+    height: 100px;
   }
 `;

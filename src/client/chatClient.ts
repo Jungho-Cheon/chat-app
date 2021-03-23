@@ -3,6 +3,7 @@ import ChatroomType, {
   ReadCheckChatroomProps,
   RequestNextMessagePageProps,
   SendMessageProps,
+  UploadFileResponse,
 } from '../features/chatroom/chatroomTypes';
 
 import {} from '../features/chatroom/chatroomSlice';
@@ -79,6 +80,23 @@ const ChatClient = class {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(readCheckChatroomProps),
+    });
+    return await response.json();
+  }
+  async uploadFile(
+    chatroomId: string,
+    file: File
+  ): Promise<UploadFileResponse> {
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await fetch(this.hostUrl + `/chatroom/file`, {
+      method: 'post',
+      mode: 'cors',
+      cache: 'no-cache',
+      headers: {
+        chatroomId,
+      },
+      body: formData,
     });
     return await response.json();
   }

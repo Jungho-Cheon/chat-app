@@ -104,13 +104,13 @@ export const EmojiPickerWrapper = styled.div`
   left: 0;
   right: 0;
   background: transparent;
-  z-index: 1;
+  z-index: 10000;
 `;
 export const EmojiPickerContainer = styled.section`
   position: absolute;
   bottom: 100px;
   right: 60px;
-  z-index: 2;
+  z-index: 10000;
 `;
 export const ChatSendButton = styled.div`
   width: 50px;

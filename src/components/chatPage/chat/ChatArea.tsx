@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   getCurrentChatroom,
   requestNextMessagePage,
+  sendMessage,
 } from '../../../features/chatroom/chatroomSlice';
 
 // components
@@ -14,10 +15,20 @@ import ChatMessage from './ChatMessage';
 import {
   ChatPaneContainer,
   ChatPaneWrapper,
+  ChatMessageContainer,
   ChatPaneNewMessageContainer,
+  ChatPaneAddFileModelContainer,
 } from '../../../styles/chatStyles/chatArea-styles';
 import { nanoid } from '@reduxjs/toolkit';
 import { getUserData } from '../../../features/auth/authSlice';
+
+// util
+import { compareDate } from './ChatMessage';
+import { socket } from '../../../features/socket/socketSlice';
+
+import Client from '../../../client/chatClient';
+
+const client = new Client(process.env.REACT_APP_SERVER_URL || '');
 
 const ChatArea = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -30,7 +41,9 @@ const ChatArea = (): JSX.Element => {
     false
   );
   const [prevHeight, setPrevHeight] = useState<number>(-1);
-  const scrollListener = () => {
+  const [showAddFileModal, setShowAddFileModal] = useState<boolean>(false);
+  const scrollListener = (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
+    e.preventDefault();
     if (chatPaneContainer.current) {
       const chatPane = chatPaneContainer.current;
       // 스크롤이 최상단인 경우 추가 메세지 추가 로딩
@@ -58,15 +71,76 @@ const ChatArea = (): JSX.Element => {
       }
     }
   };
-  // 메세지 페이징 이벤트 리스너 추가
-  useEffect(() => {
-    if (chatPaneContainer.current !== null) {
-      chatPaneContainer.current.addEventListener('scroll', scrollListener);
+  const dragEnterHandler = (e: React.DragEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setShowAddFileModal(true);
+    console.log('dragEnter!');
+  };
+  const dragLeaveHandler = (e: React.DragEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setShowAddFileModal(false);
+    console.log('dragLeave!');
+  };
+  const transferFile = (file: File) => {
+    console.log(file);
+  };
+  const handleFile = async (files: FileList) => {
+    for (let i = 0; i < files.length; i++) {
+      const file = files.item(i);
+      if (file) {
+        const chatroomId = currentChatroom.chatroomId;
+        // 파일 업로드
+        const response = await client.uploadFile(chatroomId, file);
+        // 이미지 파일인 경우
+        if (file.type.startsWith('image')) {
+          const email = userData.email;
+          const messageId = nanoid();
+          dispatch(
+            sendMessage({
+              chatroomId,
+              email,
+              message: {
+                messageId,
+                message: response.fileURL,
+                messageType: 'IMAGE',
+                readUsers: [userData.email],
+                isComplete: false,
+              },
+            })
+          );
+          socket.emit(
+            'SEND_MESSAGE',
+            JSON.stringify({
+              chatroomId,
+              email,
+              message: {
+                message: response.fileURL,
+                messageId,
+                messageType: 'IMAGE',
+              },
+            })
+          );
+        }
+        // 일반 파일인 경우 파일로 전송
+        transferFile(file);
+      }
     }
-    return () =>
-      chatPaneContainer.current?.removeEventListener('scroll', scrollListener);
-  }, [currentChatroom.currentPage]);
+  };
+  const dropHandler = (e: React.DragEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const dt = e.dataTransfer;
+    const file = dt?.files;
+    if (file) handleFile(file);
 
+    setShowAddFileModal(false);
+  };
+  const dragOverHandler = (e: React.DragEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    e.preventDefault();
+  };
   // 채팅방이 변경된 경우 스크롤을 최하단으로 이동
   useLayoutEffect(() => {
     if (chatPaneContainer.current) {
@@ -88,9 +162,10 @@ const ChatArea = (): JSX.Element => {
         // 스크롤이 너무 높게 올라가지 않은 경우 메세지를 입력한 사용자에 관계없이
         // 스크롤을 최하단으로 내린다.
         // 또는, 누군가의 입력으로 변경된 경우 마지막 메세지를 입력한 사용자에 따라 분기한다.
+        const chatMessages = currentChatroom.chatMessages;
         if (
-          currentChatroom.chatMessages[currentChatroom.chatMessages.length - 1]
-            .email === userData.email ||
+          (chatMessages.length > 0 &&
+            chatMessages[chatMessages.length - 1].email === userData.email) ||
           isScrollToBottom
         ) {
           // 현재 로그인 사용자가 입력한 경우 스크롤을 최하단으로 이동한다.
@@ -119,13 +194,48 @@ const ChatArea = (): JSX.Element => {
 
   const createChatMessage = () => {
     const { chatMessages } = currentChatroom;
-    return chatMessages.map(chatMessage => (
-      <ChatMessage chatMessage={chatMessage} key={nanoid()} />
-    ));
+    return chatMessages.map((chatMessage, idx) => {
+      let isNextDay = false,
+        date: Date = new Date();
+      if (idx > 0) {
+        if (
+          chatMessages[idx - 1].messages[chatMessage.messages.length - 1] &&
+          chatMessage.messages[0]
+        ) {
+          const prev =
+            chatMessages[idx - 1].messages[chatMessage.messages.length - 1]
+              .insertDate || '';
+          const cur = chatMessage.messages[0].insertDate || '';
+          const cmp = compareDate(prev, cur);
+          isNextDay = cmp.isNextDay;
+          date = cmp.date;
+        }
+      }
+      return (
+        <ChatMessageContainer key={nanoid()}>
+          {isNextDay && (
+            <div className="message__dateDivider">
+              <div className="message__dateDivider__line" />
+              <div className="message__dateDivider__date">
+                {date.getMonth() + 1 + '월 ' + date.getDate() + '일'}
+              </div>
+            </div>
+          )}
+          <ChatMessage chatMessage={chatMessage} />
+        </ChatMessageContainer>
+      );
+    });
   };
   return (
     <>
-      <ChatPaneContainer ref={chatPaneContainer}>
+      <ChatPaneContainer
+        ref={chatPaneContainer}
+        onScroll={scrollListener}
+        onDrop={dropHandler}
+        onDragOver={dragOverHandler}
+        onDragEnter={dragEnterHandler}
+        onDragLeave={dragLeaveHandler}
+      >
         <ChatPaneWrapper>{createChatMessage()}</ChatPaneWrapper>
       </ChatPaneContainer>
       {showNewMessageArrived && (
@@ -133,6 +243,15 @@ const ChatArea = (): JSX.Element => {
           <i className="fas fa-chevron-down"></i>
           <p>새로운 메세지가 도착하였습니다.</p>
         </ChatPaneNewMessageContainer>
+      )}
+      {showAddFileModal && (
+        <ChatPaneAddFileModelContainer>
+          <img
+            className="ChatPane__AddFile"
+            src="assets/add-photo-icon.svg"
+            alt="add-photo"
+          />
+        </ChatPaneAddFileModelContainer>
       )}
     </>
   );

@@ -89,7 +89,7 @@ const ChatInput = (): JSX.Element => {
             message: {
               message: text,
               messageId,
-              readUsers: new Array<string>(email),
+              readUsers: [email],
               messageType: 'TEXT',
               isComplete: false,
             },

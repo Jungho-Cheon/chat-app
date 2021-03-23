@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 // components
@@ -31,7 +31,7 @@ const ChatHeader = (): JSX.Element => {
   const [description, setDescrtription] = useState<string>('');
   const userData = useSelector(getUserData);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const targetUserEmail = participants.filter(
       user => user.email !== userData.email
     )[0].email;
@@ -43,7 +43,7 @@ const ChatHeader = (): JSX.Element => {
       setNickname(targetUserData.nickname);
       setDescrtription(targetUserData.description);
     }
-  }, [userData.friendData]);
+  }, [chatroomId, userData.friendData]);
 
   const createChatHeader = (): JSX.Element => {
     return (
