@@ -1,19 +1,19 @@
 import { io } from 'socket.io-client';
-import { userOffline, userOnline } from '../auth/authSlice';
+import { userOffline, userOnline } from '../features/auth/authSlice';
 import {
   checkReadMessage,
   initSocketId,
   toggleChatTyping,
   receiveMessage,
   sendComplete,
-} from '../chatroom/chatroomSlice';
+} from '../features/chatroom/chatroomSlice';
 import {
   CheckReadMessageProps,
   CompleteMessageProps,
   SendMessageProps,
-} from '../chatroom/chatroomTypes';
+} from '../features/chatroom/chatroomTypes';
 
-import store from '../../app/store';
+import store from '../app/store';
 
 export const socket = io('http://localhost:8080', {
   timeout: 5000,

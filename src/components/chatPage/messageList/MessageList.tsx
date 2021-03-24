@@ -93,7 +93,6 @@ const MessageList = (): JSX.Element => {
       <MessageListUpperContainer>
         {/* Logo */}
         <LogoContainer>
-          {/* <LogoImage src="assets/logo.svg"></LogoImage> */}
           <h1 className="logo">TALKI</h1>
           <SortButton>
             <SortIcon>

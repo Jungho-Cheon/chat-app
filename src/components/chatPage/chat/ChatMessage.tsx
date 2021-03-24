@@ -8,12 +8,13 @@ import {
   ChatMessageFlexDirection,
   ChatMessageContainer,
   MessageContainer,
-  Message,
+  MessageArticle,
+  MessageWrapper,
 } from '../../../styles/chatStyles/chatMessage-styles';
 import { useSelector } from 'react-redux';
 import { getUserData } from '../../../features/auth/authSlice';
 
-import { ChatData } from '../../../features/chatroom/chatroomTypes';
+import { ChatData, Message } from '../../../features/chatroom/chatroomTypes';
 
 interface ChatMessageProps {
   chatMessage: ChatData;
@@ -36,9 +37,6 @@ export const compareDate = (
     Date.parse(insertDate) - koreanInterval
   );
   const lastDateTime: Date = new Date(Date.parse(lastDate) - koreanInterval);
-  if (lastDateTime.getDate() !== insertDateTime.getDate())
-    console.log(`${lastDateTime.getDate()} ${insertDateTime.getDate()}`);
-
   return {
     isNextDay: lastDateTime.getDate() !== insertDateTime.getDate(),
     date: insertDateTime,
@@ -57,35 +55,52 @@ const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
   const avatarUrl = isMine
     ? userData.avatarUrl
     : userData.friendData[email]?.avatarUrl;
-
+  const createMessageComponent = (message: Message): JSX.Element => {
+    switch (message.messageType) {
+      case 'TEXT':
+        return <span>{message.message}</span>;
+      case 'FILE':
+        return (
+          <>
+            <i className="fas fa-file"></i>
+            <span onClick={() => window.open(message.fileURL, '_blank')}>
+              {message.message}
+            </span>
+          </>
+        );
+      case 'IMAGE':
+        return (
+          <img
+            className="message__image"
+            src={message.message}
+            alt={message.messageId}
+          />
+        );
+      case 'URL':
+        return (
+          <div
+            className="message__url"
+            onClick={() => window.open(message.urlData?.url, '_blank')}
+          >
+            <img className="message__url__image" src={message.urlData?.image} />
+            <div className="message__url__info">
+              <h3>{message.urlData?.title}</h3>
+              <p>{message.urlData?.description}</p>
+              <span>{message.urlData?.url}</span>
+            </div>
+          </div>
+        );
+      default:
+        return <></>;
+    }
+  };
   return (
     <ChatMessageFlexDirection isMine={isMine}>
       <ChatMessageContainer isMine={isMine}>
         <MessageContainer isMine={isMine}>
-          {messages.map((message, idx) => {
-            let isNextDay, date;
-            if (idx > 0) {
-              const cmp = compareDate(
-                messages[idx - 1].insertDate || '',
-                message.insertDate || ''
-              );
-              isNextDay = cmp.isNextDay;
-              date = cmp.date;
-            } else {
-              isNextDay = false;
-              date = new Date();
-            }
-
+          {messages.map(message => {
             return (
-              <article key={message.messageId}>
-                {isNextDay && (
-                  <div className="message__dateDivider">
-                    <div className="message__dateDivider__line" />
-                    <div className="message__dateDivider__date">
-                      {date.getMonth() + 1 + '월 ' + date.getDate() + '일'}
-                    </div>
-                  </div>
-                )}
+              <MessageArticle key={message.messageId}>
                 <div className="message__wrapper">
                   {isMine && !message.isComplete && (
                     <i className="fas fa-spinner complete"></i>
@@ -95,22 +110,15 @@ const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
                       {message.insertDate && convertTime(message.insertDate)}
                     </p>
                   </div>
-                  <Message
+                  <MessageWrapper
                     type={message.messageType}
                     isMine={isMine}
                     isCompleted={!isMine || message.isComplete || false}
                   >
-                    {message.messageType === 'FILE' && (
-                      <i className="fas fa-paperclip"></i>
-                    )}
-                    {message.messageType === 'IMAGE' ? (
-                      <img src={message.message} alt={message.messageId} />
-                    ) : (
-                      <span>{message.message}</span>
-                    )}
-                  </Message>
+                    {createMessageComponent(message)}
+                  </MessageWrapper>
                 </div>
-              </article>
+              </MessageArticle>
             );
           })}
           {isMine && isRead && (
@@ -119,6 +127,7 @@ const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
             </div>
           )}
         </MessageContainer>
+        {/* TODO: add default avatar */}
         <UserAvatar avatarUrl={avatarUrl || ''} width="40px" />
       </ChatMessageContainer>
     </ChatMessageFlexDirection>

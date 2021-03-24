@@ -24,7 +24,7 @@ import {
 import { useHistory } from 'react-router';
 
 // socket 
-import {socket} from '../features/socket/socketSlice'
+import {socket} from '../socket/socket'
 
 const ChatPage = (): JSX.Element => {
   const dispatch = useDispatch();

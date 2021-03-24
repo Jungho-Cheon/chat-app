@@ -1,11 +1,18 @@
 export interface ChatroomRequest {
   chatroomId: string;
 }
-
+export interface UrlData {
+  url: string;
+  title: string;
+  description: string;
+  image: string;
+}
 export interface Message {
   messageId: string;
   message: string;
   messageType: string;
+  urlData?: UrlData;
+  fileURL?: string;
   readUsers: string[];
   insertDate?: string;
   isComplete?: boolean;
@@ -37,7 +44,7 @@ export interface ChatRoomState {
 export interface SendMessageProps {
   chatroomId: string;
   email: string; // 보낸 사람
-  userEmail?: string; 
+  userEmail?: string;
   message: Message;
   insertDate?: string;
 }
@@ -52,6 +59,7 @@ export interface CompleteMessageProps {
   insertDate: string;
   chatroomId: string;
   messageId: string;
+  newMessageId: string;
 }
 
 // Async Thunk Props

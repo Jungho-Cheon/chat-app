@@ -4,14 +4,12 @@ export const MessageListContainer = styled.div`
   position: relative;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 180px 1fr;
+  grid-template-rows: 160px 1fr;
   max-height: 100%;
 `;
 
 export const MessageListUpperContainer = styled.div`
-  margin-top: 20px;
-  height: 150px;
-  padding: 0 0 0 40px;
+  padding: 20px 0 0 40px;
 `;
 
 export const LogoContainer = styled.div`

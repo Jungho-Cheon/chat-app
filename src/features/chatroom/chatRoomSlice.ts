@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootStateOrAny } from 'react-redux';
 
 import Client from '../../client/chatClient';
-import { socket } from '../../features/socket/socketSlice';
+import { socket } from '../../socket/socket';
 import ChatroomType, {
   ChatData,
   ChatRoomState,
@@ -97,8 +97,17 @@ export const chatroomSlice = createSlice({
         const chatMessages = state.data[chatroomId].chatMessages;
         if (
           chatMessages.length === 0 ||
-          chatMessages[chatMessages.length - 1].email !== email
+          chatMessages[chatMessages.length - 1].email !== email ||
+          new Date(
+            Date.parse(
+              chatMessages[chatMessages.length - 1].messages[
+                chatMessages[chatMessages.length - 1].messages.length - 1
+              ].insertDate || ''
+            ) -
+              9 * 1000 * 60 * 60
+          ).getDate() !== new Date().getDate()
         ) {
+          console.log('new chatMessage', new Date().getDate());
           chatMessages.push({
             email,
             messages: [message],
@@ -109,12 +118,18 @@ export const chatroomSlice = createSlice({
       }
     },
     sendComplete(state, action: PayloadAction<CompleteMessageProps>) {
-      const { chatroomId, messageId, insertDate } = action.payload;
+      const {
+        chatroomId,
+        messageId,
+        insertDate,
+        newMessageId,
+      } = action.payload;
       state.data[chatroomId].chatMessages.forEach(chatMessage =>
         chatMessage.messages.forEach(message => {
           if (message.messageId === messageId) {
             message.isComplete = true;
             message.insertDate = insertDate;
+            message.messageId = newMessageId;
           }
         })
       );

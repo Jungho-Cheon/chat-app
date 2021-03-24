@@ -24,7 +24,7 @@ import { getUserData } from '../../../features/auth/authSlice';
 
 // util
 import { compareDate } from './ChatMessage';
-import { socket } from '../../../features/socket/socketSlice';
+import { socket } from '../../../socket/socket';
 
 import Client from '../../../client/chatClient';
 
@@ -34,6 +34,7 @@ const ChatArea = (): JSX.Element => {
   const dispatch = useDispatch();
   const userData = useSelector(getUserData);
   const currentChatroom = useSelector(getCurrentChatroom);
+  let dragCounter = 0;
   const chatPaneContainer = useRef<HTMLDivElement>(null);
   const [isMessageAdded, setIsMessageAdded] = useState<boolean>(false);
   const [isScrollToBottom, setIsScollToBottom] = useState<boolean>(true);
@@ -75,28 +76,29 @@ const ChatArea = (): JSX.Element => {
     e.stopPropagation();
     e.preventDefault();
     setShowAddFileModal(true);
-    console.log('dragEnter!');
+    dragCounter += 1;
   };
   const dragLeaveHandler = (e: React.DragEvent<HTMLDivElement>) => {
     e.stopPropagation();
     e.preventDefault();
-    setShowAddFileModal(false);
-    console.log('dragLeave!');
-  };
-  const transferFile = (file: File) => {
-    console.log(file);
+    dragCounter -= 1;
+    if (dragCounter === 0) setShowAddFileModal(false);
   };
   const handleFile = async (files: FileList) => {
     for (let i = 0; i < files.length; i++) {
       const file = files.item(i);
       if (file) {
-        const chatroomId = currentChatroom.chatroomId;
+        if (file.size > 5 * 2 ** 20) {
+          alert('5MB 이하의 파일만 전송할 수 있습니다.. 😵');
+          return;
+        }
         // 파일 업로드
+        const chatroomId = currentChatroom.chatroomId;
         const response = await client.uploadFile(chatroomId, file);
+        const email = userData.email;
+        const messageId = nanoid();
         // 이미지 파일인 경우
         if (file.type.startsWith('image')) {
-          const email = userData.email;
-          const messageId = nanoid();
           dispatch(
             sendMessage({
               chatroomId,
@@ -122,9 +124,35 @@ const ChatArea = (): JSX.Element => {
               },
             })
           );
+        } else {
+          // 일반 파일인 경우 파일로 전송
+          dispatch(
+            sendMessage({
+              chatroomId,
+              email,
+              message: {
+                messageId,
+                message: file.name,
+                fileURL: response.fileURL,
+                messageType: 'FILE',
+                readUsers: [userData.email],
+                isComplete: false,
+              },
+            })
+          );
+          socket.emit(
+            'SEND_MESSAGE',
+            JSON.stringify({
+              chatroomId,
+              email,
+              message: {
+                message: response.fileURL,
+                messageId,
+                messageType: 'FILE',
+              },
+            })
+          );
         }
-        // 일반 파일인 경우 파일로 전송
-        transferFile(file);
       }
     }
   };
@@ -142,7 +170,7 @@ const ChatArea = (): JSX.Element => {
     e.preventDefault();
   };
   // 채팅방이 변경된 경우 스크롤을 최하단으로 이동
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (chatPaneContainer.current) {
       setPrevHeight(chatPaneContainer.current.scrollHeight);
       chatPaneContainer.current.scrollTop =
@@ -194,25 +222,35 @@ const ChatArea = (): JSX.Element => {
 
   const createChatMessage = () => {
     const { chatMessages } = currentChatroom;
+    if (chatMessages.length === 0)
+      return (
+        <div className="chatmessage__start">
+          <h1>채팅이 시작되었습니다. 대화를 시작해보세요!</h1>
+        </div>
+      );
     return chatMessages.map((chatMessage, idx) => {
       let isNextDay = false,
         date: Date = new Date();
       if (idx > 0) {
+        const prevChatMessages = chatMessages[idx - 1].messages;
         if (
-          chatMessages[idx - 1].messages[chatMessage.messages.length - 1] &&
+          prevChatMessages[prevChatMessages.length - 1] &&
           chatMessage.messages[0]
         ) {
           const prev =
-            chatMessages[idx - 1].messages[chatMessage.messages.length - 1]
-              .insertDate || '';
+            prevChatMessages[prevChatMessages.length - 1].insertDate || '';
           const cur = chatMessage.messages[0].insertDate || '';
           const cmp = compareDate(prev, cur);
           isNextDay = cmp.isNextDay;
           date = cmp.date;
         }
+      } else {
+        isNextDay = true;
+        const insertDate = chatMessage.messages[0].insertDate || '';
+        date = new Date(Date.parse(insertDate) - 9 * 1000 * 60 * 60);
       }
       return (
-        <ChatMessageContainer key={nanoid()}>
+        <ChatMessageContainer key={nanoid()} isNextDay={isNextDay}>
           {isNextDay && (
             <div className="message__dateDivider">
               <div className="message__dateDivider__line" />

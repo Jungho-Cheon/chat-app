@@ -26,7 +26,7 @@ import ChatroomType from '../../../features/chatroom/chatroomTypes';
 import { getUserData } from '../../../features/auth/authSlice';
 
 // services
-import { calcTimeAgo } from '../../../service/time';
+import { calcTimeAgo } from '../../../utils/time';
 
 export interface MessageCardProps extends ChatroomType {
   email: string;

@@ -17,18 +17,23 @@ export const ChatMessageFlexDirection = styled.div<FlexDirection>`
   justify-content: ${props => (props.isMine ? `flex-end` : `flex-start`)};
   position: relative;
 `;
+
+export const MessageArticle = styled.div`
+  position: relative;
+`;
 export const MessageContainer = styled.div<FlexDirection>`
   max-width: 480px;
   display: flex;
   flex-direction: column;
   align-items: ${props => (props.isMine ? `flex-end` : `flex-start`)};
-  .message__dateDivider {
-    width: 100%;
-    position: absolute;
+  .message__dateDivider__inner {
+    width: 240px;
     display: flex;
+    position: absolute;
     justify-content: center;
     align-items: center;
-    top: -20px;
+    top: -25px;
+    left: -50%;
     ${props => (props.isMine ? `right: 0px` : `left: 0px`)};
     .message__dateDivider__line {
       z-index: 0;
@@ -65,6 +70,7 @@ export const MessageContainer = styled.div<FlexDirection>`
     }
     i.complete {
       margin-top: 10px;
+
       color: ${props => props.theme.secondaryText};
       -webkit-animation: rotating 2s cubic-bezier(0.215, 0.61, 0.355, 1)
         infinite;
@@ -115,7 +121,7 @@ export const ChatMessageContainer = styled.div<FlexDirection>`
     padding-bottom: 10px;
   }
 `;
-export const Message = styled.div<MessageType>`
+export const MessageWrapper = styled.div<MessageType>`
   z-index: 10;
   width: auto;
   opacity: ${props => (props.isCompleted ? 1 : 0.5)};
@@ -125,14 +131,15 @@ export const Message = styled.div<MessageType>`
     props.isMine ? props.theme.purple : props.theme.background};
   background-color: ${props => props.type === 'FILE' && `rgb(232,232,242)`};
   padding: 10px 20px;
-  ${props => props.type === 'IMAGE' && `background: none; padding: 0;`};
+  ${props =>
+    ['IMAGE', 'URL'].includes(props.type) && `background: none; padding: 0;`};
   margin: 5px 10px 10px;
   border-radius: 5px;
   font-weight: 400;
   line-height: 1.2;
   word-break: break-all;
   white-space: initial;
-  img {
+  img.message__image {
     border-radius: 5px;
     width: 300px;
   }
@@ -148,7 +155,7 @@ export const Message = styled.div<MessageType>`
   ${props =>
     props.type === 'FILE' &&
     `
-    font-weight: 600;
+    font-weight: 400;
     &:hover {
     span {
       text-decoration: underline;
@@ -156,4 +163,29 @@ export const Message = styled.div<MessageType>`
     }
   }
   `}
+  div.message__url {
+    width: 300px;
+    background-color: ${props => props.theme.background};
+    cursor: pointer;
+    img.message__url__image {
+      width: 300px;
+      object-fit: contain;
+    }
+    div.message__url__info {
+      color: ${props => props.theme.primaryText};
+      padding: 10px;
+      h3 {
+        font-size: 1.2rem;
+        padding-bottom: 5px;
+      }
+      p {
+        font-size: 0.8rem;
+        padding: 5px 0;
+      }
+      span {
+        color: ${props => props.theme.secondaryText};
+        font-size: 0.8rem;
+      }
+    }
+  }
 `;

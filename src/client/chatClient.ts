@@ -4,6 +4,7 @@ import ChatroomType, {
   RequestNextMessagePageProps,
   SendMessageProps,
   UploadFileResponse,
+  UrlData,
 } from '../features/chatroom/chatroomTypes';
 
 import {} from '../features/chatroom/chatroomSlice';
@@ -83,6 +84,7 @@ const ChatClient = class {
     });
     return await response.json();
   }
+  // 사진, 파일 업로드 -> gcp cloud storage
   async uploadFile(
     chatroomId: string,
     file: File
@@ -99,6 +101,24 @@ const ChatClient = class {
       body: formData,
     });
     return await response.json();
+  }
+  // url preview data 요청
+  async getLinkPreview(url: string): Promise<UrlData> {
+    try {
+      const response = await fetch(this.hostUrl + `/chatroom/url`, {
+        method: 'post',
+        mode: 'cors',
+        cache: 'default',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url }),
+      });
+      return await response.json();
+    } catch (err) {
+      console.error(err);
+      return Promise.reject(err);
+    }
   }
 };
 

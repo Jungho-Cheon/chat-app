@@ -41,12 +41,21 @@ export const ChatPaneContainer = styled.div`
 
 export const ChatPaneWrapper = styled.div`
   height: 100%;
-  * {
-    pointer-events: none;
+  div.chatmessage__start {
+    text-align: center;
+    h1 {
+      font-size: 0.8rem;
+      color: ${props => props.theme.secondaryText};
+    }
   }
 `;
-export const ChatMessageContainer = styled.div`
+
+interface ChatMessageContainerProps {
+  isNextDay: boolean;
+}
+export const ChatMessageContainer = styled.div<ChatMessageContainerProps>`
   position: relative;
+  ${props => props.isNextDay && `margin-top: 20px;`}
   .message__dateDivider {
     width: 100%;
     position: absolute;

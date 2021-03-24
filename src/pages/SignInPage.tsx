@@ -25,7 +25,7 @@ import {
 } from '../features/auth/authSlice';
 
 // redux
-import { connectSocket } from '../features/socket/socketSlice';
+import { connectSocket } from '../socket/socket';
 import { SignInState } from '../features/auth/authTypes';
 
 const SignInPage = (): JSX.Element => {
