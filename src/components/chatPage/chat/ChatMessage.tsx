@@ -18,6 +18,7 @@ import { ChatData, Message } from '../../../features/chatroom/chatroomTypes';
 
 interface ChatMessageProps {
   chatMessage: ChatData;
+  scrollToBottom: (e: any) => void;
 }
 
 const convertTime = (time: string) => {
@@ -45,6 +46,7 @@ export const compareDate = (
 
 const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
   chatMessage,
+  scrollToBottom,
 }: ChatMessageProps): JSX.Element => {
   const { email, messages } = chatMessage;
   const userData = useSelector(getUserData);
@@ -72,6 +74,7 @@ const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
         return (
           <img
             className="message__image"
+            onLoad={scrollToBottom}
             src={message.message}
             alt={message.messageId}
           />
@@ -82,7 +85,11 @@ const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
             className="message__url"
             onClick={() => window.open(message.urlData?.url, '_blank')}
           >
-            <img className="message__url__image" src={message.urlData?.image} />
+            <img
+              className="message__url__image"
+              src={message.urlData?.image}
+              onLoad={scrollToBottom}
+            />
             <div className="message__url__info">
               <h3>{message.urlData?.title}</h3>
               <p>{message.urlData?.description}</p>

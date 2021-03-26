@@ -44,6 +44,7 @@ const initialState: {
     email: '',
     nickname: '',
     avatarUrl: '',
+    description: '',
     friendData: {},
     chatroomIds: new Array<string>(),
   },

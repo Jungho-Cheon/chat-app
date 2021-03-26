@@ -13,5 +13,8 @@ declare module 'styled-components' {
     divider: string;
     orange: string;
     orangeHovered: string;
+    containerBorder: string;
+    containerBackground: string;
+    hoveredButton: string;
   }
 }

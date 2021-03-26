@@ -1,33 +1,21 @@
 import React, { useEffect } from 'react';
 
 // components
-import Navbar from '../components/chatPage/navbar/Navbar';
+// import Navbar from '../components/chatPage/navbar/Navbar';
 import MessageList from '../components/chatPage/messageList/MessageList';
 import ChatMain from '../components/chatPage/chat/ChatMain';
+import ChatSideBar from '../components/chatPage/sidebar/ChatSideBar';
 
 // styled-components
 import { ChatPageContainer } from '../styles/chatStyles/chatPage-styles';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { getUserData } from '../features/auth/authSlice';
-import {
-  CheckReadMessageProps,
-  CompleteMessageProps,
-  SendMessageProps,
-} from '../features/chatroom/chatroomTypes';
-import {
-  receiveMessage,
-  sendComplete,
-  checkReadMessage,
-  getCurrentChatroomId,
-  initSocketId,
-} from '../features/chatroom/chatroomSlice';
 import { useHistory } from 'react-router';
 
-// socket 
-import {socket} from '../socket/socket'
+// socket
+import { socket } from '../socket/socket';
 
 const ChatPage = (): JSX.Element => {
-  const dispatch = useDispatch();
   const history = useHistory();
   const { email, chatroomIds } = useSelector(getUserData);
 
@@ -52,9 +40,9 @@ const ChatPage = (): JSX.Element => {
   }, []);
   return (
     <ChatPageContainer>
-      <Navbar />
       <MessageList />
       <ChatMain />
+      <ChatSideBar />
     </ChatPageContainer>
   );
 };

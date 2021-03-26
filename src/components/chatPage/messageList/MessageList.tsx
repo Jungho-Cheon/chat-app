@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { nanoid } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 
 // components
 import MessageCard from './MessageCard';
-
-// types
-import { Chatroom } from './messageCardTypes';
+import UserProfile from './UserProfile';
 
 // styled-components
 import {
@@ -67,7 +64,6 @@ const MessageList = (): JSX.Element => {
             (data: ChatroomType): JSX.Element => (
               <MessageCard
                 {...data}
-                unreadCount={0}
                 email={userData.email}
                 key={data.chatroomId}
               />
@@ -90,17 +86,13 @@ const MessageList = (): JSX.Element => {
   };
   return (
     <MessageListContainer>
+      {/* Logo */}
+      <LogoContainer>
+        <img src="assets/logo.svg" alt="logo" />
+        <h1 className="logo">TALKI</h1>
+      </LogoContainer>
+      <UserProfile />
       <MessageListUpperContainer>
-        {/* Logo */}
-        <LogoContainer>
-          <h1 className="logo">TALKI</h1>
-          <SortButton>
-            <SortIcon>
-              <i className="fas fa-sort-amount-down-alt"></i>
-            </SortIcon>
-            <SortText>Newest</SortText>
-          </SortButton>
-        </LogoContainer>
         {/* Search Input */}
         <SearchContainer>
           <SearchInput
@@ -109,9 +101,11 @@ const MessageList = (): JSX.Element => {
           ></SearchInput>
           <i className="fas fa-search"></i>
         </SearchContainer>
-        <Divider />
+        <div className="message-list__title-container">
+          <h3>Chatrooms</h3>
+        </div>
+        <MessageCardsContainer>{filterMessageCards()}</MessageCardsContainer>
       </MessageListUpperContainer>
-      <MessageCardsContainer>{filterMessageCards()}</MessageCardsContainer>
     </MessageListContainer>
   );
 };

@@ -20,5 +20,5 @@ export const PleaseSelectChatContainer = styled.div`
 `;
 
 export const LottieContainer = styled.div`
-  width: 550px;
+  width: 90%;
 `;

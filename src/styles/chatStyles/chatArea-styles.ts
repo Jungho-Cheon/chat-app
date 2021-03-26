@@ -1,16 +1,16 @@
 import styled from 'styled-components';
 
 export const ChatPaneContainer = styled.div`
-  position: absolute;
-  bottom: 100px;
   width: 100%;
-  height: 100%;
-  max-height: calc(100% - 320px);
+  height: 0;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  flex-direction: column-reverse;
+  justify-content: flex-start;
+  position: relative;
   overflow-y: scroll;
-  overflow-x: hidden;
+  overflow-x: auto;
   &::-webkit-scrollbar {
     width: 5px;
   }
@@ -37,15 +37,13 @@ export const ChatPaneContainer = styled.div`
       color: red;
     }
   }
-`;
-
-export const ChatPaneWrapper = styled.div`
-  height: 100%;
-  div.chatmessage__start {
-    text-align: center;
-    h1 {
-      font-size: 0.8rem;
-      color: ${props => props.theme.secondaryText};
+  div.wrapper {
+    div.chatmessage__start {
+      text-align: center;
+      h1 {
+        font-size: 0.8rem;
+        color: ${props => props.theme.secondaryText};
+      }
     }
   }
 `;

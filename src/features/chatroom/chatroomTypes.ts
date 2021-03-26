@@ -27,6 +27,7 @@ export interface Participant {
   email: string;
   nickname: string;
   avatarUrl: string;
+  description: string;
 }
 export enum FETCH_CHATROOM_STATUS {
   IDLE,

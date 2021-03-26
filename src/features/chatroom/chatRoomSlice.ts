@@ -28,7 +28,7 @@ const initialState: ChatRoomState = {
 // Async Thunks
 // 채팅방 정보 초기화
 export const fetchChatroomInfo = createAsyncThunk(
-  'chatroom/fetchChatRoom',
+  'chatroom/fetchChatRoomInfo',
   async (
     readCheckChatroomProps: ReadCheckChatroomProps
   ): Promise<ChatroomType> => {
@@ -200,7 +200,6 @@ export const chatroomSlice = createSlice({
   },
   extraReducers: builder => {
     builder.addCase(fetchChatroomInfo.fulfilled, (state, { payload }) => {
-      console.log(payload);
       state.data[payload.chatroomId] = payload;
       return state;
     });

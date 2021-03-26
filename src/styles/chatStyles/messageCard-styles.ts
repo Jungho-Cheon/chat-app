@@ -2,12 +2,16 @@ import styled from 'styled-components';
 
 interface messageProps {
   unread: boolean;
+  isSelected: boolean;
 }
 
 export const MessageCardContainer = styled.div<messageProps>`
-  width: 330px;
+  width: 100%;
   height: 70px;
-  background: ${props => props.theme.background};
+  background: ${props =>
+    props.isSelected
+      ? props.theme.containerBackground
+      : props.theme.background};
   margin-bottom: 11px;
   display: flex;
   justify-content: center;
@@ -27,7 +31,7 @@ export const MessageCardAvatar = styled.div`
 export const MessagePreviewContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 200px;
+  width: 40%;
 `;
 export const MessageUser = styled.div`
   color: ${props => props.theme.primaryText};
@@ -42,7 +46,7 @@ export const MessagePreview = styled.div`
   color: ${props => props.theme.secondaryText};
 `;
 export const MessageInfoContainer = styled.div`
-  width: 70px;
+  width: 75px;
   display: flex;
   flex-direction: column;
   justify-content: center;

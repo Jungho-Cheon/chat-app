@@ -21,6 +21,7 @@ import {
   changeChatroom,
   checkOutChatroom,
   checkReadMessages,
+  getCurrentChatroomId,
 } from '../../../features/chatroom/chatroomSlice';
 import ChatroomType from '../../../features/chatroom/chatroomTypes';
 import { getUserData } from '../../../features/auth/authSlice';
@@ -47,7 +48,7 @@ const MessageCard: React.FunctionComponent<MessageCardProps> = ({
   const [timeAgo, setTimeAgo] = useState<string>('');
   const [messageType, setMessageType] = useState<string>('');
   const { friendData } = useSelector(getUserData);
-
+  const currentChatroomId = useSelector(getCurrentChatroomId);
   const selectChatRoom = (e: React.MouseEvent) => {
     e.preventDefault();
     if (unreadCount > 0) {
@@ -75,10 +76,10 @@ const MessageCard: React.FunctionComponent<MessageCardProps> = ({
   }, [chatMessages]);
 
   const getPreviewMessage = (message: string): string =>
-    message.length > 40 ? message.substring(0, 40) + '...' : message;
+    message.length > 30 ? message.substring(0, 30) + '...' : message;
 
   return (
-    <MessageCardContainer unread={false} onClick={selectChatRoom}>
+    <MessageCardContainer unread={false} isSelected={chatroomId === currentChatroomId} onClick={selectChatRoom}>
       <MessageCardAvatar>
         <UserAvatar avatarUrl={chatroomAvatar} width="50px" />
       </MessageCardAvatar>

@@ -1,14 +1,17 @@
 import styled from 'styled-components';
 
 export const ChatInputContainer = styled.div`
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 100px;
+  left: 2.5%;
+  width: 95%;
+  height: 60px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 40px;
+  padding: 10px 20px;
+  background: white;
+  margin: 0 auto;
+  border-radius: 10px;
+  box-shadow: 0 0 13px 1px rgba(0, 0, 0, 0.1);
   div.ChatInput__Typing {
     position: absolute;
     display: flex;
@@ -76,7 +79,7 @@ export const UploadFileButton = styled.div`
 
 export const ChatTextInput = styled.input`
   width: 80%;
-  border: 4px solid transparent;
+  border: 1px solid ${props => props.theme.containerBorder};
   outline: none;
   height: 35px;
   font-size: 1.1rem;
@@ -98,7 +101,6 @@ export const EmojiButton = styled.div`
 `;
 
 export const EmojiPickerWrapper = styled.div`
-  position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
@@ -108,21 +110,24 @@ export const EmojiPickerWrapper = styled.div`
 `;
 export const EmojiPickerContainer = styled.section`
   position: absolute;
-  bottom: 100px;
-  right: 60px;
+  bottom: 60px;
+  right: 0px;
   z-index: 10000;
+  * {
+    box-shadow: none;
+  }
 `;
 export const ChatSendButton = styled.div`
-  width: 50px;
-  height: 50px;
-  min-width: 50px;
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
   color: white;
   background-color: ${props => props.theme.orange};
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 50%;
-  margin: 0 20px;
+  margin: 0 0 0 20px;
   cursor: pointer;
   &:hover {
     background-color: ${props => props.theme.orangeHovered};

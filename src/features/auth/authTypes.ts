@@ -21,6 +21,7 @@ export interface UserData {
   email: string;
   nickname: string;
   avatarUrl: string;
+  description: string;
   friendData: Record<string, FriendData>;
   chatroomIds: string[];
 }

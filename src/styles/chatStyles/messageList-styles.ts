@@ -4,19 +4,30 @@ export const MessageListContainer = styled.div`
   position: relative;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 160px 1fr;
+  grid-template-rows: 80px 250px 1fr;
   max-height: 100%;
 `;
 
 export const MessageListUpperContainer = styled.div`
-  padding: 20px 0 0 40px;
+  padding: 20px 0 0 20px;
+  div.message-list__title-container {
+    margin-bottom: 20px;
+    h3 {
+      font-weight: 700;
+    }
+  }
 `;
 
 export const LogoContainer = styled.div`
-  margin-right: 40px;
+  padding: 20px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  img {
+    width: 36px;
+    height: 36px;
+    margin-right: 10px;
+    padding-bottom: 4px;
+  }
   h1.logo {
     font-weight: 900;
     font-size: 2rem;
@@ -54,7 +65,7 @@ export const SearchContainer = styled.div`
   position: relative;
   width: 100%;
   height: 35px;
-  margin: 30px 0 10px;
+  margin-bottom: 20px;
   i {
     position: absolute;
     top: 10px;
@@ -66,7 +77,7 @@ export const SearchContainer = styled.div`
 export const SearchInput = styled.input`
   border: 4px solid transparent;
   outline: none;
-  width: calc(100% - 26px);
+  width: 100%;
   height: 35px;
   font-size: 1.1rem;
   padding: 1px 0 0 30px;
@@ -82,16 +93,16 @@ export const SearchInput = styled.input`
 `;
 
 export const Divider = styled.div`
-  width: calc(100% - 25px);
+  width: 100%;
   height: 1px;
   margin: 20px 0;
   background-color: ${props => props.theme.divider};
 `;
 
 export const MessageCardsContainer = styled.div`
-  height: calc(100vh - 210px);
-  padding: 0 20px 0 40px;
+  width: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
   &::-webkit-scrollbar {
     width: 5px;
   }

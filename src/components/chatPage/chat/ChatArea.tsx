@@ -14,7 +14,6 @@ import ChatMessage from './ChatMessage';
 // styled-components
 import {
   ChatPaneContainer,
-  ChatPaneWrapper,
   ChatMessageContainer,
   ChatPaneNewMessageContainer,
   ChatPaneAddFileModelContainer,
@@ -34,7 +33,6 @@ const ChatArea = (): JSX.Element => {
   const dispatch = useDispatch();
   const userData = useSelector(getUserData);
   const currentChatroom = useSelector(getCurrentChatroom);
-  let dragCounter = 0;
   const chatPaneContainer = useRef<HTMLDivElement>(null);
   const [isMessageAdded, setIsMessageAdded] = useState<boolean>(false);
   const [isScrollToBottom, setIsScollToBottom] = useState<boolean>(true);
@@ -43,6 +41,7 @@ const ChatArea = (): JSX.Element => {
   );
   const [prevHeight, setPrevHeight] = useState<number>(-1);
   const [showAddFileModal, setShowAddFileModal] = useState<boolean>(false);
+  let dragCounter = 0;
   const scrollListener = (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
     e.preventDefault();
     if (chatPaneContainer.current) {
@@ -204,20 +203,19 @@ const ChatArea = (): JSX.Element => {
         // 상대방이 입력한 경우 현재 스크롤 위치를 고정한다.
         // 새로운 메세지가 도착했다는 모달을 띄운다.
         else {
-          console.log('open modal!');
           setShowNewMessageArrived(true);
         }
       }
     }
   }, [currentChatroom.chatMessages]);
 
-  const scrollToBottom = (e: React.MouseEvent) => {
+  const scrollToBottom = (e: any) => {
     e.preventDefault();
     const chatPane = chatPaneContainer.current;
     if (chatPane) {
       chatPane.scrollTop = chatPane.scrollHeight;
+      setShowNewMessageArrived(false);
     }
-    setShowNewMessageArrived(false);
   };
 
   const createChatMessage = () => {
@@ -259,23 +257,24 @@ const ChatArea = (): JSX.Element => {
               </div>
             </div>
           )}
-          <ChatMessage chatMessage={chatMessage} />
+          <ChatMessage
+            chatMessage={chatMessage}
+            scrollToBottom={scrollToBottom}
+          />
         </ChatMessageContainer>
       );
     });
   };
   return (
-    <>
-      <ChatPaneContainer
-        ref={chatPaneContainer}
-        onScroll={scrollListener}
-        onDrop={dropHandler}
-        onDragOver={dragOverHandler}
-        onDragEnter={dragEnterHandler}
-        onDragLeave={dragLeaveHandler}
-      >
-        <ChatPaneWrapper>{createChatMessage()}</ChatPaneWrapper>
-      </ChatPaneContainer>
+    <ChatPaneContainer
+      ref={chatPaneContainer}
+      onScroll={scrollListener}
+      onDrop={dropHandler}
+      onDragOver={dragOverHandler}
+      onDragEnter={dragEnterHandler}
+      onDragLeave={dragLeaveHandler}
+    >
+      <div className="wrapper">{createChatMessage()}</div>
       {showNewMessageArrived && (
         <ChatPaneNewMessageContainer onClick={scrollToBottom}>
           <i className="fas fa-chevron-down"></i>
@@ -291,7 +290,7 @@ const ChatArea = (): JSX.Element => {
           />
         </ChatPaneAddFileModelContainer>
       )}
-    </>
+    </ChatPaneContainer>
   );
 };
 
