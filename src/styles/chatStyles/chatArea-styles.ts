@@ -1,16 +1,25 @@
 import styled from 'styled-components';
 
+export const ChatAreaContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding: 20px 0;
+  height: 100%;
+  width: 100%;
+  border-radius: 10px;
+  background-color: ${props => props.theme.containerBackground};
+`;
 export const ChatPaneContainer = styled.div`
   width: 100%;
   height: 0;
   flex: 1 1 auto;
-  display: flex;
+  /* display: flex;
   flex-direction: column;
-  flex-direction: column-reverse;
-  justify-content: flex-start;
+  justify-content: flex-start; */
   position: relative;
   overflow-y: scroll;
-  overflow-x: auto;
+  overflow-x: hidden;
   &::-webkit-scrollbar {
     width: 5px;
   }
@@ -39,7 +48,6 @@ export const ChatPaneContainer = styled.div`
   }
   div.wrapper {
     div.chatmessage__start {
-      text-align: center;
       h1 {
         font-size: 0.8rem;
         color: ${props => props.theme.secondaryText};
@@ -84,6 +92,7 @@ export const ChatMessageContainer = styled.div<ChatMessageContainerProps>`
 `;
 export const ChatPaneNewMessageContainer = styled.div`
   position: absolute;
+  z-index: 200;
   bottom: 118px;
   left: 50%;
   transform: translateX(-50%);

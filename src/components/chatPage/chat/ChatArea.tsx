@@ -13,6 +13,7 @@ import ChatMessage from './ChatMessage';
 
 // styled-components
 import {
+  ChatAreaContainer,
   ChatPaneContainer,
   ChatMessageContainer,
   ChatPaneNewMessageContainer,
@@ -35,42 +36,15 @@ const ChatArea = (): JSX.Element => {
   const currentChatroom = useSelector(getCurrentChatroom);
   const chatPaneContainer = useRef<HTMLDivElement>(null);
   const [isMessageAdded, setIsMessageAdded] = useState<boolean>(false);
-  const [isScrollToBottom, setIsScollToBottom] = useState<boolean>(true);
+  const [isScrollToBottom, setIsScrollToBottom] = useState<boolean>(true);
   const [showNewMessageArrived, setShowNewMessageArrived] = useState<boolean>(
     false
   );
   const [prevHeight, setPrevHeight] = useState<number>(-1);
   const [showAddFileModal, setShowAddFileModal] = useState<boolean>(false);
+
+  // 이미지, 파일 드래그 앤 드랍 관련 핸들러
   let dragCounter = 0;
-  const scrollListener = (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
-    e.preventDefault();
-    if (chatPaneContainer.current) {
-      const chatPane = chatPaneContainer.current;
-      // 스크롤이 최상단인 경우 추가 메세지 추가 로딩
-      if (chatPane.scrollTop === 0) {
-        const { chatroomId, currentPage, totalMessages } = currentChatroom;
-        if (totalMessages + 20 > currentPage * 20) {
-          setIsScollToBottom(false);
-          dispatch(
-            requestNextMessagePage({
-              chatroomId,
-              page: currentPage + 1,
-            })
-          );
-          // 스크롤을 고정하기위해 이전 채팅방의 높이를 상태로 기록한다.
-          setPrevHeight(chatPane.scrollHeight);
-          setIsMessageAdded(true);
-        }
-      }
-      if (
-        Math.ceil(
-          chatPane.scrollHeight - chatPane.offsetHeight - chatPane.scrollTop
-        ) < 500
-      ) {
-        setIsScollToBottom(true);
-      }
-    }
-  };
   const dragEnterHandler = (e: React.DragEvent<HTMLDivElement>) => {
     e.stopPropagation();
     e.preventDefault();
@@ -168,9 +142,69 @@ const ChatArea = (): JSX.Element => {
     e.stopPropagation();
     e.preventDefault();
   };
+
+  // 채팅창 스크롤 관련 핸들러
+  const scrollListener = (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
+    e.preventDefault();
+    const chatPane = chatPaneContainer.current;
+    if (chatPane) {
+      // 스크롤이 최상단인 경우 추가 메세지 추가 로딩
+      console.log(chatPane.scrollTop);
+      if (chatPane.scrollTop === 0) {
+        const { chatroomId, currentPage, totalMessages } = currentChatroom;
+        console.log(chatroomId, currentPage, totalMessages);
+        if (totalMessages + 20 > currentPage * 20) {
+          setIsScrollToBottom(false);
+          dispatch(
+            requestNextMessagePage({
+              chatroomId,
+              page: currentPage + 1,
+            })
+          );
+          // 스크롤을 고정하기위해 이전 채팅방의 높이를 상태로 기록한다.
+          setPrevHeight(chatPane.scrollHeight);
+          setIsMessageAdded(true);
+        }
+        console.log(
+          `최상단! 이전 높이 ${prevHeight}, 메세지 추가됨 ${isMessageAdded}`
+        );
+      }
+      if (
+        Math.ceil(
+          chatPane.scrollHeight - chatPane.offsetHeight - chatPane.scrollTop
+        ) < 100
+      ) {
+        console.log(
+          '스크롤이 100px 이상 올라가지 않아 메세지가 추가될 경우 스크롤을 바닥으로 내림.'
+        );
+        setIsScrollToBottom(true);
+      } else {
+        setIsScrollToBottom(false);
+      }
+    }
+  };
+
+  const scrollToBottom = (e: any) => {
+    console.log('scrollToBottom triggered');
+    e.preventDefault();
+    const chatPane = chatPaneContainer.current;
+    if (chatPane && isScrollToBottom) {
+      chatPane.scrollTop = chatPane.scrollHeight;
+      setShowNewMessageArrived(false);
+    }
+  };
+  const scrollToPrevHeight = () => {
+    const chatPane = chatPaneContainer.current;
+    if (chatPane && !isScrollToBottom && !showNewMessageArrived) {
+      console.log('image load trigger scrollToPrevHeight');
+      chatPane.scrollTop = chatPane.scrollHeight - prevHeight;
+    }
+  };
   // 채팅방이 변경된 경우 스크롤을 최하단으로 이동
   useEffect(() => {
+    console.log('useEffect triggered');
     if (chatPaneContainer.current) {
+      console.log('채팅방이 변경된 경우 스크롤을 최하단으로 이동');
       setPrevHeight(chatPaneContainer.current.scrollHeight);
       chatPaneContainer.current.scrollTop =
         chatPaneContainer.current.scrollHeight;
@@ -179,12 +213,22 @@ const ChatArea = (): JSX.Element => {
 
   // 메세지 내용이 변경된 경우 알맞은 스크롤 위치로 이동한다.
   useLayoutEffect(() => {
+    console.log('useLayoutEffect triggered');
     const chatPane = chatPaneContainer.current;
     if (chatPane) {
       // 만약 메세지 페이징으로 메세지 배열이 변경된 경우 현재 스크롤 위치를 고정한다.
+      console.log(
+        `현재 채팅창 높이 ${chatPane.scrollHeight}, 스크롤 위치 ${chatPane.scrollTop}`
+      );
       if (isMessageAdded) {
+        console.log(
+          '메세지 내용이 변경되었으나 스크롤 최상단으로 인함.',
+          chatPane.scrollHeight,
+          prevHeight
+        );
         chatPane.scrollTop = chatPane.scrollHeight - prevHeight;
         setIsMessageAdded(false);
+        console.log('메세지 추가 플레그 초기화', chatPane.scrollTop);
       } else {
         // 스크롤이 너무 높게 올라가지 않은 경우 메세지를 입력한 사용자에 관계없이
         // 스크롤을 최하단으로 내린다.
@@ -203,23 +247,15 @@ const ChatArea = (): JSX.Element => {
         // 상대방이 입력한 경우 현재 스크롤 위치를 고정한다.
         // 새로운 메세지가 도착했다는 모달을 띄운다.
         else {
+          console.log('상대방의 메세지 도착.');
           setShowNewMessageArrived(true);
         }
       }
     }
   }, [currentChatroom.chatMessages]);
 
-  const scrollToBottom = (e: any) => {
-    e.preventDefault();
-    const chatPane = chatPaneContainer.current;
-    if (chatPane) {
-      chatPane.scrollTop = chatPane.scrollHeight;
-      setShowNewMessageArrived(false);
-    }
-  };
-
   const createChatMessage = () => {
-    const { chatMessages } = currentChatroom;
+    const chatMessages = currentChatroom.chatMessages;
     if (chatMessages.length === 0)
       return (
         <div className="chatmessage__start">
@@ -257,26 +293,43 @@ const ChatArea = (): JSX.Element => {
               </div>
             </div>
           )}
+          {/* 이미지 로딩 이후 이미지 높이에 따라 변하는 스크롤을 내리기 위해
+           콜백함수(scrollToBottom, scrollToPrevHeight)를 전달함. */}
           <ChatMessage
             chatMessage={chatMessage}
             scrollToBottom={scrollToBottom}
+            scrollToPrevHeight={scrollToPrevHeight}
           />
         </ChatMessageContainer>
       );
     });
   };
+  console.log(
+    `ChatArea Rerender.. showNewMessageArrived ${showNewMessageArrived}`
+  );
   return (
-    <ChatPaneContainer
-      ref={chatPaneContainer}
-      onScroll={scrollListener}
-      onDrop={dropHandler}
-      onDragOver={dragOverHandler}
-      onDragEnter={dragEnterHandler}
-      onDragLeave={dragLeaveHandler}
-    >
-      <div className="wrapper">{createChatMessage()}</div>
+    <>
+      <ChatPaneContainer
+        ref={chatPaneContainer}
+        onScroll={scrollListener}
+        onDrop={dropHandler}
+        onDragOver={dragOverHandler}
+        onDragEnter={dragEnterHandler}
+        onDragLeave={dragLeaveHandler}
+      >
+        <div className="wrapper">{createChatMessage()}</div>
+      </ChatPaneContainer>
       {showNewMessageArrived && (
-        <ChatPaneNewMessageContainer onClick={scrollToBottom}>
+        <ChatPaneNewMessageContainer
+          onClick={e => {
+            e.preventDefault();
+            const chatPane = chatPaneContainer.current;
+            if (chatPane) {
+              chatPane.scrollTop = chatPane.scrollHeight;
+              setShowNewMessageArrived(false);
+            }
+          }}
+        >
           <i className="fas fa-chevron-down"></i>
           <p>새로운 메세지가 도착하였습니다.</p>
         </ChatPaneNewMessageContainer>
@@ -290,7 +343,7 @@ const ChatArea = (): JSX.Element => {
           />
         </ChatPaneAddFileModelContainer>
       )}
-    </ChatPaneContainer>
+    </>
   );
 };
 

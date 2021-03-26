@@ -16,6 +16,7 @@ import { getCurrentTheme } from './features/theme/themeSlice';
 
 const App = (): JSX.Element => {
   const currentTheme = useSelector(getCurrentTheme);
+  console.log(`App Rerender...`);
   return (
     <>
       <ThemeProvider theme={currentTheme ? darkTheme : lightTheme}>

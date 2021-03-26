@@ -12,13 +12,15 @@ export const ChatInputContainer = styled.div`
   margin: 0 auto;
   border-radius: 10px;
   box-shadow: 0 0 13px 1px rgba(0, 0, 0, 0.1);
+  position: relative;
   div.ChatInput__Typing {
+    z-index: 10;
     position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
     left: 50%;
-    top: -20px;
+    top: -30px;
     height: 30px;
     text-align: center;
     transform: translateX(-50%);

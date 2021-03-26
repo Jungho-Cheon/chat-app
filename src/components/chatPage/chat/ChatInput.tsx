@@ -22,11 +22,10 @@ import {
   getCurrentChatroomId,
   sendMessage,
 } from '../../../features/chatroom/chatroomSlice';
+import { nanoid } from '@reduxjs/toolkit';
 
 // socket
 import { socket } from '../../../socket/socket';
-import { nanoid } from '@reduxjs/toolkit';
-import { urlRegex } from '../../../utils/urlRegex';
 
 import Client from '../../../client/chatClient';
 import { UrlData } from '../../../features/chatroom/chatroomTypes';
@@ -37,7 +36,6 @@ const ChatInput = (): JSX.Element => {
   const dispatch = useDispatch();
   const fileInput = useRef<HTMLInputElement>(null);
   const { email, friendData } = useSelector(getUserData);
-  const currentChatroom = useSelector(getCurrentChatroom);
   const currentChatroomId = useSelector(getCurrentChatroomId);
   const [isEmojiOpened, setIsEmojiOpened] = useState(false);
   const [text, setText] = useState<string>('');
@@ -160,7 +158,7 @@ const ChatInput = (): JSX.Element => {
           return;
         }
         // 파일 업로드
-        const chatroomId = currentChatroom.chatroomId;
+        const chatroomId = currentChatroomId;
         const response = await client.uploadFile(chatroomId, file);
         const messageId = nanoid();
         // 이미지 파일인 경우
@@ -229,14 +227,22 @@ const ChatInput = (): JSX.Element => {
     if (files) handleFile(files);
   };
   useEffect(() => {
-    if (currentChatroom.chatingUser)
-      setNickname(friendData[currentChatroom.chatingUser].nickname);
-    else setNickname('');
-  }, [currentChatroom.chatingUser]);
+    const chatTypingHandler = async (data: any) => {
+      const { chatroomId, email } = JSON.parse(data);
+      if (currentChatroomId === chatroomId) {
+        if (email) setNickname(friendData[email].nickname);
+        else setNickname('');
+      }
+    };
+    socket.on('CHAT_TYPING', chatTypingHandler);
+    return () => {
+      socket.off('CHAT_TYPING', chatTypingHandler);
+    };
+  }, []);
 
   return (
     <ChatInputContainer>
-      {currentChatroom.chatingUser && nickname && (
+      {nickname && (
         <div className="ChatInput__Typing">
           <div className="wave">
             <div className="dot"></div>
@@ -290,4 +296,4 @@ const ChatInput = (): JSX.Element => {
   );
 };
 
-export default ChatInput;
+export default React.memo(ChatInput);

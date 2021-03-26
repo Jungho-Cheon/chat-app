@@ -12,6 +12,7 @@ import { ChatMainContainer } from '../../../styles/chatStyles/chatMain-styles';
 
 const ChatMain = (): JSX.Element => {
   const currentChatroomId = useSelector(getCurrentChatroomId);
+  console.log('ChatMain Rerender..');
   return (
     <ChatMainContainer>
       <div className="chat-main__background">

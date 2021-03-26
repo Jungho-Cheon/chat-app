@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootStateOrAny } from 'react-redux';
+import store from '../../app/store';
 
 import Client from '../../client/chatClient';
 import { socket } from '../../socket/socket';
@@ -84,12 +85,6 @@ export const chatroomSlice = createSlice({
     },
     initSocketId(state, action: PayloadAction<string>) {
       state.socketId = action.payload;
-    },
-    toggleChatTyping(state, { payload }) {
-      const { chatroomId, email } = payload;
-      if (state.data.hasOwnProperty(chatroomId)) {
-        state.data[chatroomId].chatingUser = email;
-      }
     },
     sendMessage(state, action: PayloadAction<SendMessageProps>) {
       const { chatroomId, email, message } = action.payload;
@@ -226,14 +221,14 @@ export const getCurrentChatroomId = (state: RootStateOrAny): string => {
   return state.chatroom.currentChatroomId;
 };
 export const getCurrentChatroom = (state: RootStateOrAny): ChatroomType => {
-  const currentChatroom = state.chatroom.data[state.chatroom.currentChatroomId];
+  const currentChatroom: ChatroomType =
+    state.chatroom.data[state.chatroom.currentChatroomId];
   if (!currentChatroom)
     return {
       chatroomId: '',
       unreadCount: 0,
       currentPage: 1,
       totalMessages: 0,
-      chatingUser: '',
       chatMessages: [],
       participants: [],
     };
@@ -244,7 +239,6 @@ export const {
   changeChatroom,
   clearChatroom,
   initSocketId,
-  toggleChatTyping,
   sendMessage,
   sendComplete,
   receiveMessage,

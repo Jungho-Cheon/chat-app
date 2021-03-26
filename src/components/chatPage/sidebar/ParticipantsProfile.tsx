@@ -10,14 +10,13 @@ import {
   PartnerStatus,
   StatusIndicator,
 } from '../../../styles/chatStyles/sidebarStyles/participantsProfile-styles';
-import { AvatarContainer } from '../../../styles/userAvatar-styles';
-import UserAvatar from '../avatar/UserAvatar';
 
 const ParticipantsProfile = (): JSX.Element => {
   const { chatroomId, participants } = useSelector(getCurrentChatroom);
   const { email, friendData } = useSelector(getUserData);
   const [opponent, setOpponent] = useState<FriendData>();
   const [online, setOnline] = useState<boolean>(false);
+
   useLayoutEffect(() => {
     if (chatroomId === '') return;
     const opponent = participants.find(user => user.email !== email);
@@ -26,7 +25,7 @@ const ParticipantsProfile = (): JSX.Element => {
       setOnline(targetUserData.isLoggin);
       setOpponent(targetUserData);
     }
-  }, [participants]);
+  }, [friendData, participants]);
   return (
     <ParticipantsProfileContainer>
       {chatroomId && (

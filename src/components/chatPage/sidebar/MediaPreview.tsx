@@ -1,3 +1,4 @@
+import { nanoid } from '@reduxjs/toolkit';
 import React, { useLayoutEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getCurrentChatroom } from '../../../features/chatroom/chatroomSlice';
@@ -37,10 +38,7 @@ const MediaPreview = (): JSX.Element => {
         {media?.map((info, idx) => {
           if (idx === 0)
             return (
-              <div
-                className="media-preview__media-contents"
-                key={info.mediaURL}
-              >
+              <div className="media-preview__media-contents" key={nanoid()}>
                 <img
                   className="primary"
                   src={info.mediaURL}
@@ -50,10 +48,7 @@ const MediaPreview = (): JSX.Element => {
             );
           else if (idx < 4)
             return (
-              <div
-                className="media-preview__media-contents"
-                key={info.mediaURL}
-              >
+              <div className="media-preview__media-contents" key={nanoid()}>
                 <img src={info.mediaURL} alt={info.mediaURL} />
               </div>
             );

@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 
 export const MediaPreviewContainer = styled.div`
+  position: relative;
+  height: 45%;
   div.media-preview__title {
     display: flex;
     justify-content: space-between;
@@ -19,9 +21,11 @@ export const MediaPreviewContainer = styled.div`
   div.media-preview__media-contents-container {
     position: relative;
     width: 100%;
+    /* height: 100%; */
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    align-items: flex-start;
     padding: 0 20px;
     div.media-preview__media-contents {
       img {

@@ -83,7 +83,6 @@ export interface UploadFileResponse {
 export default interface ChatroomType {
   chatroomId: string;
   unreadCount: number;
-  chatingUser: string;
   totalMessages: number;
   currentPage: number;
   participants: Participant[];

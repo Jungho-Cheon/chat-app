@@ -5,23 +5,24 @@ interface isOnlineProp {
 }
 
 export const ParticipantsProfileContainer = styled.div`
-  height: 100%;
+  position: relative;
+  height: 50%;
+  min-height: 352px;
   display: flex;
   flex-direction: column;
-  padding-top: 20px;
   /* background-color: ${props => props.theme.containerBackground}; */
   div.participants-profile__profile-picture {
     position: relative;
-    height: 300px;
+    height: 60%;
     img {
       width: 100%;
-      height: 300px;
+      height: 100%;
       object-fit: cover;
     }
     div.participants-profile__profile-picture_gradient {
       position: absolute;
       width: 100%;
-      height: 300px;
+      height: 100%;
       z-index: 2;
       top: 0;
       left: 0;

@@ -3,7 +3,6 @@ import { userOffline, userOnline } from '../features/auth/authSlice';
 import {
   checkReadMessage,
   initSocketId,
-  toggleChatTyping,
   receiveMessage,
   sendComplete,
 } from '../features/chatroom/chatroomSlice';
@@ -36,10 +35,6 @@ socket.on('connect', () => {
   console.log(`socket connected - ${socket.id}`);
   store.dispatch(initSocketId(socket.id));
 });
-socket.on('CHAT_TYPING', async data => {
-  const { chatroomId, email } = JSON.parse(data);
-  store.dispatch(toggleChatTyping({ chatroomId, email }));
-});
 socket.on('SEND_COMPLETE', async data => {
   const sendCompleteProps: CompleteMessageProps = JSON.parse(data);
   store.dispatch(sendComplete(sendCompleteProps));
@@ -55,10 +50,11 @@ socket.on('READ_MESSAGE', async data => {
 });
 socket.on('USER_ONLINE', async data => {
   const { email } = JSON.parse(data);
-
+  console.log(`${email} online`);
   store.dispatch(userOnline(email));
 });
 socket.on('USER_OFFLINE', async data => {
   const { email } = JSON.parse(data);
+  console.log(`${email} offline`);
   store.dispatch(userOffline(email));
 });

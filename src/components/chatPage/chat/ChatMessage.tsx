@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 // components
 import UserAvatar from '../avatar/UserAvatar';
@@ -15,10 +15,12 @@ import { useSelector } from 'react-redux';
 import { getUserData } from '../../../features/auth/authSlice';
 
 import { ChatData, Message } from '../../../features/chatroom/chatroomTypes';
+import { nanoid } from '@reduxjs/toolkit';
 
 interface ChatMessageProps {
   chatMessage: ChatData;
   scrollToBottom: (e: any) => void;
+  scrollToPrevHeight: () => void;
 }
 
 const convertTime = (time: string) => {
@@ -47,6 +49,7 @@ export const compareDate = (
 const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
   chatMessage,
   scrollToBottom,
+  scrollToPrevHeight,
 }: ChatMessageProps): JSX.Element => {
   const { email, messages } = chatMessage;
   const userData = useSelector(getUserData);
@@ -57,6 +60,11 @@ const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
   const avatarUrl = isMine
     ? userData.avatarUrl
     : userData.friendData[email]?.avatarUrl;
+  const imageOnLoadHandler = useCallback((e: any) => {
+    console.log('imageOnLoadHandler called');
+    scrollToBottom(e);
+    scrollToPrevHeight();
+  }, []);
   const createMessageComponent = (message: Message): JSX.Element => {
     switch (message.messageType) {
       case 'TEXT':
@@ -74,7 +82,7 @@ const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
         return (
           <img
             className="message__image"
-            onLoad={scrollToBottom}
+            onLoad={imageOnLoadHandler}
             src={message.message}
             alt={message.messageId}
           />
@@ -87,8 +95,8 @@ const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
           >
             <img
               className="message__url__image"
+              onLoad={imageOnLoadHandler}
               src={message.urlData?.image}
-              onLoad={scrollToBottom}
             />
             <div className="message__url__info">
               <h3>{message.urlData?.title}</h3>
@@ -101,13 +109,14 @@ const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
         return <></>;
     }
   };
+  console.log('ChatMessage Rerender..');
   return (
     <ChatMessageFlexDirection isMine={isMine}>
       <ChatMessageContainer isMine={isMine}>
         <MessageContainer isMine={isMine}>
           {messages.map(message => {
             return (
-              <MessageArticle key={message.messageId}>
+              <MessageArticle key={nanoid()}>
                 <div className="message__wrapper">
                   {isMine && !message.isComplete && (
                     <i className="fas fa-spinner complete"></i>
@@ -141,4 +150,7 @@ const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
   );
 };
 
-export default React.memo(ChatMessage);
+export default React.memo(
+  ChatMessage,
+  (prev, cur) => prev.chatMessage !== cur.chatMessage
+);
