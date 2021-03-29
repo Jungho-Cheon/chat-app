@@ -18,7 +18,6 @@ import {
 // redux
 import { getUserData } from '../../../features/auth/authSlice';
 import {
-  getCurrentChatroom,
   getCurrentChatroomId,
   sendMessage,
 } from '../../../features/chatroom/chatroomSlice';
@@ -273,6 +272,7 @@ const ChatInput = (): JSX.Element => {
         onChange={textChange}
         onKeyPress={handleEnterKeyPress}
       />
+
       <EmojiButton onClick={() => setIsEmojiOpened(!isEmojiOpened)}>
         <i className="far fa-smile"></i>
       </EmojiButton>
@@ -280,15 +280,15 @@ const ChatInput = (): JSX.Element => {
         style={{ display: isEmojiOpened ? `block` : `none` }}
         onClick={event => {
           event.preventDefault();
-          console.log(event.target, event.currentTarget);
           setIsEmojiOpened(!isEmojiOpened);
         }}
+      ></EmojiPickerWrapper>
+      <EmojiPickerContainer
+        style={{ display: isEmojiOpened ? `block` : `none` }}
+        onClick={e => e.stopPropagation()}
       >
-        <EmojiPickerContainer onClick={e => e.stopPropagation()}>
-          <EmojiPicker onEmojiClick={emojiClick} />
-        </EmojiPickerContainer>
-      </EmojiPickerWrapper>
-
+        <EmojiPicker onEmojiClick={emojiClick} />
+      </EmojiPickerContainer>
       <ChatSendButton onClick={sendMessageHandler}>
         <i className="fas fa-paper-plane"></i>
       </ChatSendButton>

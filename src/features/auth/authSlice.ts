@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { GoogleLoginResponse } from 'react-google-login';
 import { RootStateOrAny } from 'react-redux';
 import Client from '../../client/authClient';
 import {
@@ -30,6 +31,39 @@ export const signInThunk = createAsyncThunk(
   'auth/sign-in',
   async (signInData: SignInProps): Promise<SignInResponse> => {
     return await client.signIn(signInData);
+  }
+);
+
+export const googleLogin = createAsyncThunk(
+  'auth/google-login',
+  async (loginData: GoogleLoginResponse) => {
+    const { email, imageUrl, name } = loginData.profileObj;
+    return await client.oAuthLogin({
+      email,
+      name,
+      image: imageUrl,
+    });
+  }
+);
+
+export interface FacebookLoginResponse {
+  email: string;
+  name: string;
+  picture?: {
+    data: {
+      url: string;
+    };
+  };
+}
+export const facebookLogin = createAsyncThunk(
+  'auth/facebook-login',
+  async (loginData: FacebookLoginResponse) => {
+    const { email, name, picture } = loginData;
+    return await client.oAuthLogin({
+      email,
+      name,
+      image: picture?.data.url || '',
+    });
   }
 );
 
@@ -98,6 +132,39 @@ const authSlice = createSlice({
         state.signUpState = SignUpState.SUCCESS;
       } else if (payload === 409) {
         state.signUpState = SignUpState.FAILED;
+      }
+    });
+    // 구글 로그인 응답 처리
+    builder.addCase(googleLogin.fulfilled, (state, { payload }) => {
+      console.log(payload);
+      const { accessToken, message, statusCode, userData } = payload;
+      if (statusCode === 200) {
+        state.accessToken = accessToken;
+        state.userData = userData;
+        state.signInState.state = SignInState.SUCCESS;
+        state.signInState.message = message;
+      } else if (statusCode === 400) {
+        state.signInState.state = SignInState.EMAIL_INVALID;
+        state.signInState.message = message;
+      } else if (statusCode === 401) {
+        state.signInState.state = SignInState.PASSWORD_INVALID;
+        state.signInState.message = message;
+      }
+    });
+    builder.addCase(facebookLogin.fulfilled, (state, { payload }) => {
+      console.log(payload);
+      const { accessToken, message, statusCode, userData } = payload;
+      if (statusCode === 200) {
+        state.accessToken = accessToken;
+        state.userData = userData;
+        state.signInState.state = SignInState.SUCCESS;
+        state.signInState.message = message;
+      } else if (statusCode === 400) {
+        state.signInState.state = SignInState.EMAIL_INVALID;
+        state.signInState.message = message;
+      } else if (statusCode === 401) {
+        state.signInState.state = SignInState.PASSWORD_INVALID;
+        state.signInState.message = message;
       }
     });
   },

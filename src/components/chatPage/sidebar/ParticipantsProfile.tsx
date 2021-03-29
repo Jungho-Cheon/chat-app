@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import { getUserData } from '../../../features/auth/authSlice';
 import { FriendData } from '../../../features/auth/authTypes';
 import { getCurrentChatroom } from '../../../features/chatroom/chatroomSlice';
-import { Participant } from '../../../features/chatroom/chatroomTypes';
 
 import {
   ParticipantsProfileContainer,

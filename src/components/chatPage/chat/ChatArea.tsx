@@ -13,11 +13,11 @@ import ChatMessage from './ChatMessage';
 
 // styled-components
 import {
-  ChatAreaContainer,
   ChatPaneContainer,
   ChatMessageContainer,
   ChatPaneNewMessageContainer,
   ChatPaneAddFileModelContainer,
+  ChatPaneClickedIamge,
 } from '../../../styles/chatStyles/chatArea-styles';
 import { nanoid } from '@reduxjs/toolkit';
 import { getUserData } from '../../../features/auth/authSlice';
@@ -35,13 +35,16 @@ const ChatArea = (): JSX.Element => {
   const userData = useSelector(getUserData);
   const currentChatroom = useSelector(getCurrentChatroom);
   const chatPaneContainer = useRef<HTMLDivElement>(null);
+  const [isInit, setIsInit] = useState<boolean>(true);
+  // const [isImageClicked, setIsImageClicked] = useState<boolean>(false);
   const [isMessageAdded, setIsMessageAdded] = useState<boolean>(false);
-  const [isScrollToBottom, setIsScrollToBottom] = useState<boolean>(true);
+  // const [isScrollToBottom, setIsScrollToBottom] = useState<boolean>(true);
   const [showNewMessageArrived, setShowNewMessageArrived] = useState<boolean>(
     false
   );
   const [prevHeight, setPrevHeight] = useState<number>(-1);
   const [showAddFileModal, setShowAddFileModal] = useState<boolean>(false);
+  const [clickedImage, setClickedImage] = useState<string>('');
 
   // 이미지, 파일 드래그 앤 드랍 관련 핸들러
   let dragCounter = 0;
@@ -149,70 +152,59 @@ const ChatArea = (): JSX.Element => {
     const chatPane = chatPaneContainer.current;
     if (chatPane) {
       // 스크롤이 최상단인 경우 추가 메세지 추가 로딩
-      console.log(chatPane.scrollTop);
       if (chatPane.scrollTop === 0) {
         const { chatroomId, currentPage, totalMessages } = currentChatroom;
-        console.log(chatroomId, currentPage, totalMessages);
         if (totalMessages + 20 > currentPage * 20) {
-          setIsScrollToBottom(false);
+          // 스크롤을 고정하기위해 이전 채팅방의 높이를 상태로 기록한다.
+          setPrevHeight(chatPane.scrollHeight);
+          setIsMessageAdded(true);
+          setIsInit(false);
+
           dispatch(
             requestNextMessagePage({
               chatroomId,
               page: currentPage + 1,
             })
           );
-          // 스크롤을 고정하기위해 이전 채팅방의 높이를 상태로 기록한다.
-          setPrevHeight(chatPane.scrollHeight);
-          setIsMessageAdded(true);
         }
-        console.log(
-          `최상단! 이전 높이 ${prevHeight}, 메세지 추가됨 ${isMessageAdded}`
-        );
-      }
-      if (
-        Math.ceil(
-          chatPane.scrollHeight - chatPane.offsetHeight - chatPane.scrollTop
-        ) < 100
-      ) {
-        console.log(
-          '스크롤이 100px 이상 올라가지 않아 메세지가 추가될 경우 스크롤을 바닥으로 내림.'
-        );
-        setIsScrollToBottom(true);
-      } else {
-        setIsScrollToBottom(false);
       }
     }
   };
 
   const scrollToBottom = (e: any) => {
-    console.log('scrollToBottom triggered');
     e.preventDefault();
     const chatPane = chatPaneContainer.current;
-    if (chatPane && isScrollToBottom) {
+    if (chatPane && isInit) {
       chatPane.scrollTop = chatPane.scrollHeight;
       setShowNewMessageArrived(false);
     }
   };
   const scrollToPrevHeight = () => {
     const chatPane = chatPaneContainer.current;
-    if (chatPane && !isScrollToBottom && !showNewMessageArrived) {
-      console.log('image load trigger scrollToPrevHeight');
+    if (
+      chatPane &&
+      Math.ceil(
+        chatPane.scrollHeight - chatPane.offsetHeight - chatPane.scrollTop
+      ) >= 100 &&
+      !showNewMessageArrived
+    ) {
       chatPane.scrollTop = chatPane.scrollHeight - prevHeight;
     }
   };
   // 채팅방이 변경된 경우 스크롤을 최하단으로 이동
   useEffect(() => {
-    console.log('useEffect triggered');
     if (chatPaneContainer.current) {
-      console.log('채팅방이 변경된 경우 스크롤을 최하단으로 이동');
       setPrevHeight(chatPaneContainer.current.scrollHeight);
       chatPaneContainer.current.scrollTop =
         chatPaneContainer.current.scrollHeight;
+      console.log(chatPaneContainer.current.scrollTop);
     }
+    setTimeout(() => setIsInit(false), 3000);
   }, [currentChatroom.chatroomId]);
 
   // 메세지 내용이 변경된 경우 알맞은 스크롤 위치로 이동한다.
   useLayoutEffect(() => {
+    if (isInit) return;
     console.log('useLayoutEffect triggered');
     const chatPane = chatPaneContainer.current;
     if (chatPane) {
@@ -237,8 +229,17 @@ const ChatArea = (): JSX.Element => {
         if (
           (chatMessages.length > 0 &&
             chatMessages[chatMessages.length - 1].email === userData.email) ||
-          isScrollToBottom
+          chatPane.scrollHeight <
+            chatPane.scrollTop + chatPane.offsetHeight + 300
         ) {
+          console.log(
+            chatMessages[chatMessages.length - 1].email,
+            userData.email
+          );
+          console.log(
+            chatPane.scrollHeight,
+            chatPane.scrollTop + chatPane.offsetHeight
+          );
           // 현재 로그인 사용자가 입력한 경우 스크롤을 최하단으로 이동한다.
           chatPane.scrollTop = chatPane.scrollHeight;
           // 최하단으로 이동하므로 모달을 제거한다.
@@ -299,6 +300,9 @@ const ChatArea = (): JSX.Element => {
             chatMessage={chatMessage}
             scrollToBottom={scrollToBottom}
             scrollToPrevHeight={scrollToPrevHeight}
+            setPrevHeight={setPrevHeight}
+            chatPaneContainer={chatPaneContainer}
+            setClickedImage={setClickedImage}
           />
         </ChatMessageContainer>
       );
@@ -342,6 +346,16 @@ const ChatArea = (): JSX.Element => {
             alt="add-photo"
           />
         </ChatPaneAddFileModelContainer>
+      )}
+      {clickedImage && (
+        <ChatPaneClickedIamge
+          src={clickedImage}
+          alt="clicked-image"
+          onClick={e => {
+            e.preventDefault();
+            setClickedImage('');
+          }}
+        />
       )}
     </>
   );

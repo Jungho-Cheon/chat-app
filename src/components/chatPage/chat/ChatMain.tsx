@@ -8,7 +8,10 @@ import ChatInput from './ChatInput';
 import PleaseSelectChat from './PleaseSelectChat';
 
 // styled-components
-import { ChatMainContainer } from '../../../styles/chatStyles/chatMain-styles';
+import {
+  ChatMainContainer,
+  LogoContainer,
+} from '../../../styles/chatStyles/chatMain-styles';
 
 const ChatMain = (): JSX.Element => {
   const currentChatroomId = useSelector(getCurrentChatroomId);
@@ -16,6 +19,11 @@ const ChatMain = (): JSX.Element => {
   return (
     <ChatMainContainer>
       <div className="chat-main__background">
+        {/* Logo */}
+        <LogoContainer>
+          <img src="assets/logo.svg" alt="logo" />
+          <h1 className="logo">TALKI</h1>
+        </LogoContainer>
         {currentChatroomId ? (
           <>
             {/* Chat Pane */}

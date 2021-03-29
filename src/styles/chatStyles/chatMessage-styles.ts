@@ -52,7 +52,7 @@ export const MessageContainer = styled.div<FlexDirection>`
       z-index: 1;
       font-size: 0.8rem;
       color: ${props => props.theme.secondaryText};
-      background-color: ${props => props.theme.mainBackground};
+      background-color: ${props => props.theme.containerBackground};
     }
   }
   .message__wrapper {
@@ -126,9 +126,9 @@ export const MessageWrapper = styled.div<MessageType>`
   width: auto;
   opacity: ${props => (props.isCompleted ? 1 : 0.5)};
   color: ${props => (props.isMine ? `white` : props.theme.primaryText)};
-  color: ${props => props.type === 'FILE' && props.theme.purple};
+  color: ${props => props.type === 'FILE' && props.theme.buttonBackgroundA};
   background-color: ${props =>
-    props.isMine ? props.theme.purple : props.theme.background};
+    props.isMine ? props.theme.buttonBackgroundA : props.theme.background};
   background-color: ${props => props.type === 'FILE' && `rgb(232,232,242)`};
   padding: 10px 20px;
   ${props =>
@@ -140,8 +140,11 @@ export const MessageWrapper = styled.div<MessageType>`
   word-break: break-all;
   white-space: initial;
   img.message__image {
+    position: relative;
+    z-index: 5;
     border-radius: 5px;
     width: 300px;
+    /* transition: 0.6s cubic-bezier(0.215, 0.61, 0.355, 1); */
   }
   i {
     padding-right: 10px;

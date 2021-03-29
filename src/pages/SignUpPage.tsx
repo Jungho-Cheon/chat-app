@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 
 // styled-components
 import {
-  SignInContainer,
+  SignUpContainer,
   SidebarSection,
   SignInSection,
   SidebarContainer,
@@ -24,7 +24,6 @@ import {
   getSignUpState,
   signUpThunk,
 } from '../features/auth/authSlice';
-import { SignInButton } from '../styles/homeStyles/homeHeader-styles';
 import { SignUpState } from '../features/auth/authTypes';
 
 const SignUpPage = (): JSX.Element => {
@@ -151,7 +150,7 @@ const SignUpPage = (): JSX.Element => {
     </>
   );
   return (
-    <SignInContainer onKeyPress={handleEnterKeyPress}>
+    <SignUpContainer onKeyPress={handleEnterKeyPress}>
       <SidebarSection>
         <SidebarContainer>
           <div className="sidebar__home">
@@ -189,7 +188,7 @@ const SignUpPage = (): JSX.Element => {
           </div>
         </SignInFormContainer>
       </SignInSection>
-    </SignInContainer>
+    </SignUpContainer>
   );
 };
 

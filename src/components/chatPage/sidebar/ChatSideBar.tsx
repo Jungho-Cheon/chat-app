@@ -6,12 +6,19 @@ import MediaPreview from './MediaPreview';
 
 // styled-components
 import { ChatSideBarContainer } from '../../../styles/chatStyles/sidebarStyles/chatSidebar-styles';
+import { useSelector } from 'react-redux';
+import { getCurrentChatroomId } from '../../../features/chatroom/chatroomSlice';
 
 const ChatSideBar = (): JSX.Element => {
+  const currentChatroomId = useSelector(getCurrentChatroomId);
   return (
     <ChatSideBarContainer>
-      <ParticipantsProfile />
-      <MediaPreview />
+      {currentChatroomId && (
+        <>
+          <ParticipantsProfile />
+          <MediaPreview />
+        </>
+      )}
     </ChatSideBarContainer>
   );
 };

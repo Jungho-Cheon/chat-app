@@ -4,7 +4,7 @@ const customColor = new Map<string, string>();
 customColor.set('yellow', 'rgb(242, 209, 132)');
 customColor.set('deepYellow', 'rgb(134, 97, 24)');
 
-export const SignInContainer = styled.div`
+export const SignUpContainer = styled.div`
   height: 100vh;
   display: grid;
   grid-template-columns: 400px 1fr;
@@ -17,7 +17,7 @@ export const SidebarContainer = styled.div`
   .sidebar__home {
     padding: 80px 40px 20px;
     a {
-      color: ${props => props.theme.mainBackground};
+      color: ${props => props.theme.background};
       font-size: 2.6rem;
       font-weight: 400;
       cursor: pointer;
@@ -45,12 +45,13 @@ export const SignInSection = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
+  color: ${props => props.theme.primaryText};
   nav {
     padding: 30px 30px 0 30px;
     text-align: right;
     a {
       text-decoration: none;
-      color: ${props => props.theme.purple};
+      color: ${props => props.theme.buttonBackgroundA};
     }
   }
 `;
@@ -68,7 +69,7 @@ export const SignInFormContainer = styled.div`
     display: flex;
     flex-direction: column;
     padding: 40px 80px;
-    background-color: ${props => props.theme.mainBackground};
+    background-color: ${props => props.theme.background};
     width: 500px;
     label {
       font-weight: 700;
@@ -82,15 +83,16 @@ export const SignInFormContainer = styled.div`
       background-color: ${props => props.theme.divider};
       margin: 5px 0;
       padding-left: 10px;
+      color: ${props => props.theme.primaryText};
       transition: 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
       &:hover {
-        box-shadow: 0px 0px 0px 5px ${props => props.theme.secondaryPurple};
-        background-color: ${props => props.theme.mainBackground};
+        box-shadow: 0px 0px 0px 5px ${props => props.theme.buttonHoveredA};
+        background-color: ${props => props.theme.background};
       }
       &:focus {
-        border: 1px solid ${props => props.theme.purple};
-        box-shadow: 0px 0px 0px 5px ${props => props.theme.secondaryPurple};
-        background-color: ${props => props.theme.mainBackground};
+        border: 1px solid ${props => props.theme.buttonBackgroundA};
+        box-shadow: 0px 0px 0px 5px ${props => props.theme.buttonHoveredA};
+        background-color: ${props => props.theme.background};
       }
     }
     button#submit {
@@ -98,22 +100,22 @@ export const SignInFormContainer = styled.div`
       height: 35px;
       border: none;
       outline: none;
-      background-color: ${props => props.theme.purple};
+      background-color: ${props => props.theme.buttonBackgroundA};
       color: white;
       margin-top: 10px;
       width: 50%;
       &:hover {
-        background-color: ${props => props.theme.secondaryPurple};
+        background-color: ${props => props.theme.buttonHoveredA};
       }
       &:active {
-        background-color: ${props => props.theme.deepPurple};
+        background-color: ${props => props.theme.buttonActiveA};
       }
     }
     p {
       line-height: 1.2;
       span {
         font-weight: 700;
-        color: ${props => props.theme.purple};
+        color: ${props => props.theme.buttonBackgroundA};
       }
     }
   }
@@ -133,6 +135,8 @@ export const GoogleLoginButton = styled.button`
   text-align: center;
   position: relative;
   margin: 0 5px;
+  cursor: pointer;
+  background-color: ${props => props.theme.containerBackground};
   i {
     position: absolute;
     left: 50%;
@@ -141,9 +145,9 @@ export const GoogleLoginButton = styled.button`
     color: ${props => props.theme.secondaryText};
   }
   &:hover {
-    background-color: ${props => props.theme.secondaryText};
+    background-color: ${props => props.theme.primaryText};
     i {
-      color: ${props => props.theme.mainBackground};
+      color: ${props => props.theme.buttonBackgroundA};
     }
   }
 `;
@@ -156,6 +160,8 @@ export const FacebookLoginButton = styled.button`
   border-radius: 50%;
   text-align: center;
   position: relative;
+  cursor: pointer;
+  background-color: ${props => props.theme.containerBackground};
   i {
     position: absolute;
     left: 50%;
@@ -164,9 +170,9 @@ export const FacebookLoginButton = styled.button`
     color: ${props => props.theme.secondaryText};
   }
   &:hover {
-    background-color: ${props => props.theme.secondaryText};
+    background-color: ${props => props.theme.primaryText};
     i {
-      color: ${props => props.theme.mainBackground};
+      color: ${props => props.theme.buttonBackgroundB};
     }
   }
 `;
@@ -187,7 +193,7 @@ export const DividerContainer = styled.div`
     top: 50%;
     transform: translate(-50%, -50%);
     padding: 0 20px;
-    background-color: ${props => props.theme.mainBackground};
+    background-color: ${props => props.theme.background};
     color: ${props => props.theme.secondaryText};
   }
 `;

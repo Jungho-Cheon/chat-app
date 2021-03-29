@@ -68,7 +68,7 @@ export const ParticipantsProfileContainer = styled.div`
       justify-self: flex-end;
       font-size: 0.8rem;
       font-weight: 400;
-      color: ${props => props.theme.purple};
+      color: ${props => props.theme.buttonBackgroundA};
       cursor: pointer;
       &:hover {
         text-decoration: underline;

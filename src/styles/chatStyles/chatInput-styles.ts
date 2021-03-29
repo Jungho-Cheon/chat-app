@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 export const ChatInputContainer = styled.div`
-  left: 2.5%;
   width: 95%;
   height: 60px;
   display: flex;
@@ -75,7 +74,10 @@ export const UploadFileButton = styled.div`
   font-size: 1.2rem;
   cursor: pointer;
   &:hover {
-    color: ${props => props.theme.orangeHovered};
+    color: ${props => props.theme.buttonHoveredA};
+  }
+  &:active {
+    color: ${props => props.theme.buttonActiveA};
   }
 `;
 
@@ -98,23 +100,26 @@ export const EmojiButton = styled.div`
   margin-left: 20px;
   cursor: pointer;
   &:hover {
-    color: ${props => props.theme.orangeHovered};
+    color: ${props => props.theme.buttonHoveredA};
+  }
+  &:active {
+    color: ${props => props.theme.buttonActiveA};
   }
 `;
 
 export const EmojiPickerWrapper = styled.div`
+  position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  background: transparent;
-  z-index: 10000;
+  z-index: 250;
 `;
 export const EmojiPickerContainer = styled.section`
   position: absolute;
   bottom: 60px;
   right: 0px;
-  z-index: 10000;
+  z-index: 250;
   * {
     box-shadow: none;
   }
@@ -124,7 +129,7 @@ export const ChatSendButton = styled.div`
   height: 30px;
   min-width: 30px;
   color: white;
-  background-color: ${props => props.theme.orange};
+  background-color: ${props => props.theme.buttonBackgroundA};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -132,9 +137,9 @@ export const ChatSendButton = styled.div`
   margin: 0 0 0 20px;
   cursor: pointer;
   &:hover {
-    background-color: ${props => props.theme.orangeHovered};
+    background-color: ${props => props.theme.buttonBackgroundA};
   }
   &:active {
-    background-color: ${props => props.theme.purple};
+    background-color: ${props => props.theme.buttonBackgroundB};
   }
 `;

@@ -11,7 +11,7 @@ export const MediaPreviewContainer = styled.div`
     a {
       font-size: 0.8rem;
       font-weight: 400;
-      color: ${props => props.theme.purple};
+      color: ${props => props.theme.buttonActiveA};
       cursor: pointer;
       &:hover {
         text-decoration: underline;
@@ -32,6 +32,7 @@ export const MediaPreviewContainer = styled.div`
         width: 85px;
         height: 85px;
         object-fit: cover;
+        cursor: pointer;
       }
       img.primary {
         width: 260px;

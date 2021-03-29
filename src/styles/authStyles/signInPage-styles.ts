@@ -11,11 +11,11 @@ export const SidebarContainer = styled.div`
   width: 100%;
   height: 100%;
   object-fit: contain;
-  background-color: ${props => props.theme.purple};
+  background-color: ${props => props.theme.buttonBackgroundA};
   .sidebar__home {
     padding: 80px 40px 20px;
     a {
-      color: ${props => props.theme.mainBackground};
+      color: ${props => props.theme.primaryText};
       font-size: 2.6rem;
       font-weight: 400;
       cursor: pointer;
@@ -26,7 +26,7 @@ export const SidebarContainer = styled.div`
   .sidebar__title {
     padding: 0px 40px 40px;
     h1 {
-      color: ${props => props.theme.deepPurple};
+      color: ${props => props.theme.buttonHoveredA};
       font-size: 1.6rem;
       font-weight: 700;
     }
@@ -38,12 +38,13 @@ export const SignInSection = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
+  color: ${props => props.theme.primaryText};
   nav {
     padding: 30px 30px 0 30px;
     text-align: right;
     a {
       text-decoration: none;
-      color: ${props => props.theme.purple};
+      color: ${props => props.theme.buttonBackgroundA};
     }
   }
 `;
@@ -52,6 +53,7 @@ export const SignInFormContainer = styled.div`
   justify-content: center;
   align-items: center;
   flex-grow: 1;
+  color: ${props => props.theme.primaryText};
   h1 {
     font-size: 1.5rem;
     font-weight: 700;
@@ -61,7 +63,7 @@ export const SignInFormContainer = styled.div`
     display: flex;
     flex-direction: column;
     padding: 40px 80px;
-    background-color: ${props => props.theme.mainBackground};
+    background-color: ${props => props.theme.background};
     width: 500px;
     label {
       font-weight: 700;
@@ -76,14 +78,15 @@ export const SignInFormContainer = styled.div`
       margin: 5px 0;
       padding-left: 10px;
       transition: 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+      color: ${props => props.theme.primaryText};
       &:hover {
-        box-shadow: 0px 0px 0px 5px ${props => props.theme.secondaryPurple};
-        background-color: ${props => props.theme.mainBackground};
+        box-shadow: 0px 0px 0px 3px ${props => props.theme.buttonBackgroundA};
+        background-color: ${props => props.theme.background};
       }
       &:focus {
-        border: 1px solid ${props => props.theme.purple};
-        box-shadow: 0px 0px 0px 5px ${props => props.theme.secondaryPurple};
-        background-color: ${props => props.theme.mainBackground};
+        border: 1px solid ${props => props.theme.buttonBackgroundA};
+        box-shadow: 0px 0px 0px 3px ${props => props.theme.buttonHoveredA};
+        background-color: ${props => props.theme.background};
       }
     }
     button#submit {
@@ -91,15 +94,15 @@ export const SignInFormContainer = styled.div`
       height: 35px;
       border: none;
       outline: none;
-      background-color: ${props => props.theme.purple};
+      background-color: ${props => props.theme.buttonBackgroundA};
       color: white;
       width: 50%;
       margin-top: 10px;
       &:hover {
-        background-color: ${props => props.theme.secondaryPurple};
+        background-color: ${props => props.theme.buttonHoveredA};
       }
       &:active {
-        background-color: ${props => props.theme.deepPurple};
+        background-color: ${props => props.theme.buttonActiveA};
       }
     }
   }
@@ -119,6 +122,8 @@ export const GoogleLoginButton = styled.button`
   text-align: center;
   position: relative;
   margin: 0 5px;
+  cursor: pointer;
+  background-color: ${props => props.theme.containerBackground};
   i {
     position: absolute;
     left: 50%;
@@ -127,9 +132,9 @@ export const GoogleLoginButton = styled.button`
     color: ${props => props.theme.secondaryText};
   }
   &:hover {
-    background-color: ${props => props.theme.secondaryText};
+    background-color: ${props => props.theme.primaryText};
     i {
-      color: ${props => props.theme.mainBackground};
+      color: ${props => props.theme.buttonBackgroundA};
     }
   }
 `;
@@ -142,6 +147,8 @@ export const FacebookLoginButton = styled.button`
   border-radius: 50%;
   text-align: center;
   position: relative;
+  cursor: pointer;
+  background-color: ${props => props.theme.containerBackground};
   i {
     position: absolute;
     left: 50%;
@@ -150,9 +157,9 @@ export const FacebookLoginButton = styled.button`
     color: ${props => props.theme.secondaryText};
   }
   &:hover {
-    background-color: ${props => props.theme.secondaryText};
+    background-color: ${props => props.theme.primaryText};
     i {
-      color: ${props => props.theme.mainBackground};
+      color: ${props => props.theme.buttonBackgroundB};
     }
   }
 `;
@@ -173,7 +180,7 @@ export const DividerContainer = styled.div`
     top: 50%;
     transform: translate(-50%, -50%);
     padding: 0 20px;
-    background-color: ${props => props.theme.mainBackground};
+    background-color: ${props => props.theme.background};
     color: ${props => props.theme.secondaryText};
   }
 `;

@@ -7,7 +7,7 @@ export const HomeMainContainer = styled.div`
   position: relative;
   width: 100%;
   padding: 60px 80px 0;
-  background-color: ${props => props.theme.mainBackground};
+  background-color: ${props => props.theme.background};
   
 `;
 export const HomeDescriptions = styled.div`

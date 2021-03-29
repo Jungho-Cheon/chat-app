@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 
 // components
 import UserAvatar from '../avatar/UserAvatar';
@@ -13,7 +13,7 @@ import {
   TimeAgo,
   UnreadCount,
   MessageCardAvatar,
-} from '../../../styles/chatStyles/messageCard-styles';
+} from '../../../styles/chatStyles/MessageList-styles/messageCard-styles';
 
 // redux
 import { useDispatch, useSelector } from 'react-redux';
@@ -79,7 +79,11 @@ const MessageCard: React.FunctionComponent<MessageCardProps> = ({
     message.length > 30 ? message.substring(0, 30) + '...' : message;
 
   return (
-    <MessageCardContainer unread={false} isSelected={chatroomId === currentChatroomId} onClick={selectChatRoom}>
+    <MessageCardContainer
+      unread={false}
+      isSelected={chatroomId === currentChatroomId}
+      onClick={selectChatRoom}
+    >
       <MessageCardAvatar>
         <UserAvatar avatarUrl={chatroomAvatar} width="50px" />
       </MessageCardAvatar>

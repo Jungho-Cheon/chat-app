@@ -4,35 +4,23 @@ export const MessageListContainer = styled.div`
   position: relative;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 80px 250px 1fr;
+  grid-template-rows: 300px 1fr;
+  padding-top: 20px;
   max-height: 100%;
 `;
 
 export const MessageListUpperContainer = styled.div`
   padding: 20px 0 0 20px;
+  display: flex;
+  flex-direction: column;
   div.message-list__title-container {
     margin-bottom: 20px;
     h3 {
+      padding-left: 10px;
+      font-size: 1.2rem;
       font-weight: 700;
+      color: ${props => props.theme.primaryText};
     }
-  }
-`;
-
-export const LogoContainer = styled.div`
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  img {
-    width: 36px;
-    height: 36px;
-    margin-right: 10px;
-    padding-bottom: 4px;
-  }
-  h1.logo {
-    font-weight: 900;
-    font-size: 2rem;
-    color: ${props => props.theme.primaryText};
-    font-family: 'Pangolin', cursive;
   }
 `;
 
@@ -86,7 +74,7 @@ export const SearchInput = styled.input`
   color: ${props => props.theme.primaryText};
   transition: 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
   &:focus {
-    border: 4px solid ${props => props.theme.purple};
+    border: 4px solid ${props => props.theme.buttonBackgroundA};
     border-radius: 4px;
     outline: none;
   }
@@ -100,7 +88,12 @@ export const Divider = styled.div`
 `;
 
 export const MessageCardsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 5px;
   width: 100%;
+  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
   &::-webkit-scrollbar {
@@ -118,6 +111,47 @@ export const MessageCardsContainer = styled.div`
     &::-webkit-scrollbar-thumb {
       background-color: ${props => props.theme.secondaryText};
       border-radius: 50px;
+    }
+  }
+
+  div.message-not-found {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    p {
+      color: ${props => props.theme.secondaryText};
+      font-size: 0.7rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+      &:nth-child(2) {
+        margin-bottom: 45px;
+      }
+    }
+    div.message-not-found__discover-user-button {
+      width: 70%;
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: ${props => props.theme.buttonBackgroundB};
+      border: 1px solid ${props => props.theme.divider};
+      font-size: 0.8rem;
+      font-weight: 700;
+      border-radius: 5px;
+      transition: 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+      cursor: pointer;
+
+      &:hover {
+        background-color: ${props => props.theme.buttonHoveredB};
+      }
+      &:active {
+        color: white;
+        background-color: ${props => props.theme.buttonActiveB};
+      }
     }
   }
 `;

@@ -6,12 +6,12 @@ interface messageProps {
 }
 
 export const MessageCardContainer = styled.div<messageProps>`
-  width: 100%;
+  width: 95%;
   height: 70px;
   background: ${props =>
     props.isSelected
-      ? props.theme.containerBackground
-      : props.theme.background};
+      ? props.theme.buttonActiveA
+      : props.theme.containerBackground};
   margin-bottom: 11px;
   display: flex;
   justify-content: center;
@@ -23,6 +23,7 @@ export const MessageCardContainer = styled.div<messageProps>`
   transition: 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
   &:hover {
     transform: scale(1.05);
+    background-color: ${props => props.theme.buttonHoveredA};
   }
 `;
 export const MessageCardAvatar = styled.div`

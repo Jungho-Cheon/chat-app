@@ -19,7 +19,7 @@ export const HeaderLogoContainer = styled.div`
   h1 {
     font-weight: 900;
     font-size: 2rem;
-    color: ${props => props.theme.purple};
+    color: ${props => props.theme.primaryText};
     font-family: 'Pangolin', cursive;
   }
 `;
@@ -53,8 +53,8 @@ export const SignInButton = styled.button`
   height: 31px;
   border-radius: 5px;
   border: none;
-  background-color: ${props => props.theme.mainBackground};
-  color: ${props => props.theme.purple};
+  background-color: ${props => props.theme.background};
+  color: ${props => props.theme.buttonBackgroundA};
 `;
 export const SignUpButton = styled.button`
   padding: 5px;
@@ -62,6 +62,6 @@ export const SignUpButton = styled.button`
   height: 31px;
   border-radius: 5px;
   border: none;
-  background-color: ${props => props.theme.purple};
+  background-color: ${props => props.theme.buttonBackgroundA};
   color: ${props => props.theme.background};
 `;

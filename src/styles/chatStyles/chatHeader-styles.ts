@@ -106,7 +106,7 @@ export const DropdownContents = styled.div`
       font-weight: 600;
       color: ${props => props.theme.secondaryText};
       &:hover {
-        color: ${props => props.theme.orange};
+        color: ${props => props.theme.buttonBackgroundA};
         cursor: pointer;
       }
       i {
@@ -126,7 +126,7 @@ export const ChatMenuIcon = styled.div`
   margin: 0 10px;
   color: ${props => props.theme.secondaryText};
   &:hover {
-    color: ${props => props.theme.orange};
+    color: ${props => props.theme.buttonBackgroundA};
   }
   &:nth-child(4):hover {
     position: relative;

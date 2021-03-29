@@ -14,9 +14,6 @@ export const ChatPaneContainer = styled.div`
   width: 100%;
   height: 0;
   flex: 1 1 auto;
-  /* display: flex;
-  flex-direction: column;
-  justify-content: flex-start; */
   position: relative;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -86,7 +83,7 @@ export const ChatMessageContainer = styled.div<ChatMessageContainerProps>`
       z-index: 1;
       font-size: 0.8rem;
       color: ${props => props.theme.secondaryText};
-      background-color: ${props => props.theme.mainBackground};
+      background-color: ${props => props.theme.containerBackground};
     }
   }
 `;
@@ -100,7 +97,7 @@ export const ChatPaneNewMessageContainer = styled.div`
   width: 200px;
   text-align: center;
   border-radius: 20px;
-  background-color: ${props => props.theme.orange};
+  background-color: ${props => props.theme.buttonBackgroundA};
   color: white;
   font-size: 0.7rem;
   display: flex;
@@ -118,10 +115,10 @@ export const ChatPaneNewMessageContainer = styled.div`
     padding-right: 7px;
   }
   &:hover {
-    background-color: ${props => props.theme.orangeHovered};
+    background-color: ${props => props.theme.buttonHoveredA};
   }
   &:active {
-    background-color: ${props => props.theme.purple};
+    background-color: ${props => props.theme.buttonActiveA};
   }
 `;
 
@@ -141,4 +138,15 @@ export const ChatPaneAddFileModelContainer = styled.section`
     width: 100px;
     height: 100px;
   }
+`;
+
+export const ChatPaneClickedIamge = styled.img`
+  z-index: 500;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  max-height: 60%;
+  object-fit: contain;
 `;

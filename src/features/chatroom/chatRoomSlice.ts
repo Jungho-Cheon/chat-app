@@ -1,16 +1,19 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  createSlice,
+  nanoid,
+  PayloadAction,
+} from '@reduxjs/toolkit';
 import { RootStateOrAny } from 'react-redux';
-import store from '../../app/store';
 
 import Client from '../../client/chatClient';
 import { socket } from '../../socket/socket';
 import ChatroomType, {
-  ChatData,
   ChatRoomState,
   CheckReadMessageProps,
   CompleteMessageProps,
   FETCH_CHATROOM_STATUS,
-  Message,
+  MediaPreviewType,
   ReadCheckChatroomProps,
   RequestNextMessagePageProps,
   SendMessageProps,
@@ -35,7 +38,6 @@ export const fetchChatroomInfo = createAsyncThunk(
   ): Promise<ChatroomType> => {
     const { chatroomId, email } = readCheckChatroomProps;
     const response = await client.fetchChatroomInfo(chatroomId);
-    console.log(response);
     let unreadCount = 0;
     response.chatMessages.forEach(chatMessage =>
       chatMessage.messages.forEach(message => {
@@ -45,9 +47,27 @@ export const fetchChatroomInfo = createAsyncThunk(
     );
     response.unreadCount = unreadCount;
     response.currentPage = 1;
+    response.mediaPreviews = new Array<MediaPreviewType>();
     return response;
   }
 );
+
+// media preview 요청
+export const fetchMediaPreviews = createAsyncThunk(
+  'chatroom/fetchMediaPreviews',
+  async (chatroomId: string) => {
+    const response = await client.fetchMediaPreviews(chatroomId);
+    const mediaPreviews = response.mediaPreviews.filter(
+      preview => preview.fileURL
+    );
+
+    return {
+      chatroomId,
+      mediaPreviews,
+    };
+  }
+);
+
 // 메세지 다음 페이지 요청
 export const requestNextMessagePage = createAsyncThunk(
   'chatroom/requestNextMessagePage',
@@ -90,6 +110,10 @@ export const chatroomSlice = createSlice({
       const { chatroomId, email, message } = action.payload;
       if (state.data.hasOwnProperty(chatroomId)) {
         const chatMessages = state.data[chatroomId].chatMessages;
+        // 메세지가 분리되는 조건(chatMessages를 새로 만듦)
+        // 1. 채팅이 시작될 때
+        // 2. 이전 메세지와 작성자가 다를 때
+        // 3. 이전 메세지와 날짜가 다를 떄
         if (
           chatMessages.length === 0 ||
           chatMessages[chatMessages.length - 1].email !== email ||
@@ -102,7 +126,6 @@ export const chatroomSlice = createSlice({
               9 * 1000 * 60 * 60
           ).getDate() !== new Date().getDate()
         ) {
-          console.log('new chatMessage', new Date().getDate());
           chatMessages.push({
             email,
             messages: [message],
@@ -110,6 +133,14 @@ export const chatroomSlice = createSlice({
         } else {
           chatMessages[chatMessages.length - 1].messages.push(message);
         }
+        // media type('IMAGE', 'VIDEO')인 경우 mediapreview에 추가한다.
+        if (['IMAGE', 'VIDEO'].includes(message.messageType))
+          state.data[chatroomId].mediaPreviews.push({
+            email,
+            fileURL: message.message,
+            insertDate: new Date().toString(),
+            mediaId: nanoid(),
+          });
       }
     },
     sendComplete(state, action: PayloadAction<CompleteMessageProps>) {
@@ -119,15 +150,23 @@ export const chatroomSlice = createSlice({
         insertDate,
         newMessageId,
       } = action.payload;
-      state.data[chatroomId].chatMessages.forEach(chatMessage =>
+      state.data[chatroomId].chatMessages.find(chatMessage =>
         chatMessage.messages.forEach(message => {
           if (message.messageId === messageId) {
             message.isComplete = true;
             message.insertDate = insertDate;
             message.messageId = newMessageId;
+            return true;
           }
         })
       );
+      state.data[chatroomId].mediaPreviews.find(mediaPreview => {
+        if (mediaPreview.mediaId === messageId) {
+          mediaPreview.insertDate = insertDate;
+          mediaPreview.mediaId = newMessageId;
+          return true;
+        }
+      });
     },
     receiveMessage(state, action: PayloadAction<SendMessageProps>) {
       const { chatroomId, email, userEmail, message } = action.payload;
@@ -156,6 +195,15 @@ export const chatroomSlice = createSlice({
         } else {
           chatMessages[chatMessages.length - 1].messages.push(message);
         }
+
+        // media type('IMAGE', 'VIDEO')인 경우 mediapreview에 추가한다.
+        if (['IMAGE', 'VIDEO'].includes(message.messageType))
+          state.data[chatroomId].mediaPreviews.push({
+            email,
+            fileURL: message.message,
+            insertDate: message.insertDate || '',
+            mediaId: message.messageId,
+          });
       }
     },
     checkReadMessage(state, action: PayloadAction<CheckReadMessageProps>) {
@@ -201,6 +249,12 @@ export const chatroomSlice = createSlice({
     builder.addCase(checkOutChatroom.fulfilled, state => {
       return state;
     });
+    builder.addCase(fetchMediaPreviews.fulfilled, (state, { payload }) => {
+      const { chatroomId, mediaPreviews } = payload;
+      state.data[chatroomId].mediaPreviews = state.data[
+        chatroomId
+      ].mediaPreviews.concat(mediaPreviews);
+    });
     builder.addCase(requestNextMessagePage.fulfilled, (state, { payload }) => {
       console.log(payload);
       state.data[payload.chatroomId].currentPage++;
@@ -231,8 +285,17 @@ export const getCurrentChatroom = (state: RootStateOrAny): ChatroomType => {
       totalMessages: 0,
       chatMessages: [],
       participants: [],
+      mediaPreviews: [],
     };
   return currentChatroom;
+};
+
+export const getMediaPreviews = (state: RootStateOrAny): MediaPreviewType[] => {
+  if (state.chatroom.currentChatroomId)
+    return state.chatroom.data[state.chatroom.currentChatroomId].mediaPreviews
+      .slice()
+      .reverse();
+  return [];
 };
 
 export const {

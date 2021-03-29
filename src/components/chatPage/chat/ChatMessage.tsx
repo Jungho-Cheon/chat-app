@@ -21,6 +21,9 @@ interface ChatMessageProps {
   chatMessage: ChatData;
   scrollToBottom: (e: any) => void;
   scrollToPrevHeight: () => void;
+  setClickedImage: React.Dispatch<React.SetStateAction<string>>;
+  setPrevHeight: React.Dispatch<React.SetStateAction<number>>;
+  chatPaneContainer: React.RefObject<HTMLDivElement>;
 }
 
 const convertTime = (time: string) => {
@@ -50,6 +53,9 @@ const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
   chatMessage,
   scrollToBottom,
   scrollToPrevHeight,
+  setClickedImage,
+  setPrevHeight,
+  chatPaneContainer,
 }: ChatMessageProps): JSX.Element => {
   const { email, messages } = chatMessage;
   const userData = useSelector(getUserData);
@@ -62,9 +68,19 @@ const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
     : userData.friendData[email]?.avatarUrl;
   const imageOnLoadHandler = useCallback((e: any) => {
     console.log('imageOnLoadHandler called');
-    scrollToBottom(e);
     scrollToPrevHeight();
+    scrollToBottom(e);
   }, []);
+  const imageClickHanlder = (
+    e: React.MouseEvent<HTMLImageElement, MouseEvent>,
+    url: string
+  ) => {
+    e.preventDefault();
+    setClickedImage(prev => {
+      if (prev) return '';
+      return url;
+    });
+  };
   const createMessageComponent = (message: Message): JSX.Element => {
     switch (message.messageType) {
       case 'TEXT':
@@ -82,9 +98,21 @@ const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
         return (
           <img
             className="message__image"
-            onLoad={imageOnLoadHandler}
             src={message.message}
             alt={message.messageId}
+            draggable={false}
+            onClick={e => {
+              e.preventDefault();
+
+              if (chatPaneContainer.current) {
+                setPrevHeight(
+                  chatPaneContainer.current.scrollHeight -
+                    chatPaneContainer.current.scrollTop
+                );
+                imageClickHanlder(e, message.message);
+              }
+            }}
+            onLoad={imageOnLoadHandler}
           />
         );
       case 'URL':
@@ -150,7 +178,4 @@ const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
   );
 };
 
-export default React.memo(
-  ChatMessage,
-  (prev, cur) => prev.chatMessage !== cur.chatMessage
-);
+export default React.memo(ChatMessage);

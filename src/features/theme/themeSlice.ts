@@ -3,7 +3,7 @@ import { RootStateOrAny } from 'react-redux';
 
 const themeSlice = createSlice({
   name: 'theme',
-  initialState: false,
+  initialState: true,
   reducers: {
     toggleTheme(state) {
       return !state;

@@ -13,3 +13,21 @@ export const ChatMainContainer = styled.div`
     background-color: ${props => props.theme.containerBackground};
   }
 `;
+
+export const LogoContainer = styled.div`
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  img {
+    width: 36px;
+    height: 36px;
+    margin-right: 10px;
+    padding-bottom: 4px;
+  }
+  h1.logo {
+    font-weight: 900;
+    font-size: 2rem;
+    color: ${props => props.theme.primaryText};
+    font-family: 'Pangolin', cursive;
+  }
+`;

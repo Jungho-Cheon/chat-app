@@ -1,5 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import GoogleLogin, {
+  GoogleLoginResponse,
+  GoogleLoginResponseOffline,
+} from 'react-google-login';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 
 // styled-components
 import {
@@ -20,7 +25,10 @@ import animationData from '../lotties/PRODUCT/Animation 07/drawkit-grape-animati
 import ValidationNotifier from '../components/authPage/ValidationNotifier';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  facebookLogin,
+  FacebookLoginResponse,
   getSignInState,
+  googleLogin,
   signInThunk,
 } from '../features/auth/authSlice';
 
@@ -70,13 +78,34 @@ const SignInPage = (): JSX.Element => {
   useEffect(() => {
     const changePage = async () => {
       if (currentSignInState.state === SignInState.SUCCESS) {
-        console.log('changePage()');
         await connectSocket(email);
         history.push('/chat');
       }
     };
     changePage();
   }, [currentSignInState.state]);
+  const onGoogleLoginSuccess = (
+    result: GoogleLoginResponse | GoogleLoginResponseOffline
+  ) => {
+    console.log(result);
+    if ('profileObj' in result) {
+      setEmail(result.profileObj.email);
+      dispatch(googleLogin(result as GoogleLoginResponse));
+    }
+  };
+
+  const onFacebookLogin = (result: FacebookLoginResponse) => {
+    console.log(result);
+    if ('email' in result && 'name' in result) {
+      setEmail(result.email);
+      dispatch(
+        facebookLogin({
+          email: result.email,
+          name: result.name,
+        })
+      );
+    }
+  };
   return (
     <SignInContainer onKeyPress={handleEnterKeyPress}>
       <SidebarSection>
@@ -109,12 +138,33 @@ const SignInPage = (): JSX.Element => {
           <div className="signin__form">
             <h1>Sign in to Chat App</h1>
             <SocialLoginContainer>
-              <GoogleLoginButton>
-                <i className="fab fa-google"></i>
-              </GoogleLoginButton>
-              <FacebookLoginButton>
-                <i className="fab fa-facebook-f"></i>
-              </FacebookLoginButton>
+              <GoogleLogin
+                clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ''}
+                render={props => {
+                  // eslint-disable-next-line react/prop-types
+                  const { onClick } = props;
+                  return (
+                    <GoogleLoginButton onClick={onClick}>
+                      <i className="fab fa-google"></i>
+                    </GoogleLoginButton>
+                  );
+                }}
+                onSuccess={onGoogleLoginSuccess}
+                onFailure={message => console.error(message)}
+                cookiePolicy={'single_host_origin'}
+              />
+              <FacebookLogin
+                appId={process.env.REACT_APP_FACEBOOK_APP_ID}
+                autoLoad={false}
+                fields="name,email,picture"
+                callback={onFacebookLogin}
+                render={(props: { onClick: () => void }) => (
+                  // eslint-disable-next-line react/prop-types
+                  <FacebookLoginButton onClick={props.onClick}>
+                    <i className="fab fa-facebook-f"></i>
+                  </FacebookLoginButton>
+                )}
+              />
             </SocialLoginContainer>
             <DividerContainer>
               <div className="divider" />

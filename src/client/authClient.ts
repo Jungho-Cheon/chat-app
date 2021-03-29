@@ -4,6 +4,12 @@ import {
   SignUpProps,
 } from '../features/auth/authTypes';
 
+export interface OAuthSignInProps {
+  email: string;
+  name: string;
+  image: string;
+}
+
 const AuthClient = class {
   hostUrl: string;
   constructor(hostUrl: string) {
@@ -30,6 +36,19 @@ const AuthClient = class {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ email, password }),
+    });
+    const { accessToken, message, userData } = await response.json();
+    return { statusCode: response.status, accessToken, message, userData };
+  }
+  async oAuthLogin(loginData: OAuthSignInProps): Promise<SignInResponse> {
+    const response = await fetch(this.hostUrl + '/sign-in/oauth2', {
+      method: 'post',
+      mode: 'cors',
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ ...loginData }),
     });
     const { accessToken, message, userData } = await response.json();
     return { statusCode: response.status, accessToken, message, userData };

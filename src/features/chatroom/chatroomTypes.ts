@@ -80,6 +80,18 @@ export interface UploadFileResponse {
   fileURL: string;
 }
 
+export interface MediaPreviewResponse {
+  mediaPreviews: MediaPreviewType[];
+}
+
+export interface MediaPreviewType {
+  mediaId: string;
+  email: string;
+  fileURL: string;
+  insertDate: string;
+}
+
+
 export default interface ChatroomType {
   chatroomId: string;
   unreadCount: number;
@@ -87,4 +99,5 @@ export default interface ChatroomType {
   currentPage: number;
   participants: Participant[];
   chatMessages: ChatData[];
+  mediaPreviews: MediaPreviewType[];
 }
