@@ -7,5 +7,5 @@ export const ChatPageContainer = styled.div`
   padding: 0 100px;
   grid-template-columns: 300px 1fr 300px;
   grid-template-rows: 1fr;
-  grid-gap: 10px;
+  grid-gap: 20px;
 `;

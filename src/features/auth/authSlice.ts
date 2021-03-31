@@ -107,6 +107,9 @@ const authSlice = createSlice({
         friendData.isLoggin = true;
       }
     },
+    addFriend(state, { payload }) {
+      state.userData.friendData[payload.email] = payload;
+    },
   },
   extraReducers: builder => {
     // 로그인 응답 처리
@@ -171,7 +174,12 @@ const authSlice = createSlice({
 });
 
 // actions
-export const { clearSignUpState, userOffline, userOnline } = authSlice.actions;
+export const {
+  clearSignUpState,
+  userOffline,
+  userOnline,
+  addFriend,
+} = authSlice.actions;
 
 // selectors
 export const getSignUpState = (state: RootStateOrAny): SignUpState =>

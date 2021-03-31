@@ -14,10 +14,12 @@ export const DiscoverFriendModalContainer = styled.div`
   div.discover-friend-modal-inner {
     display: flex;
     flex-direction: column;
+    justify-content: start;
+    align-items: baseline;
     color: ${props => props.theme.primaryText};
     position: relative;
     width: 355px;
-    height: 400px;
+    height: 367px;
     background-color: ${props => props.theme.containerBackground};
     box-shadow: 0 4px 10px 0px ${props => props.theme.shadow};
     border-radius: 10px;
@@ -47,14 +49,13 @@ export const DiscoverFriendModalContainer = styled.div`
       }
     }
     section.discover-friend-modal-inner__result {
-      position: relative;
-      display: flex;
-      flex-wrap: wrap;
       flex: 1 1 auto;
       width: 100%;
+      position: relative;
       border-radius: 10px;
       background-color: ${props => props.theme.background};
-      overflow: auto;
+      overflow-y: auto;
+      overflow-x: hidden;
       &::-webkit-scrollbar {
         width: 5px;
       }
@@ -80,6 +81,12 @@ export const DiscoverFriendModalContainer = styled.div`
         align-items: center;
         font-size: 0.8rem;
         color: ${props => props.theme.secondaryText};
+      }
+      div.discover-friend-modal-inner__result-wrapper {
+        flex-wrap: wrap;
+        display: flex;
+        width: 100%;
+        padding: 10px 10px 0;
       }
     }
     div.close-button {

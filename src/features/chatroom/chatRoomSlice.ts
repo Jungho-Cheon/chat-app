@@ -7,7 +7,7 @@ import {
 import { RootStateOrAny } from 'react-redux';
 
 import Client from '../../client/chatClient';
-import { socket } from '../../socket/socket';
+import socket from '../../socket/socket';
 import ChatroomType, {
   ChatRoomState,
   CheckReadMessageProps,

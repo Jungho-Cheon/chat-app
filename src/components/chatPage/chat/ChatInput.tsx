@@ -24,7 +24,7 @@ import {
 import { nanoid } from '@reduxjs/toolkit';
 
 // socket
-import { socket } from '../../../socket/socket';
+import socket from '../../../socket/socket';
 
 import Client from '../../../client/chatClient';
 import { UrlData } from '../../../features/chatroom/chatroomTypes';
@@ -287,7 +287,7 @@ const ChatInput = (): JSX.Element => {
         style={{ display: isEmojiOpened ? `block` : `none` }}
         onClick={e => e.stopPropagation()}
       >
-        <EmojiPicker onEmojiClick={emojiClick} />
+        <EmojiPicker onEmojiClick={emojiClick} disableSkinTonePicker={true} />
       </EmojiPickerContainer>
       <ChatSendButton onClick={sendMessageHandler}>
         <i className="fas fa-paper-plane"></i>

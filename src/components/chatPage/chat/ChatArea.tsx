@@ -24,7 +24,7 @@ import { getUserData } from '../../../features/auth/authSlice';
 
 // util
 import { compareDate } from './ChatMessage';
-import { socket } from '../../../socket/socket';
+import socket from '../../../socket/socket';
 
 import Client from '../../../client/chatClient';
 

@@ -8,9 +8,13 @@ export const MediaPreviewContainer = styled.div`
     justify-content: space-between;
     align-items: flex-end;
     padding: 0 20px;
+    h3 {
+      font-weight: 700;
+      color: ${props => props.theme.primaryText};
+    }
     a {
       font-size: 0.8rem;
-      font-weight: 400;
+      font-weight: 700;
       color: ${props => props.theme.buttonActiveA};
       cursor: pointer;
       &:hover {

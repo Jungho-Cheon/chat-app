@@ -13,7 +13,7 @@ import { getUserData } from '../features/auth/authSlice';
 import { useHistory } from 'react-router';
 
 // socket
-import { socket } from '../socket/socket';
+import socket from '../socket/socket';
 
 const ChatPage = (): JSX.Element => {
   const history = useHistory();

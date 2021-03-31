@@ -10,17 +10,23 @@ export const MessageListContainer = styled.div`
 `;
 
 export const MessageListUpperContainer = styled.div`
-  padding: 20px 0 0 20px;
+  width: 100%;
+  padding-top: 20px;
   display: flex;
   flex-direction: column;
   div.message-list__title-container {
-    margin-bottom: 20px;
+    width: 100%;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 25px;
     h3 {
-      padding-left: 10px;
-      font-size: 1.2rem;
+      font-size: 1.5rem;
       font-weight: 700;
       color: ${props => props.theme.primaryText};
     }
+    
   }
 `;
 
@@ -31,29 +37,10 @@ export const LogoImage = styled.img`
   cursor: pointer;
 `;
 
-export const SortButton = styled.div`
-  display: flex;
-  align-items: flex-end;
-  color: ${props => props.theme.secondaryText};
-  cursor: pointer;
-`;
-export const SortIcon = styled.div`
-  i {
-    font-size: 1.2rem;
-    padding-bottom: 3px;
-    padding-right: 10px;
-  }
-`;
-export const SortText = styled.span`
-  font-weight: 600;
-  margin-top: 15px;
-`;
-
 export const SearchContainer = styled.div`
   position: relative;
   width: 100%;
   height: 35px;
-  margin-bottom: 20px;
   i {
     position: absolute;
     top: 10px;
@@ -83,7 +70,7 @@ export const SearchInput = styled.input`
 export const Divider = styled.div`
   width: 100%;
   height: 1px;
-  margin: 20px 0;
+  margin: 10px 0;
   background-color: ${props => props.theme.divider};
 `;
 
@@ -137,16 +124,17 @@ export const MessageCardsContainer = styled.div`
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: ${props => props.theme.buttonBackgroundB};
-      border: 1px solid ${props => props.theme.divider};
-      font-size: 0.8rem;
+      background-color: ${props => props.theme.containerBackground};
+      color: ${props => props.theme.secondaryText};
+      /* font-size: 0.8rem; */
       font-weight: 700;
       border-radius: 5px;
       transition: 0.2s cubic-bezier(0.19, 1, 0.22, 1);
       cursor: pointer;
-
       &:hover {
         background-color: ${props => props.theme.buttonHoveredB};
+        color: ${props => props.theme.background};
+        box-shadow: 0 5px 10px 1px rgba(0, 0, 0, 0.2);
       }
       &:active {
         color: white;

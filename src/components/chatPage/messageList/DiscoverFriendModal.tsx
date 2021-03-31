@@ -2,7 +2,7 @@ import { nanoid } from '@reduxjs/toolkit';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getUserData } from '../../../features/auth/authSlice';
-import { socket } from '../../../socket/socket';
+import socket from '../../../socket/socket';
 
 // styled-components
 import { DiscoverFriendModalContainer } from '../../../styles/chatStyles/MessageList-styles/discoverFriendModal-styles';
@@ -92,9 +92,11 @@ const DiscoverFriendModal = ({
               결과가 없습니다. 💦
             </div>
           ) : (
-            searchResults.map(result => (
-              <DiscoverFriendModalCard key={nanoid()} {...result} />
-            ))
+            <div className="discover-friend-modal-inner__result-wrapper">
+              {searchResults.map(result => (
+                <DiscoverFriendModalCard key={nanoid()} {...result} />
+              ))}
+            </div>
           )}
         </section>
       </div>

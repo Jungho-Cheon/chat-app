@@ -14,8 +14,10 @@ declare module 'styled-components' {
     divider: string;
     containerBorder: string;
     containerBackground: string;
+    containerHovered: string;
     modalBackground: string;
     shadow: string;
     navbarBackground: string;
+    notification: string;
   }
 }

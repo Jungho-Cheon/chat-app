@@ -10,7 +10,8 @@ export const ChatInputContainer = styled.div`
   background: white;
   margin: 0 auto;
   border-radius: 10px;
-  box-shadow: 0 0 13px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 5px 10px 1px rgba(0, 0, 0, 0.2);
+  background-color: ${props => props.theme.background};
   position: relative;
   div.ChatInput__Typing {
     z-index: 10;
@@ -83,7 +84,7 @@ export const UploadFileButton = styled.div`
 
 export const ChatTextInput = styled.input`
   width: 80%;
-  border: 1px solid ${props => props.theme.containerBorder};
+  border: 1px solid ${props => props.theme.containerBackground};
   outline: none;
   height: 35px;
   font-size: 1.1rem;
@@ -92,6 +93,9 @@ export const ChatTextInput = styled.input`
   transition: 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
   background-color: transparent;
   color: ${props => props.theme.primaryText};
+  &:focus {
+    border: 1px solid ${props => props.theme.secondaryText};
+  }
 `;
 
 export const EmojiButton = styled.div`
@@ -120,14 +124,53 @@ export const EmojiPickerContainer = styled.section`
   bottom: 60px;
   right: 0px;
   z-index: 250;
-  * {
+  aside.emoji-picker-react {
     box-shadow: none;
+    border: none;
+    background-color: ${props => props.theme.background};
+    color: ${props => props.theme.primaryText};
+    padding-top: 10px;
+    nav,
+    div.active-category-indicator-wrapper {
+      display: none;
+    }
+    input.emoji-search {
+      background-color: ${props => props.theme.containerBackground};
+      border: none;
+      color: ${props => props.theme.primaryText};
+    }
+    .emoji-picker-react .emoji-group:before {
+      background-color: ${props => props.theme.background};
+    }
+    section.emoji-scroll-wrapper {
+      &::-webkit-scrollbar {
+        width: 5px;
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: transparent;
+        border-radius: 50px;
+      }
+      &::-webkit-scrollbar-track {
+        background-color: transparent;
+      }
+
+      &:hover {
+        &::-webkit-scrollbar-thumb {
+          background-color: ${props => props.theme.secondaryText};
+          border-radius: 50px;
+        }
+      }
+    }
+    ul.emoji-group::before {
+      background-color: ${props => props.theme.background};
+      line-height: 50px;
+    }
   }
 `;
 export const ChatSendButton = styled.div`
-  width: 30px;
-  height: 30px;
-  min-width: 30px;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
   color: white;
   background-color: ${props => props.theme.buttonBackgroundA};
   display: flex;

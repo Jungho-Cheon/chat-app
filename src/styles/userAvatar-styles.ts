@@ -16,3 +16,10 @@ export const AvatarImage = styled.img`
   height: 100%;
   border-radius: 50%;
 `;
+
+export const AvatarRectImage = styled.img`
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  border-radius: 5%;
+`;

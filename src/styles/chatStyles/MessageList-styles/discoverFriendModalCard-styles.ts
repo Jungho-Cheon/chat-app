@@ -9,14 +9,15 @@ export const DiscoverFriendModalCardContainer = styled.div`
   align-items: center;
   flex-direction: column;
   background-color: ${props => props.theme.containerBackground};
+  border-radius: 5px;
   &:nth-child(3n - 2) {
-    margin: 10px 0 0 10px;
+    margin: 0 0 10px 0;
   }
   &:nth-child(3n - 1) {
-    margin: 10px;
+    margin: 0 10px 0;
   }
   &:nth-child(3n) {
-    margin: 10px 10px 0 0;
+    margin: 0 0 10px 0;
   }
   h3 {
     font-size: 0.8rem;
@@ -28,6 +29,7 @@ export const DiscoverFriendModalCardContainer = styled.div`
     white-space: nowrap;
     color: ${props => props.theme.primaryText};
     margin-top: 5px;
+    margin-bottom: 3px;
   }
   span {
     font-size: 0.6rem;
@@ -49,7 +51,10 @@ interface FriendRequestButtonProps {
 export const FriendRequestButton = styled.div<FriendRequestButtonProps>`
   width: 60px;
   height: 20px;
-  color: ${props => props.theme.background};
+  color: ${props =>
+    'IDLE' === props.status
+      ? props.theme.secondaryText
+      : props.theme.background};
   font-size: 0.7rem;
   font-weight: 700;
   display: flex;
@@ -58,14 +63,22 @@ export const FriendRequestButton = styled.div<FriendRequestButtonProps>`
   border-radius: 3px;
   cursor: pointer;
   background-color: ${props =>
-    ['IDLE', 'REJECT'].includes(props.status)
-      ? props.theme.buttonBackgroundA
+    'IDLE' === props.status
+      ? props.theme.background
       : props.theme.buttonBackgroundB};
   &:hover {
     background-color: ${props => props.theme.buttonHoveredA};
+    color: ${props => props.theme.background};
   }
   &:active {
     background-color: ${props => props.theme.buttonActiveA};
     color: ${props => props.theme.primaryText};
   }
+  ${props =>
+    props.status === 'REJECT' &&
+    `
+  color: ${props.theme.primaryText};
+  background-color: ${props.theme.notification};
+  pointer-events: none;
+  `}
 `;

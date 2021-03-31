@@ -8,8 +8,6 @@ import ChatroomType, {
   UrlData,
 } from '../features/chatroom/chatroomTypes';
 
-import {} from '../features/chatroom/chatroomSlice';
-
 const ChatClient = class {
   hostURL: string;
   constructor(hostURL: string) {

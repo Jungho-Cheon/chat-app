@@ -20,6 +20,11 @@ export const ChatMessageFlexDirection = styled.div<FlexDirection>`
 
 export const MessageArticle = styled.div`
   position: relative;
+  i.fa-spinner {
+    position: absolute;
+    right: -25px;
+    top: 5px;
+  }
 `;
 export const MessageContainer = styled.div<FlexDirection>`
   max-width: 480px;
@@ -146,7 +151,7 @@ export const MessageWrapper = styled.div<MessageType>`
     width: 300px;
     /* transition: 0.6s cubic-bezier(0.215, 0.61, 0.355, 1); */
   }
-  i {
+  i.fa-file {
     padding-right: 10px;
   }
   ${props =>

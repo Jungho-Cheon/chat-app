@@ -19,6 +19,7 @@ import {
   SearchContainer,
   SearchInput,
   MessageCardsContainer,
+  Divider,
 } from '../../../styles/chatStyles/MessageList-styles/messageList-styles';
 
 const MessageList = (): JSX.Element => {
@@ -83,7 +84,7 @@ const MessageList = (): JSX.Element => {
         className="message-not-found__discover-user-button"
         onClick={() => setIsOpenDiscoverFriend(true)}
       >
-        친구 찾기 🔎
+        🔎 Discover Users
       </div>
     </div>
   );
@@ -91,6 +92,9 @@ const MessageList = (): JSX.Element => {
     <MessageListContainer>
       <UserProfile />
       <MessageListUpperContainer>
+        <div className="message-list__title-container">
+          <h3>Chatrooms</h3>
+        </div>
         {/* Search Input */}
         <SearchContainer>
           <SearchInput
@@ -99,9 +103,7 @@ const MessageList = (): JSX.Element => {
           ></SearchInput>
           <i className="fas fa-search"></i>
         </SearchContainer>
-        <div className="message-list__title-container">
-          <h3>Chatrooms</h3>
-        </div>
+        <Divider />
         <MessageCardsContainer>
           {chatrooms.length > 0
             ? filterMessageCards(chatrooms)

@@ -52,8 +52,9 @@ export const ParticipantsProfileContainer = styled.div`
     padding: 20px;
     h3 {
       font-size: 0.9rem;
-      font-weight: 400;
+      font-weight: 700;
       margin-bottom: 5px;
+      color: ${props => props.theme.primaryText};
     }
     p {
       font-size: 0.9rem;
@@ -67,7 +68,7 @@ export const ParticipantsProfileContainer = styled.div`
     a {
       justify-self: flex-end;
       font-size: 0.8rem;
-      font-weight: 400;
+      font-weight: 700;
       color: ${props => props.theme.buttonBackgroundA};
       cursor: pointer;
       &:hover {
