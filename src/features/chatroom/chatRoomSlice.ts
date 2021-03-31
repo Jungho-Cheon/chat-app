@@ -5,6 +5,7 @@ import {
   PayloadAction,
 } from '@reduxjs/toolkit';
 import { RootStateOrAny } from 'react-redux';
+import store from '../../app/store';
 
 import Client from '../../client/chatClient';
 import socket from '../../socket/socket';
@@ -33,10 +34,10 @@ const initialState: ChatRoomState = {
 // 채팅방 정보 초기화
 export const fetchChatroomInfo = createAsyncThunk(
   'chatroom/fetchChatRoomInfo',
-  async (
-    readCheckChatroomProps: ReadCheckChatroomProps
-  ): Promise<ChatroomType> => {
-    const { chatroomId, email } = readCheckChatroomProps;
+  async (chatroomId: string, { getState }): Promise<ChatroomType> => {
+    const { auth } = getState() as { auth: { userData: { email: string } } };
+    const email = auth.userData.email;
+    console.log(email);
     const response = await client.fetchChatroomInfo(chatroomId);
     let unreadCount = 0;
     response.chatMessages.forEach(chatMessage =>
@@ -48,6 +49,7 @@ export const fetchChatroomInfo = createAsyncThunk(
     response.unreadCount = unreadCount;
     response.currentPage = 1;
     response.mediaPreviews = new Array<MediaPreviewType>();
+    console.log(response);
     return response;
   }
 );

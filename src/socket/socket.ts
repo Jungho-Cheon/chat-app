@@ -2,6 +2,7 @@ import { io } from 'socket.io-client';
 import { userOffline, userOnline, addFriend } from '../features/auth/authSlice';
 import {
   checkReadMessage,
+  fetchChatroomInfo,
   initSocketId,
   receiveMessage,
   sendComplete,
@@ -39,6 +40,12 @@ export const connectSocket = async (email: string): Promise<void> => {
 socket.on('connect', () => {
   console.log(`socket connected - ${socket.id}`);
   store.dispatch(initSocketId(socket.id));
+});
+
+// 채팅방 생성 완료 처리
+socket.on('CREATE_ROOM', async data => {
+  const { chatroomId } = JSON.parse(data);
+  store.dispatch(fetchChatroomInfo(chatroomId));
 });
 
 // 메세지 전송, 응답 처리

@@ -9,7 +9,7 @@ import ChatroomType from '../../../features/chatroom/chatroomTypes';
 
 // components
 import MessageCard from './MessageCard';
-import UserProfile from './UserProfile';
+import UserProfile from '../userProfile/UserProfile';
 import DiscoverFriendModal from './DiscoverFriendModal';
 
 // styled-components
@@ -38,7 +38,7 @@ const MessageList = (): JSX.Element => {
   const dispatchAllChatrooms = useCallback(() => {
     const chatroomSet = new Set(userData.chatroomIds);
     chatroomSet.forEach((chatroomId: string) => {
-      dispatch(fetchChatroomInfo({ chatroomId, email: userData.email }));
+      dispatch(fetchChatroomInfo(chatroomId));
     });
   }, [userData.chatroomIds]);
 
