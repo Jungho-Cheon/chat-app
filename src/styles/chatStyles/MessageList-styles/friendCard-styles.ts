@@ -7,7 +7,7 @@ export const FriendCardContainer = styled.div`
   justify-content: center;
   align-items: center;
   width: 66px;
-  height: 80px;
+  height: 85px;
   border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
@@ -15,15 +15,24 @@ export const FriendCardContainer = styled.div`
     position: relative;
   }
   h4 {
+    width: 100%;
+    height: 1rem;
     font-weight: 400;
     font-size: 0.8rem;
     margin: 5px 0;
     color: ${props => props.theme.primaryText};
     text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   p {
+    width: 64px;
     font-size: 0.7rem;
     color: ${props => props.theme.secondaryText};
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
   margin: 0 2px 8px;
   &:nth-child(4n-3) {
@@ -53,4 +62,3 @@ export const FriendCardLoginCheckDot = styled.div<FriendCardLoginCheckDotProps>`
   background-color: ${props =>
     props.isLoggin ? props.theme.buttonBackgroundB : props.theme.secondaryText};
 `;
-

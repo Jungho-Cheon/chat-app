@@ -30,6 +30,7 @@ const ProfileSection = ({ userProfile }: ProfileSectionProps): JSX.Element => {
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     e.preventDefault();
+    console.log(userProfile);
     if (!userProfile) return;
     userProfile.style.transform = `translateX(0px)`;
   };
@@ -64,7 +65,9 @@ const ProfileSection = ({ userProfile }: ProfileSectionProps): JSX.Element => {
       <UserProfileInfo>
         <UserNameContainer>{userData.nickname}</UserNameContainer>
         <span className="userprofile__email">{userData.email}</span>
-        <div className="userprofile__setting-button">Edit Profile</div>
+        <div className="userprofile__setting-button">
+          <p>Edit Profile</p>
+        </div>
       </UserProfileInfo>
     </ProfileSectionContianer>
   );

@@ -1,11 +1,19 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, {
+  createContext,
+  Dispatch,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import {
   fetchChatroomInfo,
-  getAllChatrooms,
+  getChatroomPreviews,
 } from '../../../features/chatroom/chatroomSlice';
 import { getUserData } from '../../../features/auth/authSlice';
-import ChatroomType from '../../../features/chatroom/chatroomTypes';
+import ChatroomType, {
+  ChatData,
+} from '../../../features/chatroom/chatroomTypes';
 
 // components
 import MessageCard from './MessageCard';
@@ -15,12 +23,21 @@ import DiscoverFriendModal from './DiscoverFriendModal';
 // styled-components
 import {
   MessageListContainer,
-  MessageListUpperContainer,
+  MessageListWrapper,
   SearchContainer,
   SearchInput,
   MessageCardsContainer,
   Divider,
 } from '../../../styles/chatStyles/MessageList-styles/messageList-styles';
+import { getLastElement } from '../../../utils/arrayUtils';
+
+export const DiscoverFriendModalContext = createContext<
+  | {
+      isOpenDiscoverFriend: boolean;
+      setIsOpenDiscoverFriend: Dispatch<boolean>;
+    }
+  | undefined
+>(undefined);
 
 const MessageList = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -29,39 +46,57 @@ const MessageList = (): JSX.Element => {
     false
   );
   const userData = useSelector(getUserData);
-  const chatroomData = useSelector(getAllChatrooms);
+  const chatrooms = useSelector(getChatroomPreviews);
   const searchHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchUserName(e.target.value.trim());
   };
-  const chatrooms = Array.from(Object.values(chatroomData));
 
   const dispatchAllChatrooms = useCallback(() => {
     const chatroomSet = new Set(userData.chatroomIds);
     chatroomSet.forEach((chatroomId: string) => {
       dispatch(fetchChatroomInfo(chatroomId));
     });
-  }, [userData.chatroomIds]);
+  }, []);
 
   useEffect(() => {
     dispatchAllChatrooms();
-  }, [userData.chatroomIds]);
+  }, []);
 
-  const filterMessageCards = (chatrooms: ChatroomType[]): JSX.Element[] => {
+  const filterMessageCards = (
+    chatrooms: {
+      chatroomId: string;
+      participants: string[];
+      unreadCount: number;
+    }[]
+  ): JSX.Element[] => {
     if (searchUsername !== '') {
       return chatrooms
         .filter(
-          (data: ChatroomType) =>
+          (data: {
+            chatroomId: string;
+            participants: string[];
+            unreadCount: number;
+          }) =>
             data.participants
-              .filter(user => user.email !== userData.email)
-              .map(user => user.nickname)
+              .filter(pEmail => pEmail !== userData.email)
+              .map(pEmail => {
+                const friendData = userData.friendData[pEmail];
+                return friendData !== undefined ? friendData.nickname : '';
+              })
               .join(' ')
               .toLowerCase()
               .indexOf(searchUsername.toLowerCase()) !== -1
         )
+
         .map(
-          (data: ChatroomType): JSX.Element => (
+          (data: {
+            chatroomId: string;
+            participants: string[];
+            unreadCount: number;
+          }): JSX.Element => (
             <MessageCard
-              {...data}
+              chatroomId={data.chatroomId}
+              unreadCount={data.unreadCount}
               email={userData.email}
               key={data.chatroomId}
             />
@@ -69,9 +104,14 @@ const MessageList = (): JSX.Element => {
         );
     }
     return chatrooms.map(
-      (data: ChatroomType): JSX.Element => {
+      (data: { chatroomId: string; unreadCount: number }): JSX.Element => {
         return (
-          <MessageCard {...data} email={userData.email} key={data.chatroomId} />
+          <MessageCard
+            chatroomId={data.chatroomId}
+            unreadCount={data.unreadCount}
+            email={userData.email}
+            key={data.chatroomId}
+          />
         );
       }
     );
@@ -88,10 +128,15 @@ const MessageList = (): JSX.Element => {
       </div>
     </div>
   );
+  console.log(chatrooms);
   return (
     <MessageListContainer>
-      <UserProfile />
-      <MessageListUpperContainer>
+      <DiscoverFriendModalContext.Provider
+        value={{ isOpenDiscoverFriend, setIsOpenDiscoverFriend }}
+      >
+        <UserProfile />
+      </DiscoverFriendModalContext.Provider>
+      <MessageListWrapper>
         <div className="message-list__title-container">
           <h3>Chatrooms</h3>
         </div>
@@ -109,7 +154,7 @@ const MessageList = (): JSX.Element => {
             ? filterMessageCards(chatrooms)
             : messageNotFound()}
         </MessageCardsContainer>
-      </MessageListUpperContainer>
+      </MessageListWrapper>
       {isOpenDiscoverFriend && (
         <DiscoverFriendModal
           setIsOpenDiscoverFriend={setIsOpenDiscoverFriend}

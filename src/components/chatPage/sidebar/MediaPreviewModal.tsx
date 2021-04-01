@@ -87,8 +87,8 @@ const MediaPreviewModal = ({
       >
         {slideBarMedia.map(media => (
           <SlideBarImage
-            src={media.fileURL}
-            alt={media.fileURL}
+            src={media.fileUrl}
+            alt={media.fileUrl}
             key={media.mediaId}
             isCurrentImage={
               media.mediaId === mediaPreviews[currentMediaIdx].mediaId
@@ -168,7 +168,7 @@ const MediaPreviewModal = ({
                   <a
                     href="#"
                     onClick={e =>
-                      download(e, mediaPreviews[currentMediaIdx].fileURL)
+                      download(e, mediaPreviews[currentMediaIdx].fileUrl)
                     }
                   >
                     <div className="media-preview-modal__media-box__download-button">
@@ -177,7 +177,7 @@ const MediaPreviewModal = ({
                   </a>
                 </div>
                 <img
-                  src={mediaPreviews[currentMediaIdx].fileURL}
+                  src={mediaPreviews[currentMediaIdx].fileUrl}
                   alt="media-modal-image"
                 />
               </>

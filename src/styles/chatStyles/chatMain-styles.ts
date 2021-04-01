@@ -7,7 +7,7 @@ export const ChatMainContainer = styled.div`
     display: flex;
     flex-direction: column;
     position: relative;
-    padding: 20px 0;
+    padding-bottom: 20px;
     height: 100%;
     border-radius: 10px;
     background-color: ${props => props.theme.containerBackground};
@@ -18,6 +18,9 @@ export const LogoContainer = styled.div`
   padding: 0 20px;
   display: flex;
   align-items: center;
+  height: 60px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
   img {
     width: 36px;
     height: 36px;

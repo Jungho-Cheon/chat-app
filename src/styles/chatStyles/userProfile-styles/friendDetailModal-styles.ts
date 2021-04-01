@@ -6,7 +6,7 @@ export const FriendDetailModalContainer = styled.section`
   left: 0;
   top: 60px;
   width: 100%;
-  height: 200px;
+  height: 100%;
   padding: 20px;
   color: ${props => props.theme.primaryText};
   background-color: ${props => props.theme.containerBackground};

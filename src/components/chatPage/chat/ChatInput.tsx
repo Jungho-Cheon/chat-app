@@ -168,7 +168,8 @@ const ChatInput = (): JSX.Element => {
               email,
               message: {
                 messageId,
-                message: response.fileURL,
+                message: '',
+                fileUrl: response.fileUrl,
                 messageType: 'IMAGE',
                 readUsers: [email],
                 isComplete: false,
@@ -181,8 +182,9 @@ const ChatInput = (): JSX.Element => {
               chatroomId,
               email,
               message: {
-                message: response.fileURL,
                 messageId,
+                message: file.name,
+                fileUrl: response.fileUrl,
                 messageType: 'IMAGE',
               },
             })
@@ -196,7 +198,7 @@ const ChatInput = (): JSX.Element => {
               message: {
                 messageId,
                 message: file.name,
-                fileURL: response.fileURL,
+                fileUrl: response.fileUrl,
                 messageType: 'FILE',
                 readUsers: [email],
                 isComplete: false,
@@ -209,8 +211,9 @@ const ChatInput = (): JSX.Element => {
               chatroomId,
               email,
               message: {
-                message: response.fileURL,
                 messageId,
+                message: file.name,
+                fileUrl: response.fileUrl,
                 messageType: 'FILE',
               },
             })

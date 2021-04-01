@@ -26,27 +26,29 @@ export const MessagePreview = styled.div`
   color: ${props => props.theme.secondaryText};
 `;
 export const MessageInfoContainer = styled.div`
-  width: 75px;
+  width: 65px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-end;
+  align-items: center;
   padding: 0 15px 0 5px;
 `;
 export const TimeAgo = styled.div`
-  position: absolute;
-  top: 20px;
-  min-width: 50px;
   font-weight: 400;
   font-size: 0.68rem;
+  padding-bottom: 5px;
   color: ${props => props.theme.secondaryText};
 `;
-export const UnreadCount = styled.div`
+interface UnreadCountProps {
+  isUnread: boolean;
+}
+export const UnreadCount = styled.div<UnreadCountProps>`
   position: relative;
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background-color: rgba(244, 118, 85, 1);
+  background-color: ${props =>
+    props.isUnread ? props.theme.notification : `transparent`};
   color: white;
   font-weight: 400;
   font-size: 0.68rem;

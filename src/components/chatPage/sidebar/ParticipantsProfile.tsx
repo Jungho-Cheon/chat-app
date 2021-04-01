@@ -18,9 +18,9 @@ const ParticipantsProfile = (): JSX.Element => {
 
   useLayoutEffect(() => {
     if (chatroomId === '') return;
-    const opponent = participants.find(user => user.email !== email);
-    if (opponent) {
-      const targetUserData = friendData[opponent.email];
+    const opponentEmail = participants.find(pEmail => pEmail !== email);
+    if (opponentEmail) {
+      const targetUserData = friendData[opponentEmail];
       setOnline(targetUserData.isLoggin);
       setOpponent(targetUserData);
     }
@@ -31,23 +31,31 @@ const ParticipantsProfile = (): JSX.Element => {
         <>
           <div className="participants-profile__profile-picture">
             <img
-              src={opponent?.avatarUrl || ''}
-              alt="participants-profile-picture"
+              className="profile__background"
+              src=""
+              onError={e =>
+                (e.currentTarget.src =
+                  'https://image.shutterstock.com/image-illustration/composition-rounded-shapes-champagne-tones-260nw-1873473172.jpg')
+              }
             />
-            <div className="participants-profile__profile-picture_gradient">
-              <h3>{opponent?.nickname}</h3>
-              <PartnerStatus isOnline={online}>
-                <StatusIndicator isOnline={online} />
-                <p>{online ? `Online` : `Offline`}</p>
-              </PartnerStatus>
+            <div className="profile__profile-picture-background">
+              <img
+                className="profile__profile-picture"
+                src={opponent?.avatarUrl || ''}
+                alt="participants-profile-picture"
+              />
             </div>
+            <PartnerStatus isOnline={online}>
+              <StatusIndicator isOnline={online} />
+              <p>{online ? `Online` : `Offline`}</p>
+            </PartnerStatus>
           </div>
           <div className="participants-profile__profile-info">
+            <h2>{opponent?.nickname}</h2>
             <h3>Email</h3>
             <p>{opponent?.email}</p>
             <h3>Description</h3>
             <p>{opponent?.description}</p>
-            <a>Show More</a>
           </div>
         </>
       )}

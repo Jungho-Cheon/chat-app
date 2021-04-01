@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 // styled-components
 import { UserProfileContainer } from '../../../styles/chatStyles/userProfile-styles/userProfile-styles';
@@ -9,16 +9,18 @@ import ProfileSection from './ProfileSection';
 import FriendSection from './FriendSection';
 
 const UserProfile = (): JSX.Element => {
-  const userProfile = useRef<HTMLDivElement>(null);
-
+  // const userProfile = useRef<HTMLDivElement>(null);
+  const [userProfile, setUserProfile] = useState<HTMLDivElement|null>();
   return (
     <UserProfileContainer>
-      <div className="user-profile__wrapper" ref={userProfile}>
-        <FriendSection userProfile={userProfile.current} />
-        <ProfileSection userProfile={userProfile.current} />
-        <NotificationSection
-          userProfile={userProfile.current}
-        />
+      <div className="user-profile__wrapper" ref={el => setUserProfile(el)}>
+        {userProfile && (
+          <>
+            <FriendSection userProfile={userProfile} />
+            <ProfileSection userProfile={userProfile} />
+            <NotificationSection userProfile={userProfile} />
+          </>
+        )}
       </div>
     </UserProfileContainer>
   );

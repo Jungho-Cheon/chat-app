@@ -5,10 +5,10 @@ import {
   PayloadAction,
 } from '@reduxjs/toolkit';
 import { RootStateOrAny } from 'react-redux';
-import store from '../../app/store';
 
 import Client from '../../client/chatClient';
 import socket from '../../socket/socket';
+import { getLastElement } from '../../utils/arrayUtils';
 import ChatroomType, {
   ChatRoomState,
   CheckReadMessageProps,
@@ -18,6 +18,7 @@ import ChatroomType, {
   ReadCheckChatroomProps,
   RequestNextMessagePageProps,
   SendMessageProps,
+  ChatData,
 } from './chatroomTypes';
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL || '';
@@ -37,7 +38,6 @@ export const fetchChatroomInfo = createAsyncThunk(
   async (chatroomId: string, { getState }): Promise<ChatroomType> => {
     const { auth } = getState() as { auth: { userData: { email: string } } };
     const email = auth.userData.email;
-    console.log(email);
     const response = await client.fetchChatroomInfo(chatroomId);
     let unreadCount = 0;
     response.chatMessages.forEach(chatMessage =>
@@ -49,7 +49,6 @@ export const fetchChatroomInfo = createAsyncThunk(
     response.unreadCount = unreadCount;
     response.currentPage = 1;
     response.mediaPreviews = new Array<MediaPreviewType>();
-    console.log(response);
     return response;
   }
 );
@@ -60,9 +59,10 @@ export const fetchMediaPreviews = createAsyncThunk(
   async (chatroomId: string) => {
     const response = await client.fetchMediaPreviews(chatroomId);
     const mediaPreviews = response.mediaPreviews.filter(
-      preview => preview.fileURL
+      preview => preview.fileUrl
     );
-
+    console.log(response);
+    console.log(mediaPreviews);
     return {
       chatroomId,
       mediaPreviews,
@@ -110,6 +110,7 @@ export const chatroomSlice = createSlice({
     },
     sendMessage(state, action: PayloadAction<SendMessageProps>) {
       const { chatroomId, email, message } = action.payload;
+      console.log('sendMessage -> message', message);
       if (state.data.hasOwnProperty(chatroomId)) {
         const chatMessages = state.data[chatroomId].chatMessages;
         // 메세지가 분리되는 조건(chatMessages를 새로 만듦)
@@ -139,7 +140,7 @@ export const chatroomSlice = createSlice({
         if (['IMAGE', 'VIDEO'].includes(message.messageType))
           state.data[chatroomId].mediaPreviews.push({
             email,
-            fileURL: message.message,
+            fileUrl: message.fileUrl || '',
             insertDate: new Date().toString(),
             mediaId: nanoid(),
           });
@@ -202,7 +203,7 @@ export const chatroomSlice = createSlice({
         if (['IMAGE', 'VIDEO'].includes(message.messageType))
           state.data[chatroomId].mediaPreviews.push({
             email,
-            fileURL: message.message,
+            fileUrl: message.fileUrl || '',
             insertDate: message.insertDate || '',
             mediaId: message.messageId,
           });
@@ -267,12 +268,53 @@ export const chatroomSlice = createSlice({
   },
 });
 
+const compareTime = (a: ChatroomType, b: ChatroomType) => {
+  const defaultMessage: ChatData = {
+    email: 'default',
+    messages: [
+      {
+        insertDate: JSON.stringify(new Date()),
+        message: '',
+        messageId: '',
+        messageType: '',
+        readUsers: [],
+      },
+    ],
+  };
+  const defaultTime = new Date();
+  const lastMessageA = getLastElement(a.chatMessages) || defaultMessage;
+  const lastMessageB = getLastElement(b.chatMessages) || defaultMessage;
+  const resultA =
+    new Date(getLastElement(lastMessageA.messages)?.insertDate || '') ||
+    defaultTime;
+  const resultB =
+    new Date(getLastElement(lastMessageB.messages)?.insertDate || '') ||
+    defaultTime;
+  return resultB.getTime() - resultA.getTime();
+};
+
 // selecters
-export const getAllChatrooms = function (
+export const getAllChatrooms = (
   state: RootStateOrAny
-): ChatroomType[] {
+): Record<string, ChatroomType> => {
   return state.chatroom.data;
 };
+
+export const getChatroomPreviews = (
+  state: RootStateOrAny
+): { chatroomId: string; participants: string[]; unreadCount: number }[] => {
+  const values = Object.values(
+    state.chatroom.data as Record<string, ChatroomType>
+  );
+  return values.sort(compareTime).map((chatroom: ChatroomType) => {
+    return {
+      chatroomId: chatroom.chatroomId,
+      participants: chatroom.participants,
+      unreadCount: chatroom.unreadCount,
+    };
+  });
+};
+
 export const getCurrentChatroomId = (state: RootStateOrAny): string => {
   return state.chatroom.currentChatroomId;
 };

@@ -12,7 +12,7 @@ export interface Message {
   message: string;
   messageType: string;
   urlData?: UrlData;
-  fileURL?: string;
+  fileUrl?: string;
   readUsers: string[];
   insertDate?: string;
   isComplete?: boolean;
@@ -77,7 +77,7 @@ export interface RequestNextMessagePageProps {
 export interface UploadFileResponse {
   chatroomId: string;
   email: string;
-  fileURL: string;
+  fileUrl: string;
 }
 
 export interface MediaPreviewResponse {
@@ -87,17 +87,16 @@ export interface MediaPreviewResponse {
 export interface MediaPreviewType {
   mediaId: string;
   email: string;
-  fileURL: string;
+  fileUrl: string;
   insertDate: string;
 }
-
 
 export default interface ChatroomType {
   chatroomId: string;
   unreadCount: number;
   totalMessages: number;
   currentPage: number;
-  participants: Participant[];
+  participants: string[];
   chatMessages: ChatData[];
   mediaPreviews: MediaPreviewType[];
 }

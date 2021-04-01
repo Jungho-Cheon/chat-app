@@ -13,12 +13,14 @@ const ChatSideBar = (): JSX.Element => {
   const currentChatroomId = useSelector(getCurrentChatroomId);
   return (
     <ChatSideBarContainer>
-      {currentChatroomId && (
-        <>
-          <ParticipantsProfile />
-          <MediaPreview />
-        </>
-      )}
+      <div className="chat-sidebar__inner">
+        {currentChatroomId && (
+          <>
+            <ParticipantsProfile />
+            <MediaPreview />
+          </>
+        )}
+      </div>
     </ChatSideBarContainer>
   );
 };

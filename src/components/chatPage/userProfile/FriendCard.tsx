@@ -32,7 +32,6 @@ const FriendCard = ({
         <FriendCardLoginCheckDot isLoggin={isLoggin} />
       </div>
       <h4>{nickname}</h4>
-      {/* <p>{email}</p> */}
     </FriendCardContainer>
   );
 };

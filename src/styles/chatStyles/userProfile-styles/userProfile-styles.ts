@@ -42,7 +42,7 @@ export const UserProfileNotification = styled.div<UserProfileNotificationProps>`
 
 export const UserProfileContainer = styled.div`
   background-color: ${props => props.theme.containerBackground};
-  border-radius: 5px;
+  border-radius: 10px;
   position: relative;
   height: 100%;
   overflow: hidden;
@@ -56,4 +56,3 @@ export const UserProfileContainer = styled.div`
     transform: translateX(-300px);
   }
 `;
-

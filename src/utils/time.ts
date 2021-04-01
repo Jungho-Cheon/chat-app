@@ -14,6 +14,6 @@ export const calcTimeAgo = (insertDate: string): string => {
       ret = Math.floor(interval / div).toString() + unit + '전';
     }
   });
-  if (!ret) ret = '방금 전';
+  if (!ret) return '방금전';
   return ret;
 };

@@ -67,7 +67,6 @@ const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
     ? userData.avatarUrl
     : userData.friendData[email]?.avatarUrl;
   const imageOnLoadHandler = useCallback((e: any) => {
-    console.log('imageOnLoadHandler called');
     scrollToPrevHeight();
     scrollToBottom(e);
   }, []);
@@ -89,7 +88,7 @@ const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
         return (
           <>
             <i className="fas fa-file"></i>
-            <span onClick={() => window.open(message.fileURL, '_blank')}>
+            <span onClick={() => window.open(message.fileUrl, '_blank')}>
               {message.message}
             </span>
           </>
@@ -98,8 +97,8 @@ const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
         return (
           <img
             className="message__image"
-            src={message.message}
-            alt={message.messageId}
+            src={message.fileUrl}
+            alt="image-message"
             draggable={false}
             onClick={e => {
               e.preventDefault();
@@ -109,7 +108,7 @@ const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
                   chatPaneContainer.current.scrollHeight -
                     chatPaneContainer.current.scrollTop
                 );
-                imageClickHanlder(e, message.message);
+                imageClickHanlder(e, message.fileUrl || '');
               }
             }}
             onLoad={imageOnLoadHandler}
@@ -137,7 +136,6 @@ const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
         return <></>;
     }
   };
-  console.log('ChatMessage Rerender..');
   return (
     <ChatMessageFlexDirection isMine={isMine}>
       <ChatMessageContainer isMine={isMine}>

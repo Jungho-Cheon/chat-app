@@ -32,9 +32,10 @@ const ChatHeader = (): JSX.Element => {
   const userData = useSelector(getUserData);
 
   useLayoutEffect(() => {
-    const targetUserEmail = participants.filter(
-      user => user.email !== userData.email
-    )[0].email;
+    const targetUserEmail = participants.find(
+      pEmail => pEmail !== userData.email
+    );
+    if (targetUserEmail === undefined) return;
     const targetUserData = userData.friendData[targetUserEmail];
     console.log(`${targetUserEmail} ${JSON.stringify(targetUserData)}`);
     if (targetUserData) {

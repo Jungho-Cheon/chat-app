@@ -48,25 +48,32 @@ export const UserProfileInfo = styled.div`
     max-height: 45px;
   }
   div.userprofile__setting-button {
-    width: 80%;
+    width: 100px;
     height: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: ${props => props.theme.buttonBackgroundA};
-    border: 1px solid ${props => props.theme.divider};
     border-radius: 5px;
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: ${props => props.theme.primaryText};
-    transition: 1s cubic-bezier(0.19, 1, 0.22, 1);
+    border: 1px solid ${props => props.theme.primaryText};
     cursor: pointer;
-
+    transition: 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
+    color: ${props => props.theme.primaryText};
     &:hover {
-      background-color: ${props => props.theme.buttonHoveredA};
+      border: 1px solid ${props => props.theme.buttonBackgroundA};
+      background-color: ${props => props.theme.buttonBackgroundA};
+      color: ${props => props.theme.primaryText};
     }
     &:active {
-      background-color: ${props => props.theme.buttonActiveA};
+      border: 1px solid ${props => props.theme.primaryText};
+    }
+    p {
+      -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+      -khtml-user-select: none; /* Konqueror HTML */
+      -moz-user-select: none; /* Old versions of Firefox */
+      -ms-user-select: none; /* Internet Explorer/Edge */
+      user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
     }
   }
 `;

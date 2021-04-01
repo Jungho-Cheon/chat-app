@@ -1,4 +1,6 @@
 import React, { useLayoutEffect, useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
+
 import { nanoid } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -29,6 +31,11 @@ const MediaPreview = (): JSX.Element => {
   const mediaPreviews = useSelector(getMediaPreviews);
   const [isModalOpened, setIsModalOpened] = useState<boolean>(false);
   const [clickedMediaIdx, setClickedMediaIdx] = useState<number>(-1);
+
+  const isShowPrimaryMedia = useMediaQuery({
+    query: '(min-height: 830px)',
+  });
+
   useLayoutEffect(() => {
     setIsModalOpened(false);
     setClickedMediaIdx(-1);
@@ -55,28 +62,44 @@ const MediaPreview = (): JSX.Element => {
         <h3>Media</h3>
         <a>Show More</a>
       </div>
-      <div className="media-preview__media-contents-container">
-        {mediaPreviews?.map((media, idx) => {
-          if (!media.fileURL || idx > 3) return;
-          return (
-            <div
-              className="media-preview__media-contents"
-              key={nanoid()}
-              onClick={e => mediaContentsClickHandler(e, media)}
-            >
-              {idx === 0 ? (
-                <img
-                  className="primary"
-                  src={media.fileURL}
-                  alt={media.fileURL}
-                />
-              ) : (
-                <img src={media.fileURL} alt={media.fileURL} />
-              )}
-            </div>
-          );
-        })}
+      <div className="media-preview__wrapper">
+        <div className="media-preview__media-contents-container">
+          {isShowPrimaryMedia
+            ? mediaPreviews?.map((media, idx) => {
+                if (!media.fileUrl || idx > 3) return;
+                return (
+                  <div
+                    className="media-preview__media-contents"
+                    key={nanoid()}
+                    onClick={e => mediaContentsClickHandler(e, media)}
+                  >
+                    {idx === 0 ? (
+                      <img
+                        className="primary"
+                        src={media.fileUrl}
+                        alt={media.fileUrl}
+                      />
+                    ) : (
+                      <img src={media.fileUrl} alt={media.fileUrl} />
+                    )}
+                  </div>
+                );
+              })
+            : mediaPreviews?.map((media, idx) => {
+                if (idx > 8) return;
+                return (
+                  <div
+                    className="media-preview__media-contents"
+                    key={nanoid()}
+                    onClick={e => mediaContentsClickHandler(e, media)}
+                  >
+                    <img src={media.fileUrl} alt={media.fileUrl} />
+                  </div>
+                );
+              })}
+        </div>
       </div>
+
       {clickedMediaIdx !== -1 && (
         <MediaPreviewModal
           isModalOpened={isModalOpened}

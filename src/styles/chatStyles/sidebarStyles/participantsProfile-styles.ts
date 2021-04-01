@@ -6,21 +6,46 @@ interface isOnlineProp {
 
 export const ParticipantsProfileContainer = styled.div`
   position: relative;
-  height: 50%;
-  min-height: 352px;
   display: flex;
   flex-direction: column;
-  /* background-color: ${props => props.theme.containerBackground}; */
+  height: 400px;
+  min-height: 400px;
   div.participants-profile__profile-picture {
     position: relative;
+    width: 100%;
     height: 60%;
-    img {
+    img.profile__background {
       width: 100%;
-      height: 100%;
+      height: 200px;
       object-fit: cover;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      background-color: ${props => props.theme.divider};
     }
-    div.participants-profile__profile-picture_gradient {
+    div.profile__profile-picture-background {
       position: absolute;
+      top: 100px;
+      left: 40px;
+      width: 130px;
+      height: 130px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: ${props => props.theme.containerBackground};
+      border-radius: 15px;
+      img.profile__profile-picture {
+        z-index: 100;
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+
+        margin: 0;
+        padding: 0;
+        border-radius: 10px;
+      }
+    }
+
+    div.participants-profile__profile-picture_gradient {
       width: 100%;
       height: 100%;
       z-index: 2;
@@ -48,16 +73,22 @@ export const ParticipantsProfileContainer = styled.div`
   div.participants-profile__profile-info {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    padding: 20px;
-    h3 {
-      font-size: 0.9rem;
+    padding: 10px 20px;
+    height: 20%;
+    h2 {
+      font-size: 1.7rem;
       font-weight: 700;
-      margin-bottom: 5px;
+      margin: 0 0 15px 0;
       color: ${props => props.theme.primaryText};
     }
+    h3 {
+      font-size: 0.98rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+      color: ${props => props.theme.secondaryText};
+    }
     p {
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       font-weight: 400;
       color: ${props => props.theme.secondaryText};
       margin-bottom: 15px;
@@ -65,20 +96,13 @@ export const ParticipantsProfileContainer = styled.div`
         margin-right: 5px;
       }
     }
-    a {
-      justify-self: flex-end;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: ${props => props.theme.buttonBackgroundA};
-      cursor: pointer;
-      &:hover {
-        text-decoration: underline;
-      }
-    }
   }
 `;
 
 export const PartnerStatus = styled.div<isOnlineProp>`
+  position: absolute;
+  top: 210px;
+  right: 23%;
   display: flex;
   justify-content: start;
   align-items: center;

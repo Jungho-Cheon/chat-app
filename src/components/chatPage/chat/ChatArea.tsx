@@ -36,9 +36,7 @@ const ChatArea = (): JSX.Element => {
   const currentChatroom = useSelector(getCurrentChatroom);
   const chatPaneContainer = useRef<HTMLDivElement>(null);
   const [isInit, setIsInit] = useState<boolean>(true);
-  // const [isImageClicked, setIsImageClicked] = useState<boolean>(false);
   const [isMessageAdded, setIsMessageAdded] = useState<boolean>(false);
-  // const [isScrollToBottom, setIsScrollToBottom] = useState<boolean>(true);
   const [showNewMessageArrived, setShowNewMessageArrived] = useState<boolean>(
     false
   );
@@ -81,7 +79,8 @@ const ChatArea = (): JSX.Element => {
               email,
               message: {
                 messageId,
-                message: response.fileURL,
+                message: '',
+                fileUrl: response.fileUrl,
                 messageType: 'IMAGE',
                 readUsers: [userData.email],
                 isComplete: false,
@@ -94,8 +93,9 @@ const ChatArea = (): JSX.Element => {
               chatroomId,
               email,
               message: {
-                message: response.fileURL,
                 messageId,
+                message: file.name,
+                fileUrl: response.fileUrl,
                 messageType: 'IMAGE',
               },
             })
@@ -109,7 +109,7 @@ const ChatArea = (): JSX.Element => {
               message: {
                 messageId,
                 message: file.name,
-                fileURL: response.fileURL,
+                fileUrl: response.fileUrl,
                 messageType: 'FILE',
                 readUsers: [userData.email],
                 isComplete: false,
@@ -122,8 +122,9 @@ const ChatArea = (): JSX.Element => {
               chatroomId,
               email,
               message: {
-                message: response.fileURL,
                 messageId,
+                message: file.name,
+                fileUrl: response.fileUrl,
                 messageType: 'FILE',
               },
             })
@@ -197,7 +198,6 @@ const ChatArea = (): JSX.Element => {
       setPrevHeight(chatPaneContainer.current.scrollHeight);
       chatPaneContainer.current.scrollTop =
         chatPaneContainer.current.scrollHeight;
-      console.log(chatPaneContainer.current.scrollTop);
     }
     setTimeout(() => setIsInit(false), 3000);
   }, [currentChatroom.chatroomId]);
@@ -205,22 +205,12 @@ const ChatArea = (): JSX.Element => {
   // 메세지 내용이 변경된 경우 알맞은 스크롤 위치로 이동한다.
   useLayoutEffect(() => {
     if (isInit) return;
-    console.log('useLayoutEffect triggered');
     const chatPane = chatPaneContainer.current;
     if (chatPane) {
       // 만약 메세지 페이징으로 메세지 배열이 변경된 경우 현재 스크롤 위치를 고정한다.
-      console.log(
-        `현재 채팅창 높이 ${chatPane.scrollHeight}, 스크롤 위치 ${chatPane.scrollTop}`
-      );
       if (isMessageAdded) {
-        console.log(
-          '메세지 내용이 변경되었으나 스크롤 최상단으로 인함.',
-          chatPane.scrollHeight,
-          prevHeight
-        );
         chatPane.scrollTop = chatPane.scrollHeight - prevHeight;
         setIsMessageAdded(false);
-        console.log('메세지 추가 플레그 초기화', chatPane.scrollTop);
       } else {
         // 스크롤이 너무 높게 올라가지 않은 경우 메세지를 입력한 사용자에 관계없이
         // 스크롤을 최하단으로 내린다.
@@ -232,14 +222,6 @@ const ChatArea = (): JSX.Element => {
           chatPane.scrollHeight <
             chatPane.scrollTop + chatPane.offsetHeight + 300
         ) {
-          console.log(
-            chatMessages[chatMessages.length - 1].email,
-            userData.email
-          );
-          console.log(
-            chatPane.scrollHeight,
-            chatPane.scrollTop + chatPane.offsetHeight
-          );
           // 현재 로그인 사용자가 입력한 경우 스크롤을 최하단으로 이동한다.
           chatPane.scrollTop = chatPane.scrollHeight;
           // 최하단으로 이동하므로 모달을 제거한다.
@@ -248,7 +230,6 @@ const ChatArea = (): JSX.Element => {
         // 상대방이 입력한 경우 현재 스크롤 위치를 고정한다.
         // 새로운 메세지가 도착했다는 모달을 띄운다.
         else {
-          console.log('상대방의 메세지 도착.');
           setShowNewMessageArrived(true);
         }
       }
@@ -308,9 +289,6 @@ const ChatArea = (): JSX.Element => {
       );
     });
   };
-  console.log(
-    `ChatArea Rerender.. showNewMessageArrived ${showNewMessageArrived}`
-  );
   return (
     <>
       <ChatPaneContainer

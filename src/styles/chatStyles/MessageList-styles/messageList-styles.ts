@@ -5,12 +5,14 @@ export const MessageListContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 300px 1fr;
-  padding-top: 20px;
+  padding: 20px 0;
+  height: 100%;
   max-height: 100%;
 `;
 
-export const MessageListUpperContainer = styled.div`
+export const MessageListWrapper = styled.div`
   width: 100%;
+  height: 100%;
   padding-top: 20px;
   display: flex;
   flex-direction: column;
@@ -26,7 +28,6 @@ export const MessageListUpperContainer = styled.div`
       font-weight: 700;
       color: ${props => props.theme.primaryText};
     }
-    
   }
 `;
 
@@ -57,12 +58,12 @@ export const SearchInput = styled.input`
   font-size: 1.1rem;
   padding: 1px 0 0 30px;
   border-radius: 10px;
-  background-color: ${props => props.theme.background};
+  background-color: ${props => props.theme.containerBackground};
   color: ${props => props.theme.primaryText};
   transition: 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
   &:focus {
-    border: 4px solid ${props => props.theme.buttonBackgroundA};
-    border-radius: 4px;
+    border: 2px solid ${props => props.theme.buttonBackgroundA};
+    background-color: ${props => props.theme.navbarBackground};
     outline: none;
   }
 `;
@@ -75,12 +76,13 @@ export const Divider = styled.div`
 `;
 
 export const MessageCardsContainer = styled.div`
+  flex: 1 1 auto;
+  height: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: 5px;
   width: 100%;
-  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
   &::-webkit-scrollbar {

@@ -1,6 +1,7 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 export const FriendSectionContianer = styled.section`
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 300px;
@@ -19,6 +20,9 @@ export const FriendSectionContianer = styled.section`
       color: ${props => props.theme.primaryText};
       font-size: 1.5rem;
       font-weight: 700;
+    }
+    div.friend-section__buttons {
+      display: flex;
     }
   }
   section.user-profile__friend-card-container {

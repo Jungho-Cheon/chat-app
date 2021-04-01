@@ -2,12 +2,10 @@ import styled from 'styled-components';
 
 export const ChatSideBarContainer = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 100%;
+  padding: 20px 0;
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  overflow: auto;
+  overflow: hidden;
   &::-webkit-scrollbar {
     width: 5px;
   }
@@ -18,11 +16,13 @@ export const ChatSideBarContainer = styled.div`
   &::-webkit-scrollbar-track {
     background-color: transparent;
   }
-
-  /* &:hover {
-    &::-webkit-scrollbar-thumb {
-      background-color: ${props => props.theme.secondaryText};
-      border-radius: 50px;
-    }
-  } */
+  div.chat-sidebar__inner {
+    height: 100%;
+    width: 100%;
+    background-color: ${props => props.theme.containerBackground};
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 10px;
+  }
 `;

@@ -45,6 +45,11 @@ socket.on('connect', () => {
 // 채팅방 생성 완료 처리
 socket.on('CREATE_ROOM', async data => {
   const { chatroomId } = JSON.parse(data);
+  const existChatroom = Object.entries(store.getState().chatroom.data).find(
+    ([id, _]) => id === chatroomId
+  );
+  if (existChatroom === undefined)
+    socket.emit('JOIN_ROOM', JSON.stringify({ chatroomId }));
   store.dispatch(fetchChatroomInfo(chatroomId));
 });
 

@@ -15,7 +15,7 @@ export const ChatPaneContainer = styled.div`
   height: 0;
   flex: 1 1 auto;
   position: relative;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
   &::-webkit-scrollbar {
     width: 5px;
