@@ -9,6 +9,7 @@ import { RootStateOrAny } from 'react-redux';
 import Client from '../../client/chatClient';
 import socket from '../../socket/socket';
 import { getLastElement } from '../../utils/arrayUtils';
+import { getCurrentDate } from '../../utils/time';
 import ChatroomType, {
   ChatRoomState,
   CheckReadMessageProps,
@@ -31,6 +32,20 @@ const initialState: ChatRoomState = {
   data: {},
 };
 
+const getLastMessageDate = (chatroom: ChatroomType): string => {
+  const lastChatMessage = getLastElement(chatroom.chatMessages);
+  if (lastChatMessage === undefined) return getCurrentDate();
+  const lastMessage = getLastElement(lastChatMessage.messages);
+  if (lastMessage === undefined) return getCurrentDate();
+  return lastMessage.insertDate || getCurrentDate();
+};
+
+const compareTime = (a: ChatroomType, b: ChatroomType) => {
+  return (
+    new Date(b.lastMessageDate).getTime() -
+    new Date(a.lastMessageDate).getTime()
+  );
+};
 // Async Thunks
 // 채팅방 정보 초기화
 export const fetchChatroomInfo = createAsyncThunk(
@@ -42,13 +57,15 @@ export const fetchChatroomInfo = createAsyncThunk(
     let unreadCount = 0;
     response.chatMessages.forEach(chatMessage =>
       chatMessage.messages.forEach(message => {
-        message.isComplete = true;
+        // message.isComplete = true;
         !message.readUsers?.includes(email) && unreadCount++;
       })
     );
     response.unreadCount = unreadCount;
     response.currentPage = 1;
     response.mediaPreviews = new Array<MediaPreviewType>();
+    response.lastMessageDate = getLastMessageDate(response);
+    console.log(response.participants, response.lastMessageDate);
     return response;
   }
 );
@@ -61,8 +78,6 @@ export const fetchMediaPreviews = createAsyncThunk(
     const mediaPreviews = response.mediaPreviews.filter(
       preview => preview.fileUrl
     );
-    console.log(response);
-    console.log(mediaPreviews);
     return {
       chatroomId,
       mediaPreviews,
@@ -76,11 +91,6 @@ export const requestNextMessagePage = createAsyncThunk(
   async (requestNextMessagePageProps: RequestNextMessagePageProps) => {
     const response = await client.requestNextMessagePage(
       requestNextMessagePageProps
-    );
-    response.chatMessages.forEach(chatMessage =>
-      chatMessage.messages.forEach(message => {
-        message.isComplete = true;
-      })
     );
     return response;
   }
@@ -112,7 +122,9 @@ export const chatroomSlice = createSlice({
       const { chatroomId, email, message } = action.payload;
       console.log('sendMessage -> message', message);
       if (state.data.hasOwnProperty(chatroomId)) {
-        const chatMessages = state.data[chatroomId].chatMessages;
+        const chatroom = state.data[chatroomId];
+        const chatMessages = chatroom.chatMessages;
+        chatroom.lastMessageDate = getCurrentDate();
         // 메세지가 분리되는 조건(chatMessages를 새로 만듦)
         // 1. 채팅이 시작될 때
         // 2. 이전 메세지와 작성자가 다를 때
@@ -156,7 +168,7 @@ export const chatroomSlice = createSlice({
       state.data[chatroomId].chatMessages.find(chatMessage =>
         chatMessage.messages.forEach(message => {
           if (message.messageId === messageId) {
-            message.isComplete = true;
+            // message.isComplete = true;
             message.insertDate = insertDate;
             message.messageId = newMessageId;
             return true;
@@ -174,7 +186,9 @@ export const chatroomSlice = createSlice({
     receiveMessage(state, action: PayloadAction<SendMessageProps>) {
       const { chatroomId, email, userEmail, message } = action.payload;
       if (state.data.hasOwnProperty(chatroomId)) {
-        const chatMessages = state.data[chatroomId].chatMessages;
+        const chatroom = state.data[chatroomId];
+        const chatMessages = chatroom.chatMessages;
+        chatroom.lastMessageDate = getCurrentDate();
         if (state.currentChatroomId !== chatroomId) {
           state.data[chatroomId].unreadCount++;
         } else {
@@ -268,31 +282,6 @@ export const chatroomSlice = createSlice({
   },
 });
 
-const compareTime = (a: ChatroomType, b: ChatroomType) => {
-  const defaultMessage: ChatData = {
-    email: 'default',
-    messages: [
-      {
-        insertDate: JSON.stringify(new Date()),
-        message: '',
-        messageId: '',
-        messageType: '',
-        readUsers: [],
-      },
-    ],
-  };
-  const defaultTime = new Date();
-  const lastMessageA = getLastElement(a.chatMessages) || defaultMessage;
-  const lastMessageB = getLastElement(b.chatMessages) || defaultMessage;
-  const resultA =
-    new Date(getLastElement(lastMessageA.messages)?.insertDate || '') ||
-    defaultTime;
-  const resultB =
-    new Date(getLastElement(lastMessageB.messages)?.insertDate || '') ||
-    defaultTime;
-  return resultB.getTime() - resultA.getTime();
-};
-
 // selecters
 export const getAllChatrooms = (
   state: RootStateOrAny
@@ -321,20 +310,11 @@ export const getCurrentChatroomId = (state: RootStateOrAny): string => {
 export const getCurrentChatroom = (state: RootStateOrAny): ChatroomType => {
   const currentChatroom: ChatroomType =
     state.chatroom.data[state.chatroom.currentChatroomId];
-  if (!currentChatroom)
-    return {
-      chatroomId: '',
-      unreadCount: 0,
-      currentPage: 1,
-      totalMessages: 0,
-      chatMessages: [],
-      participants: [],
-      mediaPreviews: [],
-    };
   return currentChatroom;
 };
 
 export const getMediaPreviews = (state: RootStateOrAny): MediaPreviewType[] => {
+  console.log('recompute');
   if (state.chatroom.currentChatroomId)
     return state.chatroom.data[state.chatroom.currentChatroomId].mediaPreviews
       .slice()

@@ -144,7 +144,7 @@ const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
             return (
               <MessageArticle key={nanoid()}>
                 <div className="message__wrapper">
-                  {isMine && !message.isComplete && (
+                  {isMine && message.messageId.startsWith('tmp_') && (
                     <i className="fas fa-spinner complete"></i>
                   )}
                   <div className="message__time">
@@ -155,7 +155,9 @@ const ChatMessage: React.FunctionComponent<ChatMessageProps> = ({
                   <MessageWrapper
                     type={message.messageType}
                     isMine={isMine}
-                    isCompleted={!isMine || message.isComplete || false}
+                    isCompleted={
+                      !isMine || !message.messageId.startsWith('tmp_') || false
+                    }
                   >
                     {createMessageComponent(message)}
                   </MessageWrapper>

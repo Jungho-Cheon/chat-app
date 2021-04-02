@@ -83,7 +83,6 @@ const ChatArea = (): JSX.Element => {
                 fileUrl: response.fileUrl,
                 messageType: 'IMAGE',
                 readUsers: [userData.email],
-                isComplete: false,
               },
             })
           );
@@ -112,7 +111,6 @@ const ChatArea = (): JSX.Element => {
                 fileUrl: response.fileUrl,
                 messageType: 'FILE',
                 readUsers: [userData.email],
-                isComplete: false,
               },
             })
           );

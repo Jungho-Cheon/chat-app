@@ -51,17 +51,6 @@ const MessageList = (): JSX.Element => {
     setSearchUserName(e.target.value.trim());
   };
 
-  const dispatchAllChatrooms = useCallback(() => {
-    const chatroomSet = new Set(userData.chatroomIds);
-    chatroomSet.forEach((chatroomId: string) => {
-      dispatch(fetchChatroomInfo(chatroomId));
-    });
-  }, []);
-
-  useEffect(() => {
-    dispatchAllChatrooms();
-  }, []);
-
   const filterMessageCards = (
     chatrooms: {
       chatroomId: string;
@@ -128,7 +117,6 @@ const MessageList = (): JSX.Element => {
       </div>
     </div>
   );
-  console.log(chatrooms);
   return (
     <MessageListContainer>
       <DiscoverFriendModalContext.Provider

@@ -15,7 +15,6 @@ export interface Message {
   fileUrl?: string;
   readUsers: string[];
   insertDate?: string;
-  isComplete?: boolean;
 }
 
 export interface ChatData {
@@ -98,5 +97,6 @@ export default interface ChatroomType {
   currentPage: number;
   participants: string[];
   chatMessages: ChatData[];
+  lastMessageDate: string;
   mediaPreviews: MediaPreviewType[];
 }

@@ -159,7 +159,7 @@ const ChatInput = (): JSX.Element => {
         // 파일 업로드
         const chatroomId = currentChatroomId;
         const response = await client.uploadFile(chatroomId, file);
-        const messageId = nanoid();
+        const messageId = 'tmp_' + nanoid();
         // 이미지 파일인 경우
         if (file.type.startsWith('image')) {
           dispatch(
@@ -172,7 +172,7 @@ const ChatInput = (): JSX.Element => {
                 fileUrl: response.fileUrl,
                 messageType: 'IMAGE',
                 readUsers: [email],
-                isComplete: false,
+                // isComplete: false,
               },
             })
           );
@@ -201,7 +201,7 @@ const ChatInput = (): JSX.Element => {
                 fileUrl: response.fileUrl,
                 messageType: 'FILE',
                 readUsers: [email],
-                isComplete: false,
+                // isComplete: false,
               },
             })
           );

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 
 // components
 // import Navbar from '../components/chatPage/navbar/Navbar';
@@ -8,17 +8,25 @@ import ChatSideBar from '../components/chatPage/sidebar/ChatSideBar';
 
 // styled-components
 import { ChatPageContainer } from '../styles/chatStyles/chatPage-styles';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getUserData } from '../features/auth/authSlice';
 import { useHistory } from 'react-router';
 
 // socket
 import socket from '../socket/socket';
+import { fetchChatroomInfo } from '../features/chatroom/chatroomSlice';
 
 const ChatPage = (): JSX.Element => {
+  const dispatch = useDispatch();
   const history = useHistory();
+  const userData = useSelector(getUserData);
   const { email, chatroomIds } = useSelector(getUserData);
-
+  const dispatchAllChatrooms = useCallback(() => {
+    const chatroomSet = new Set(userData.chatroomIds);
+    chatroomSet.forEach((chatroomId: string) => {
+      dispatch(fetchChatroomInfo(chatroomId));
+    });
+  }, [userData]);
   useEffect((): (() => void) => {
     if (email) {
       chatroomIds.forEach(chatroomId => {
@@ -30,6 +38,7 @@ const ChatPage = (): JSX.Element => {
           })
         );
       });
+      dispatchAllChatrooms();
     } else {
       history.push('/sign-in');
     }

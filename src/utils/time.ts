@@ -17,3 +17,6 @@ export const calcTimeAgo = (insertDate: string): string => {
   if (!ret) return '방금전';
   return ret;
 };
+
+export const getCurrentDate = (): string =>
+  new Date(Date.now() + 1000 * 60 * 60 * 9).toISOString();
