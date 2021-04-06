@@ -20,7 +20,9 @@ import {
 } from '../features/friendRequest/friendRequestSlice';
 import { FriendData } from '../features/auth/authTypes';
 
-const socket = io('ws://localhost:8080', {
+const SERVER_URL = process.env.REACT_APP_SERVER_URL as string;
+console.log(SERVER_URL);
+const socket = io(`${SERVER_URL}`, {
   timeout: 5000,
   reconnectionAttempts: 5,
   autoConnect: false,

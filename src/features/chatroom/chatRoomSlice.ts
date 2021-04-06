@@ -5,11 +5,14 @@ import {
   PayloadAction,
 } from '@reduxjs/toolkit';
 import { RootStateOrAny } from 'react-redux';
-
-import Client from '../../client/chatClient';
+// client
+import chatClient from '../../client/chatClient';
+// socket
 import socket from '../../socket/socket';
+// utils
 import { getLastElement } from '../../utils/arrayUtils';
 import { getCurrentDate } from '../../utils/time';
+//types
 import ChatroomType, {
   ChatRoomState,
   CheckReadMessageProps,
@@ -19,11 +22,7 @@ import ChatroomType, {
   ReadCheckChatroomProps,
   RequestNextMessagePageProps,
   SendMessageProps,
-  ChatData,
 } from './chatroomTypes';
-
-const SERVER_URL = process.env.REACT_APP_SERVER_URL || '';
-const client = new Client(SERVER_URL.toString());
 
 const initialState: ChatRoomState = {
   status: FETCH_CHATROOM_STATUS.IDLE,
@@ -50,10 +49,17 @@ const compareTime = (a: ChatroomType, b: ChatroomType) => {
 // 채팅방 정보 초기화
 export const fetchChatroomInfo = createAsyncThunk(
   'chatroom/fetchChatRoomInfo',
-  async (chatroomId: string, { getState }): Promise<ChatroomType> => {
-    const { auth } = getState() as { auth: { userData: { email: string } } };
+  async (chatroomId: string, { getState, dispatch }): Promise<ChatroomType> => {
+    const { auth } = getState() as {
+      auth: { userData: { email: string }; accessToken: string };
+    };
     const email = auth.userData.email;
-    const response = await client.fetchChatroomInfo(chatroomId);
+    const accessToken = auth.accessToken;
+    const response = await chatClient.fetchChatroomInfo(
+      chatroomId,
+      accessToken,
+      dispatch
+    );
     let unreadCount = 0;
     response.chatMessages.forEach(chatMessage =>
       chatMessage.messages.forEach(message => {
@@ -73,8 +79,17 @@ export const fetchChatroomInfo = createAsyncThunk(
 // media preview 요청
 export const fetchMediaPreviews = createAsyncThunk(
   'chatroom/fetchMediaPreviews',
-  async (chatroomId: string) => {
-    const response = await client.fetchMediaPreviews(chatroomId);
+  async (chatroomId: string, { getState, dispatch }) => {
+    const {
+      auth: { accessToken },
+    } = getState() as {
+      auth: { accessToken: string };
+    };
+    const response = await chatClient.fetchMediaPreviews(
+      chatroomId,
+      accessToken,
+      dispatch
+    );
     const mediaPreviews = response.mediaPreviews.filter(
       preview => preview.fileUrl
     );
@@ -88,9 +103,19 @@ export const fetchMediaPreviews = createAsyncThunk(
 // 메세지 다음 페이지 요청
 export const requestNextMessagePage = createAsyncThunk(
   'chatroom/requestNextMessagePage',
-  async (requestNextMessagePageProps: RequestNextMessagePageProps) => {
-    const response = await client.requestNextMessagePage(
-      requestNextMessagePageProps
+  async (
+    requestNextMessagePageProps: RequestNextMessagePageProps,
+    { getState, dispatch }
+  ) => {
+    const {
+      auth: { accessToken },
+    } = getState() as {
+      auth: { accessToken: string };
+    };
+    const response = await chatClient.requestNextMessagePage(
+      requestNextMessagePageProps,
+      accessToken,
+      dispatch
     );
     return response;
   }
@@ -99,8 +124,17 @@ export const requestNextMessagePage = createAsyncThunk(
 // 채팅방의 모든 메세지 읽음 처리
 export const checkOutChatroom = createAsyncThunk(
   'chatroom/checkOutChatroom',
-  async (readCheckChatroomProps: ReadCheckChatroomProps) => {
-    const response = await client.readCheckChatroom(readCheckChatroomProps);
+  async (readCheckChatroomProps: ReadCheckChatroomProps, { getState, dispatch }) => {
+    const {
+      auth: { accessToken },
+    } = getState() as {
+      auth: { accessToken: string };
+    };
+    const response = await chatClient.readCheckChatroom(
+      readCheckChatroomProps,
+      accessToken,
+      dispatch
+    );
     return response;
   }
 );
@@ -314,7 +348,6 @@ export const getCurrentChatroom = (state: RootStateOrAny): ChatroomType => {
 };
 
 export const getMediaPreviews = (state: RootStateOrAny): MediaPreviewType[] => {
-  console.log('recompute');
   if (state.chatroom.currentChatroomId)
     return state.chatroom.data[state.chatroom.currentChatroomId].mediaPreviews
       .slice()

@@ -15,13 +15,17 @@ import {
   checkFriendRequests,
   getCurrentFriendRequest,
 } from '../../../features/friendRequest/friendRequestSlice';
-import { getUserData } from '../../../features/auth/authSlice';
+import { getUserData, userLogOut } from '../../../features/auth/authSlice';
 
 export interface ProfileSectionProps {
   userProfile: HTMLDivElement | null;
+  setShowEditProfileModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ProfileSection = ({ userProfile }: ProfileSectionProps): JSX.Element => {
+const ProfileSection = ({
+  userProfile,
+  setShowEditProfileModal,
+}: ProfileSectionProps): JSX.Element => {
   const dispatch = useDispatch();
   const userData = useSelector(getUserData);
   const friendRequests = useSelector(getCurrentFriendRequest);
@@ -40,7 +44,7 @@ const ProfileSection = ({ userProfile }: ProfileSectionProps): JSX.Element => {
     e.preventDefault();
     if (!userProfile) return;
     userProfile.style.transform = `translateX(-600px)`;
-    dispatch(checkFriendRequests());
+    dispatch(checkFriendRequests(userData.email));
     setHasNewNotification(false);
   };
   useEffect(() => {
@@ -51,21 +55,38 @@ const ProfileSection = ({ userProfile }: ProfileSectionProps): JSX.Element => {
       setHasNewNotification(true);
     }
   }, [friendRequests]);
+  const logOut = () => {
+    dispatch(userLogOut());
+  };
   return (
     <ProfileSectionContianer>
       <header>
-        <MenuButton iconClass="fa-users" onClick={slideToFriendList} />
         <MenuButton
-          iconClass="fa-bell"
+          iconClass="fas fa-users"
+          onClick={slideToFriendList}
+          hoverMessage="friends"
+        />
+        <MenuButton
+          iconClass="fas fa-bell"
           hasNewNotification={hasNewNotification}
           onClick={slideToNotification}
+          hoverMessage="Notification"
+        />
+        <MenuButton
+          iconClass="fas fa-sign-out-alt"
+          onClick={logOut}
+          hoverMessage="log out"
         />
       </header>
       <UserRectAvatar avatarUrl={userData.avatarUrl} width="120px" />
       <UserProfileInfo>
         <UserNameContainer>{userData.nickname}</UserNameContainer>
         <span className="userprofile__email">{userData.email}</span>
-        <div className="userprofile__setting-button">
+
+        <div
+          className="userprofile__setting-button"
+          onClick={() => setShowEditProfileModal(true)}
+        >
           <p>Edit Profile</p>
         </div>
       </UserProfileInfo>

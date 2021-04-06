@@ -2,11 +2,12 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootStateOrAny } from 'react-redux';
 import store from '../../app/store';
 
-import FriendRequestClient from '../../client/friendRequestClient';
+// client
+import friendRequestClient from '../../client/friendRequestClient';
+// socket
 import socket from '../../socket/socket';
+// types
 import { FriendData } from '../auth/authTypes';
-
-const client = new FriendRequestClient(process.env.REACT_APP_SERVER_URL || '');
 
 export interface FriendRequest {
   email: string;
@@ -31,34 +32,51 @@ export interface ResponseFriendRequestProps {
 
 export const getFriendRequest = createAsyncThunk(
   'friendRequest/getFriendRequest',
-  async (email: string): Promise<FriendRequest[]> => {
-    return await client.getFriendRequest(email);
+  async (email: string, { getState }): Promise<FriendRequest[]> => {
+    const {
+      auth: { accessToken },
+    } = getState() as {
+      auth: { accessToken: string };
+    };
+    return await friendRequestClient.getFriendRequest(email, accessToken);
   }
 );
 
 export const checkFriendRequests = createAsyncThunk(
   'friendRequest/checkFriendReqeusts',
-  async () => {
+  async (email: string, { getState }) => {
+    const {
+      auth: { accessToken },
+    } = getState() as {
+      auth: { accessToken: string };
+    };
     const friendRequest = store.getState().friendRequest;
-    const email = store.getState().auth.userData.email;
     if (
       friendRequest.length > 0 &&
       !friendRequest[friendRequest.length - 1].isChecked
     )
-      return await client.checkFriendRequests(email);
+      return await friendRequestClient.checkFriendRequests(email, accessToken);
   }
 );
 
 export const responseFriendRequest = createAsyncThunk(
   'friendRequest/response',
-  async (responseFriendRequestProps: ResponseFriendRequestProps) => {
+  async (
+    responseFriendRequestProps: ResponseFriendRequestProps,
+    { getState }
+  ) => {
+    const {
+      auth: { accessToken },
+    } = getState() as {
+      auth: { accessToken: string };
+    };
     const receiveEmail = store.getState().auth.userData.email;
     const props = {
       ...responseFriendRequestProps,
       receiveEmail,
     };
     socket.emit('RESPONSE_FRIEND_REQUEST', JSON.stringify(props));
-    return await client.responseFriendRequest(props);
+    return await friendRequestClient.responseFriendRequest(props, accessToken);
   }
 );
 

@@ -79,7 +79,7 @@ const NotificationSection = ({
   return (
     <NotificationSectionContainer>
       <div className="user-profile__notification__header">
-        <MenuButton iconClass="fa-chevron-left" onClick={slideToUserProfile} />
+        <MenuButton iconClass="fas fa-chevron-left" onClick={slideToUserProfile} />
         <h3>Notification</h3>
       </div>
 

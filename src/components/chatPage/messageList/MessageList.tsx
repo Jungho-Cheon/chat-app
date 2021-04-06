@@ -1,19 +1,7 @@
-import React, {
-  createContext,
-  Dispatch,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
-import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
-import {
-  fetchChatroomInfo,
-  getChatroomPreviews,
-} from '../../../features/chatroom/chatroomSlice';
+import React, { createContext, Dispatch, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { getChatroomPreviews } from '../../../features/chatroom/chatroomSlice';
 import { getUserData } from '../../../features/auth/authSlice';
-import ChatroomType, {
-  ChatData,
-} from '../../../features/chatroom/chatroomTypes';
 
 // components
 import MessageCard from './MessageCard';
@@ -29,7 +17,6 @@ import {
   MessageCardsContainer,
   Divider,
 } from '../../../styles/chatStyles/MessageList-styles/messageList-styles';
-import { getLastElement } from '../../../utils/arrayUtils';
 
 export const DiscoverFriendModalContext = createContext<
   | {
@@ -40,7 +27,6 @@ export const DiscoverFriendModalContext = createContext<
 >(undefined);
 
 const MessageList = (): JSX.Element => {
-  const dispatch = useDispatch();
   const [searchUsername, setSearchUserName] = useState<string>('');
   const [isOpenDiscoverFriend, setIsOpenDiscoverFriend] = useState<boolean>(
     false

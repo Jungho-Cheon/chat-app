@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import {
   HeaderContainer,
   HeaderLogoContainer,
-  HeaderNav,
   HeaderRightContainer,
   SignInButton,
   SignUpButton,
@@ -14,10 +13,10 @@ const Header = (): JSX.Element => {
     <HeaderContainer>
       <HeaderLogoContainer>
         <h1>TALKI</h1>
-        <HeaderNav>
+        {/* <HeaderNav>
           <Link to="/about">about</Link>
           <Link to="/contact">contact</Link>
-        </HeaderNav>
+        </HeaderNav> */}
       </HeaderLogoContainer>
       <HeaderRightContainer>
         <Link to="/sign-in">

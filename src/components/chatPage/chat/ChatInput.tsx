@@ -16,7 +16,7 @@ import {
 } from '../../../styles/chatStyles/chatInput-styles';
 
 // redux
-import { getUserData } from '../../../features/auth/authSlice';
+import { getUserData, getAccessToken } from '../../../features/auth/authSlice';
 import {
   getCurrentChatroomId,
   sendMessage,
@@ -26,16 +26,18 @@ import { nanoid } from '@reduxjs/toolkit';
 // socket
 import socket from '../../../socket/socket';
 
-import Client from '../../../client/chatClient';
-import { UrlData } from '../../../features/chatroom/chatroomTypes';
+// client
+import chatClient from '../../../client/chatClient';
 
-const client = new Client(process.env.REACT_APP_SERVER_URL || '');
+// types
+import { UrlData } from '../../../features/chatroom/chatroomTypes';
 
 const ChatInput = (): JSX.Element => {
   const dispatch = useDispatch();
   const fileInput = useRef<HTMLInputElement>(null);
   const { email, friendData } = useSelector(getUserData);
   const currentChatroomId = useSelector(getCurrentChatroomId);
+  const accessToken = useSelector(getAccessToken);
   const [isEmojiOpened, setIsEmojiOpened] = useState(false);
   const [text, setText] = useState<string>('');
   const [nickname, setNickname] = useState<string>('');
@@ -97,7 +99,7 @@ const ChatInput = (): JSX.Element => {
   const sendMessageHandler = async () => {
     if (text.trim() !== '' && currentChatroomId && socket.connected) {
       const messageType = checkMessageType(text);
-      const messageId = nanoid(); // 임시 메세지 아이디
+      const messageId = 'tmp_' + nanoid(); // 임시 메세지 아이디
       const payload: {
         chatroomId: string;
         email: string;
@@ -125,7 +127,7 @@ const ChatInput = (): JSX.Element => {
         },
       };
       if (messageType === 'URL') {
-        const urlData = await client.getLinkPreview(text);
+        const urlData = await chatClient.getLinkPreview(text, accessToken, dispatch);
         if (urlData.hasOwnProperty('message')) {
           payload.message.messageType = 'TEXT';
           statePayload.message.messageType = 'TEXT';
@@ -158,7 +160,12 @@ const ChatInput = (): JSX.Element => {
         }
         // 파일 업로드
         const chatroomId = currentChatroomId;
-        const response = await client.uploadFile(chatroomId, file);
+        const response = await chatClient.uploadFile(
+          chatroomId,
+          file,
+          accessToken,
+          dispatch
+        );
         const messageId = 'tmp_' + nanoid();
         // 이미지 파일인 경우
         if (file.type.startsWith('image')) {

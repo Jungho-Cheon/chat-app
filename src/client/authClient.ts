@@ -10,6 +10,8 @@ export interface OAuthSignInProps {
   image: string;
 }
 
+const SERVER_URL = process.env.REACT_APP_SERVER_URL as string;
+
 const AuthClient = class {
   hostUrl: string;
   constructor(hostUrl: string) {
@@ -32,6 +34,7 @@ const AuthClient = class {
       method: 'post',
       mode: 'cors',
       cache: 'no-cache',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -45,6 +48,7 @@ const AuthClient = class {
       method: 'post',
       mode: 'cors',
       cache: 'no-cache',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -55,4 +59,4 @@ const AuthClient = class {
   }
 };
 
-export default AuthClient;
+export default new AuthClient(SERVER_URL);

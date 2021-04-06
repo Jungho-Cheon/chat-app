@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 export const ProfileSectionContianer = styled.section`
-  position: relative;
   height: 100%;
   width: 300px;
   display: flex;
@@ -76,10 +75,12 @@ export const UserProfileInfo = styled.div`
                                   supported by Chrome, Edge, Opera and Firefox */
     }
   }
+
 `;
 
 export const UserNameContainer = styled.div`
   width: 200px;
+  height: 1.6rem;
   font-size: 1.5rem;
   font-weight: 700;
   white-space: nowrap;

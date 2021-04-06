@@ -1,6 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-import Lottie from 'react-lottie';
+// components
+import MenuButton from '../chatPage/menuButton/MenuButton';
 
 // styled components
 import { SignUpButton } from '../../styles/homeStyles/homeHeader-styles';
@@ -11,8 +13,8 @@ import {
 } from '../../styles/homeStyles/homeMain-styles';
 
 // lottie file
+import Lottie from 'react-lottie';
 import animationData from '../../lotties/PRODUCT/Animation 04/drawkit-grape-animation-4-LOOP.json';
-import { Link } from 'react-router-dom';
 
 const HomeMain = (): JSX.Element => {
   const defaultOptions = {
@@ -54,6 +56,61 @@ const HomeMain = (): JSX.Element => {
           <SignUpButton>Sign Up</SignUpButton>
         </Link>
       </HomeDescriptions>
+      <footer className="home-page__footer">
+        <div className="home-page__footer-container">
+          <section className="home-page__footer__section">
+            <h3>FE Stack</h3>
+            <ul>
+              <li>React.js</li>
+              <li>React Router Dom</li>
+              <li>Redux</li>
+              <li>Styled-Components</li>
+              <li>Socket.io client</li>
+            </ul>
+          </section>
+          <section className="home-page__footer__section">
+            <h3>BE Stack</h3>
+            <ul>
+              <li>Node.js</li>
+              <li>express</li>
+              <li>Socket.io</li>
+              <li>atlas</li>
+              <li>mongoose</li>
+              <li>Google Cloud Platform</li>
+              <li>Docker</li>
+            </ul>
+          </section>
+          <section className="home-page__footer__contact-section">
+            <h1>TALKI</h1>
+            <div className="home-page__footer__sns">
+              <MenuButton
+                iconClass="fab fa-github"
+                onClick={e => {
+                  e.preventDefault();
+                  if (window)
+                    window.open('https://github.com/Jungho-Cheon', '_blank');
+                }}
+                hoverMessage="Github"
+              />
+              <MenuButton
+                iconClass="fab fa-instagram"
+                onClick={e => {
+                  e.preventDefault();
+                  if (window)
+                    window.open(
+                      'https://www.instagram.com/junghothethousand/',
+                      '_blank'
+                    );
+                }}
+                hoverMessage="Instagram"
+              />
+            </div>
+          </section>
+        </div>
+        <div className="home-page__footer__copyright">
+          Copyright 2021. JHTT - JungHo The Thousand All rights reserved
+        </div>
+      </footer>
     </HomeMainContainer>
   );
 };

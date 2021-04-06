@@ -20,19 +20,19 @@ import {
   ChatPaneClickedIamge,
 } from '../../../styles/chatStyles/chatArea-styles';
 import { nanoid } from '@reduxjs/toolkit';
-import { getUserData } from '../../../features/auth/authSlice';
+import { getUserData, getAccessToken } from '../../../features/auth/authSlice';
+
+// client
+import chatClient from '../../../client/chatClient';
 
 // util
 import { compareDate } from './ChatMessage';
 import socket from '../../../socket/socket';
 
-import Client from '../../../client/chatClient';
-
-const client = new Client(process.env.REACT_APP_SERVER_URL || '');
-
 const ChatArea = (): JSX.Element => {
   const dispatch = useDispatch();
   const userData = useSelector(getUserData);
+  const accessToken = useSelector(getAccessToken);
   const currentChatroom = useSelector(getCurrentChatroom);
   const chatPaneContainer = useRef<HTMLDivElement>(null);
   const [isInit, setIsInit] = useState<boolean>(true);
@@ -68,7 +68,12 @@ const ChatArea = (): JSX.Element => {
         }
         // 파일 업로드
         const chatroomId = currentChatroom.chatroomId;
-        const response = await client.uploadFile(chatroomId, file);
+        const response = await chatClient.uploadFile(
+          chatroomId,
+          file,
+          accessToken,
+          dispatch
+        );
         const email = userData.email;
         const messageId = nanoid();
         // 이미지 파일인 경우

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 // Redux
 import { FriendData } from '../../../features/auth/authTypes';
 import { getUserData } from '../../../features/auth/authSlice';
@@ -68,7 +68,7 @@ const FriendDetailModal = ({
       </div>
       <div className="button-absolute">
         <MenuButton
-          iconClass="fa-times"
+          iconClass="fas fa-times"
           onClick={e => {
             e.preventDefault();
             setFriendDetailModalData(undefined);

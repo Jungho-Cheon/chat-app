@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useReducer, useState } from 'react';
+import React from 'react';
 
 // components
 import UserAvatar from '../avatar/UserAvatar';
@@ -23,7 +23,6 @@ import {
   checkReadMessages,
   getCurrentChatroomId,
 } from '../../../features/chatroom/chatroomSlice';
-import ChatroomType from '../../../features/chatroom/chatroomTypes';
 
 // hooks
 import useMessageCard from './useMessageCard';

@@ -1,7 +1,10 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { GoogleLoginResponse } from 'react-google-login';
 import { RootStateOrAny } from 'react-redux';
-import Client from '../../client/authClient';
+
+// clients
+import authClient from '../../client/authClient';
+import { ChangeProfileProps } from '../../client/userInfoClient';
 import {
   SignInProps,
   SignInResponse,
@@ -11,26 +14,18 @@ import {
   UserData,
 } from './authTypes';
 
-if (!process.env.REACT_APP_SERVER_URL) {
-  console.error('server url required!');
-} else {
-  console.log('server url : ' + process.env.REACT_APP_SERVER_URL);
-}
-const SERVER_URL = process.env.REACT_APP_SERVER_URL || '';
-const client = new Client(SERVER_URL.toString());
-
 // Async Thunks
 export const signUpThunk = createAsyncThunk(
   'auth/sign-up',
   async (signUpData: SignUpProps) => {
-    return await client.signUp(signUpData);
+    return await authClient.signUp(signUpData);
   }
 );
 
 export const signInThunk = createAsyncThunk(
   'auth/sign-in',
   async (signInData: SignInProps): Promise<SignInResponse> => {
-    return await client.signIn(signInData);
+    return await authClient.signIn(signInData);
   }
 );
 
@@ -38,7 +33,7 @@ export const googleLogin = createAsyncThunk(
   'auth/google-login',
   async (loginData: GoogleLoginResponse) => {
     const { email, imageUrl, name } = loginData.profileObj;
-    return await client.oAuthLogin({
+    return await authClient.oAuthLogin({
       email,
       name,
       image: imageUrl,
@@ -59,14 +54,29 @@ export const facebookLogin = createAsyncThunk(
   'auth/facebook-login',
   async (loginData: FacebookLoginResponse) => {
     const { email, name, picture } = loginData;
-    return await client.oAuthLogin({
+    return await authClient.oAuthLogin({
       email,
       name,
       image: picture?.data.url || '',
     });
   }
 );
-
+const handleOAuth2Login = (state: any, { payload }: { payload: any }) => {
+  console.log(payload);
+  const { accessToken, message, statusCode, userData } = payload;
+  if (statusCode === 200) {
+    state.accessToken = accessToken;
+    state.userData = userData;
+    state.signInState.state = SignInState.SUCCESS;
+    state.signInState.message = message;
+  } else if (statusCode === 400) {
+    state.signInState.state = SignInState.EMAIL_INVALID;
+    state.signInState.message = message;
+  } else if (statusCode === 401) {
+    state.signInState.state = SignInState.PASSWORD_INVALID;
+    state.signInState.message = message;
+  }
+};
 const initialState: {
   accessToken: string;
   userData: UserData;
@@ -110,6 +120,24 @@ const authSlice = createSlice({
     addFriend(state, { payload }) {
       state.userData.friendData[payload.email] = payload;
     },
+    userLogOut(state) {
+      state = initialState;
+      return state;
+    },
+    changeProfile(state, action: PayloadAction<ChangeProfileProps>) {
+      const { avatarUrl, description, nickname } = action.payload;
+      state.userData = {
+        ...state.userData,
+        avatarUrl,
+        description,
+        nickname,
+      };
+    },
+    accessTokenRefresh(state, action: PayloadAction<string>) {
+      const newAccessToken = action.payload;
+      state.accessToken = newAccessToken;
+      return state;
+    },
   },
   extraReducers: builder => {
     // 로그인 응답 처리
@@ -137,7 +165,7 @@ const authSlice = createSlice({
         state.signUpState = SignUpState.FAILED;
       }
     });
-    // 구글 로그인 응답 처리
+    // 구글, 페이스북 로그인 응답 처리
     builder.addCase(googleLogin.fulfilled, (state, { payload }) => {
       console.log(payload);
       const { accessToken, message, statusCode, userData } = payload;
@@ -179,6 +207,9 @@ export const {
   userOffline,
   userOnline,
   addFriend,
+  changeProfile,
+  userLogOut,
+  accessTokenRefresh,
 } = authSlice.actions;
 
 // selectors
@@ -186,8 +217,13 @@ export const getSignUpState = (state: RootStateOrAny): SignUpState =>
   state.auth.signUpState;
 export const getSignInState = (
   state: RootStateOrAny
-): { state: SignInState; message: string } => state.auth.signInState;
+): { state: SignInState; message: string } => {
+  console.log(JSON.stringify(state));
+  return state.auth.signInState;
+};
 export const getUserData = (state: RootStateOrAny): UserData =>
   state.auth.userData;
+export const getAccessToken = (state: RootStateOrAny): string =>
+  state.auth.accessToken;
 
 export default authSlice.reducer;

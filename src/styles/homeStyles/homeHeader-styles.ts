@@ -9,7 +9,8 @@ export const HeaderContainer = styled.div`
   background-color: ${props => props.theme.background};
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  padding: 0 420px;
   z-index: 9999;
 `;
 export const HeaderLogoContainer = styled.div`
@@ -53,6 +54,7 @@ export const SignInButton = styled.button`
   height: 31px;
   border-radius: 5px;
   border: none;
+  cursor: pointer;
   background-color: ${props => props.theme.background};
   color: ${props => props.theme.buttonBackgroundA};
 `;
@@ -62,6 +64,7 @@ export const SignUpButton = styled.button`
   height: 31px;
   border-radius: 5px;
   border: none;
+  cursor: pointer;
   background-color: ${props => props.theme.buttonBackgroundA};
   color: ${props => props.theme.background};
 `;

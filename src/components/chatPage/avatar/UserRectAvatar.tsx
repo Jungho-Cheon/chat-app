@@ -10,7 +10,12 @@ import {
 const UserAvatar = ({ avatarUrl, width }: UserAvatarProps): JSX.Element => {
   return (
     <AvatarContainer width={width}>
-      <AvatarRectImage src={avatarUrl}></AvatarRectImage>
+      <AvatarRectImage
+        src={avatarUrl}
+        onError={e => {
+          e.currentTarget.src = 'assets/default-avatar.png';
+        }}
+      ></AvatarRectImage>
     </AvatarContainer>
   );
 };

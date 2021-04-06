@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useReducer } from 'react';
+import { useEffect, useLayoutEffect, useReducer } from 'react';
 import { RootStateOrAny, useSelector } from 'react-redux';
 import { getUserData } from '../../../features/auth/authSlice';
 import ChatroomType, {

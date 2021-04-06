@@ -4,6 +4,10 @@ import { getUserData } from '../../../features/auth/authSlice';
 import { FriendData } from '../../../features/auth/authTypes';
 import { getCurrentChatroom } from '../../../features/chatroom/chatroomSlice';
 
+// components
+import UserRectAvatar from '../avatar/UserRectAvatar';
+
+// styled-components
 import {
   ParticipantsProfileContainer,
   PartnerStatus,
@@ -32,18 +36,18 @@ const ParticipantsProfile = (): JSX.Element => {
           <div className="participants-profile__profile-picture">
             <img
               className="profile__background"
-              src=""
-              onError={e =>
-                (e.currentTarget.src =
-                  'https://image.shutterstock.com/image-illustration/composition-rounded-shapes-champagne-tones-260nw-1873473172.jpg')
-              }
+              src="assets/default-background.jpeg"
             />
             <div className="profile__profile-picture-background">
-              <img
+              <UserRectAvatar
+                avatarUrl={opponent?.avatarUrl || ''}
+                width="120px"
+              />
+              {/* <img
                 className="profile__profile-picture"
                 src={opponent?.avatarUrl || ''}
                 alt="participants-profile-picture"
-              />
+              /> */}
             </div>
             <PartnerStatus isOnline={online}>
               <StatusIndicator isOnline={online} />

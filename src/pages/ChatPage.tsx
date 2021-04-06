@@ -46,7 +46,7 @@ const ChatPage = (): JSX.Element => {
       socket.off('RECEIVE_MESSAGE');
       socket.off('SEND_COMPLETE');
     };
-  }, []);
+  }, [userData]);
   return (
     <ChatPageContainer>
       <MessageList />

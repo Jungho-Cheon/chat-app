@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 
 // Redux
 import { useSelector } from 'react-redux';
@@ -14,7 +14,6 @@ import FriendDetailModal from './FriendDetailModal';
 import { FriendData } from '../../../features/auth/authTypes';
 
 // context
-import { DiscoverFriendModalContext } from '../messageList/MessageList';
 import useDiscoverModalState from './useDiscoverModalState';
 export interface FriendSectionProps {
   userProfile: HTMLDivElement | null;
@@ -22,10 +21,7 @@ export interface FriendSectionProps {
 
 const FriendSection = ({ userProfile }: FriendSectionProps): JSX.Element => {
   const userData = useSelector(getUserData);
-  const {
-    isOpenDiscoverFriend,
-    setIsOpenDiscoverFriend,
-  } = useDiscoverModalState();
+  const { setIsOpenDiscoverFriend } = useDiscoverModalState();
   const [
     friendDetailModalData,
     setFriendDetailModalData,
@@ -55,11 +51,11 @@ const FriendSection = ({ userProfile }: FriendSectionProps): JSX.Element => {
         <h3>Friends</h3>
         <div className="friend-section__buttons">
           <MenuButton
-            iconClass="fa-plus"
+            iconClass="fas fa-plus"
             onClick={() => setIsOpenDiscoverFriend(true)}
           />
           <MenuButton
-            iconClass="fa-chevron-right"
+            iconClass="fas fa-chevron-right"
             onClick={slideToUserProfile}
           />
         </div>
