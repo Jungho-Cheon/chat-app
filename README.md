@@ -46,17 +46,18 @@
     <td vlign="center"><img height="400" alt="스크린샷 2021-04-12 오전 11 31 40" src="https://user-images.githubusercontent.com/61958795/114333174-a7e83980-9b82-11eb-8877-4fd0aeb80fcb.png"></td>
   </tr>
 </table>
+
 - 채팅방은 사용자의 이름을 통한 **검색기능**이 제공됩니다.
 - 각 채팅방을 클릭하여 현재 채팅방을 변경할 수 있습니다.
 
 ### `채팅창`
-![progressive_circle](https://user-images.githubusercontent.com/61958795/114334427-8177cd80-9b85-11eb-8ec4-af7558ac2447.gif)
-- 채팅창의 메세지는 메세지를 보낸 사용자가 연달아 보낼 경우 그룹핑 되어 표시됩니다.
-- 입력한 메세지가 정상적으로 전송되었는지 확인할 수 있는 프로그레스 서클이 제공됩니다.
-
 ![chatting](https://user-images.githubusercontent.com/61958795/114334758-3ad6a300-9b86-11eb-8488-dce761a78c87.gif)
-- 상대방이 입력중인 경우를 알려주는 표시와 읽음 표시를 제공합니다.
+
+<br/>
 
 ![file_transfer](https://user-images.githubusercontent.com/61958795/114335585-05cb5000-9b88-11eb-9f94-52c877b5326d.gif)
+- 채팅창의 메세지는 메세지를 보낸 사용자가 연달아 보낼 경우 그룹핑 되어 표시됩니다.
+- 입력한 메세지가 정상적으로 전송되었는지 확인할 수 있는 프로그레스 서클이 제공됩니다.
+- 상대방이 입력중인 경우를 알려주는 표시와 읽음 표시를 제공합니다.
 - 드래그 앤 드랍, 파일 전송 버튼을 통해 사진이나 파일을 전송할 수 있습니다.
 - 전송된 파일은 GCP의 Cloud Storage의 각 채팅방 ID를 통해 보관됩니다.
